@@ -25,7 +25,7 @@ class PlayState extends FlxState
 	private var timer : Float;
 	private var timerText : FlxText;
 	
-	
+	private var player : Player;
 	
 	
 	
@@ -48,6 +48,9 @@ class PlayState extends FlxState
 		//SpriteFunctions.createRoundedCornerBox(spr, 100, 100, 4);
 		////SpriteFunctions.shadeSpriteWithBorder(spr, Palette.color3, Palette.color5);
 		//add(spr);
+		
+		player = new Player(this);
+		add(player);
 		
 		
 		ending = false;
@@ -93,6 +96,7 @@ class PlayState extends FlxState
 	override public function update(elapsed : Float):Void
 	{
 		super.update(elapsed);
+		MyInput.update();
 		scoreText.text = "Score: " + Std.string(Score);
 		
 		var dec: Int = Std.int((timer * 10) % 10);

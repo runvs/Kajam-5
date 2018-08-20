@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.math.FlxPoint;
@@ -15,21 +16,14 @@ class Player extends FlxSprite
 {
     //#################################################################
 
-	public var headItem   : Item;
-	public var torsoItem  : Item;
-	public var legsItem   : Item;
-	public var weaponItem : Item;
-
-	public var strength      : Float;
-	public var agility       : Float;
-	public var healthMax     : Float;
-	public var agilityBonus  : Float;
-	public var strengthBonus : Float;
-	public var healthBonus   : Float;
-	public var healthBase    : Float;
+	public var swordItem  : Item;
+	public var armorItem  : Item;
+	public var bowItem    : Item;
 	
-	public var coins : Int;
 
+	public var healthMax     : Float;
+	
+	
     var _dashDir        : FlxPoint;
 	var _dashCooldown   : Float;
     var _dashSpeedMax   : Float;
@@ -44,61 +38,43 @@ class Player extends FlxSprite
 	
 	var _facing         : Facing;
 	var _attackCooldown : Float;
-	var _coinsText 		: FlxText;
 	
 	var _healthBar 		: HudBar;
 	var _dashCooldownBar: HudBar;
 
-	var _inventory      : Inventory;
-	var _showInventory  : Bool;
-	var _npcInteraction : Bool;
-	var _interactingNPC : NPC;
 	
-	var _attackSound     : FlxSound;
-	var _dashSound       : FlxSound;
-	var _takeDamageSound : FlxSound;
+	//var _attackSound     : FlxSound;
+	//var _dashSound       : FlxSound;
+	//var _takeDamageSound : FlxSound;
 	
 	var dustparticles : MyParticleSystem;
-	var dustTime : Float;
+	var dustTime : Float = 0;
 	
 	var _slashSprite     :FlxSprite;
 	
-	public function isInInventory () : Bool 
-	{
-		return _showInventory;
-	}
-
+	
     //#################################################################
 
     public function new(playState: PlayState)
     {
         super();
 
-		loadGraphic(AssetPaths.Hero__png, true, 16, 16);
-		animation.add("walk_south", [0, 4, 8,  12], 8);
-		animation.add("walk_west",  [1, 5, 9,  13], 8);
-		animation.add("walk_north", [2, 6, 10, 14], 8);
-		animation.add("walk_east",  [3, 7, 11, 15], 8);
-		animation.add("idle", [0]);
-		animation.play("idle");
-
+		//loadGraphic(AssetPaths.Hero__png, true, 16, 16);
+		//animation.add("walk_south", [0, 4, 8,  12], 8);
+		//animation.add("walk_west",  [1, 5, 9,  13], 8);
+		//animation.add("walk_north", [2, 6, 10, 14], 8);
+		//animation.add("walk_east",  [3, 7, 11, 15], 8);
+		//animation.add("idle", [0]);
+		//animation.play("idle");
+		makeGraphic(16,16);
 		_dashSprite1 = new FlxSprite();
-		_dashSprite1.loadGraphic(AssetPaths.Hero__png, true, 16, 16);
-		_dashSprite1.animation.add("idle", [0]);
-		_dashSprite1.animation.play("idle");
-		_dashSprite1.alpha = 0.0;
+		_dashSprite1.makeGraphic(16, 16);
 		
 		_dashSprite2 = new FlxSprite();
-		_dashSprite2.loadGraphic(AssetPaths.Hero__png, true, 16, 16);
-		_dashSprite2.animation.add("idle", [0]);
-		_dashSprite2.animation.play("idle");
-		_dashSprite2.alpha = 0.0;
+		_dashSprite2.makeGraphic(16, 16);
 		
 		_dashSprite3 = new FlxSprite();
-		_dashSprite3.loadGraphic(AssetPaths.Hero__png, true, 16, 16);
-		_dashSprite3.animation.add("idle", [0]);
-		_dashSprite3.animation.play("idle");
-		_dashSprite3.alpha = 0.0;
+		_dashSprite3.makeGraphic(16, 16);
 		
 		dustparticles = new MyParticleSystem();
 		dustparticles.mySize = 500;
@@ -119,8 +95,6 @@ class Player extends FlxSprite
         _dashCooldown = 0;
         _dashDir = new FlxPoint();
 		
-		coins      = 0;
-		healthBase = 0;
 
 		_playState = playState;
 
@@ -128,25 +102,19 @@ class Player extends FlxSprite
 		
 		health = healthMax = GameProperties.PlayerHealthMaxDefault;
 		
-		_healthBar = new HudBar(10, 10, 96, 16, false);
-		_healthBar.color = GameProperties.ColorHealthBar;
+		_healthBar = new HudBar(10, 10, 96, 16, false, FlxColor.WHITE);
+		//_healthBar.color = GameProperties.ColorHealthBar;
 		_healthBar._background.color = FlxColor.fromRGB(100, 100, 100, 100);
 		
-		_dashCooldownBar = new HudBar(10, 32, 48, 8, false);
-		_dashCooldownBar.color = GameProperties.ColorStaminaBar;
+		_dashCooldownBar = new HudBar(10, 32, 48, 8, false, FlxColor.BLUE);
+		//_dashCooldownBar.color = GameProperties.ColorStaminaBar;
 		_dashCooldownBar._background.color = FlxColor.fromRGB(100, 100, 100, 100);
 
-		_inventory      = new Inventory(this);
-		_showInventory  = false;
-		_npcInteraction = false;
 		
-		_coinsText = new FlxText(128, 10, 0, "", 12);
-		_coinsText.scrollFactor.set();
-		
-		_attackSound     = FlxG.sound.load(AssetPaths.attack1__ogg, 1);
-		_dashSound       = FlxG.sound.load(AssetPaths.dash__ogg, 0.25);
-		_takeDamageSound = FlxG.sound.load(AssetPaths.takeHit__ogg, 1);
-		
+		//_attackSound     = FlxG.sound.load(AssetPaths.attack1__ogg, 1);
+		//_dashSound       = FlxG.sound.load(AssetPaths.dash__ogg, 0.25);
+		//_takeDamageSound = FlxG.sound.load(AssetPaths.takeHit__ogg, 1);
+		//
 		_slashSprite = new FlxSprite();
 		_slashSprite.loadGraphic(AssetPaths.slash__png, true, 16, 16);
 		_slashSprite.animation.add("slash", [4, 5, 6, 3], 14, false);
@@ -212,15 +180,15 @@ class Player extends FlxSprite
 			
 		}
 
-        handleInput();
+        handleInput(elapsed);
 		var l : Float = velocity.distanceTo(new FlxPoint());
 		if (l <= GameProperties.PlayerMovementMaxVelocity.x / 8 )
 		{
-			animation.play("idle", true);
+			//animation.play("idle", true);
 		}
 		else
 		{
-			dustTime -= FlxG.elapsed;
+			dustTime -= elapsed;
 			if (dustTime <= 0)
 			{
 				dustTime += 0.25;
@@ -229,62 +197,39 @@ class Player extends FlxSprite
 				{
 					s.alive = true;
 					var T : Float = 1.25;
-					s.setPosition(x + GameProperties.rng.float(0, this.width) , y + height + GameProperties.rng.float( 0, 1) );
-					s.alpha = GameProperties.rng.float(0.125, 0.35);
+					s.setPosition(x + FlxG.random.float(0, this.width) , y + height + FlxG.random.float( 0, 1) );
+					s.alpha = FlxG.random.float(0.125, 0.35);
 					FlxTween.tween(s, { alpha:0 }, T, { onComplete: function(t:FlxTween) : Void { s.alive = false; } } );
-					var v : Float = GameProperties.rng.float(0.75, 1.0);
+					var v : Float = FlxG.random.float(0.75, 1.0);
 					s.scale.set(v, v);
 					FlxTween.tween(s.scale, { x: 2.5, y:2.5 }, T);
 				},
 				function(s:FlxSprite) : Void 
 				{
 					s.makeGraphic(7, 7, FlxColor.TRANSPARENT);
-					s.drawCircle(4, 4, 3, GameProperties.ColorDustParticles);
+					s.drawCircle(4, 4, 3, FlxColor.WHITE);
 				});
 			}
 		}
 		
-        var healthFactor = health / healthMax;
-        healthMax = GameProperties.PlayerHealthMaxDefault + healthBase + healthBonus;
-        health    = healthMax * healthFactor;
+        //var healthFactor = health / healthMax;
+        //healthMax = GameProperties.PlayerHealthMaxDefault + healthBase + healthBonus;
+        //health    = healthMax * healthFactor;
 		
 		_healthBar.health = health / healthMax;
 		_healthBar.update(elapsed);
 
-        _dashSpeedMax = GameProperties.PlayerMovementDashCooldown - agilityBonus / 50;
+        _dashSpeedMax = GameProperties.PlayerMovementDashCooldown;
         _dashSpeedMax = _dashSpeedMax < 0.5 ? 0.5 : _dashSpeedMax;
 
 		_dashCooldownBar.health = 1.0 - _dashCooldown / _dashSpeedMax;
 		_dashCooldownBar.update(elapsed);
-		
-        _coinsText.text = Std.string(coins);
-		_coinsText.update(elapsed);
-
-		_inventory.update(elapsed);
     }
 
     //#################################################################
 
-    function handleInput()
+    function handleInput(elapsed : Float)
     {
-		if(!_npcInteraction && MyInput.InventoryButtonJustPressed)
-		{
-			_showInventory = !_showInventory;
-		}
-
-		if(_npcInteraction || _showInventory)
-		{
-			// Don't handle player input here when interacting with an
-			// NPC. Let the NPC handle the input instead.
-			// TODO handle input when showing inventory
-
-			if(_interactingNPC != null)
-			{
-				_interactingNPC.handleInput(this);
-			}
-			return;
-		}
-
         var vx : Float = MyInput.xVal * _accelFactor;
 		var vy : Float = MyInput.yVal * _accelFactor;
 		var l : Float = Math.sqrt(vx * vx + vy * vy);
@@ -325,126 +270,66 @@ class Player extends FlxSprite
 		}
 		else
 		{
-			_dashCooldown -= FlxG.elapsed;
+			_dashCooldown -= elapsed;
 		}
 		
-		_attackCooldown -= FlxG.elapsed;
+		_attackCooldown -= elapsed;
 		if(_attackCooldown <= 0.0)
 		{
-			if(MyInput.AttackButtonJustPressed) attack();
+			if(MyInput.InteractButtonPressed) attack();
 		}
     }
 
     //#################################################################
 
-	public function stopNpcInteraction()
-	{
-		_npcInteraction = false;
-		_interactingNPC = null;
-	}
-
-    //#################################################################
-
-	public function pickupItem(item: Item)
-	{
-		switch(item.itemType)
-		{
-			case ItemType.HEAD:
-				headItem = item;
-			case ItemType.TORSO:
-				torsoItem = item;
-			case ItemType.LEGS:
-				legsItem = item;
-			case ItemType.WEAPON:
-				weaponItem = item;
-		}
-	}
-
-    //#################################################################
-
-	public function recalculateBonuses()
-	{
-		agilityBonus  = 0.0;
-		strengthBonus = 0.0;
-		healthBonus   = 0.0;
-
-		if(headItem != null)
-		{
-			agilityBonus  += headItem.agilityBonus;
-			strengthBonus += headItem.strengthBonus;
-			healthBonus   += headItem.healthBonus;
-		}
-
-		if(torsoItem != null)
-		{
-			agilityBonus  += torsoItem.agilityBonus;
-			strengthBonus += torsoItem.strengthBonus;
-			healthBonus   += torsoItem.healthBonus;
-		}
-
-		if(legsItem != null)
-		{
-			agilityBonus  += legsItem.agilityBonus;
-			strengthBonus += legsItem.strengthBonus;
-			healthBonus   += legsItem.healthBonus;
-		}
-
-		if(weaponItem != null)
-		{
-			agilityBonus  += weaponItem.agilityBonus;
-			strengthBonus += weaponItem.strengthBonus;
-			healthBonus   += weaponItem.healthBonus;
-		}
-	}
-
-    //#################################################################
-
 	function attack()
 	{
+		trace("attack");
 		_attackCooldown += GameProperties.PlayerAttackCooldown;
-		_slashSprite.animation.play("slash", true);
+		//_slashSprite.animation.play("slash", true);
 
-		if(GameProperties.SoundTimeout <= 0.0)
-		{
-			_attackSound.pitch = GameProperties.rng.float(0.8, 1.2);
-			_attackSound.play();
-
-			GameProperties.SoundTimeout = GameProperties.SoundTimeoutMax;
-		}
+		//if(GameProperties.SoundTimeout <= 0.0)
+		//{
+			//_attackSound.pitch = GameProperties.rng.float(0.8, 1.2);
+			//_attackSound.play();
+//
+			//GameProperties.SoundTimeout = GameProperties.SoundTimeoutMax;
+		//}
 		
 		var enemyHit = false;
-		for(enemy in _playState.level.enemies)
-		{
-			if(FlxG.overlap(_hitArea, enemy))
-			{
-				enemy.hit(getDamage(), x, y);
-				enemyHit = true;
-				_playState.level.spladder(enemy.x + GameProperties.TileSize/2, enemy.y + GameProperties.TileSize/2);
-			}
-		}
-
-		if(!enemyHit)
-		{
-			for(npc in _playState.level.npcs)
-			{
-				if (npc.alive)
-				{
-					if(FlxG.overlap(_hitArea, npc))
-					{
-						npc.interact();
-						_npcInteraction = true;
-						_interactingNPC = npc;
-					}
-				}
-			}
-		}
+		// TODO check if enemy is hit
+		//for(enemy in _playState.level.enemies)
+		//{
+			//if(FlxG.overlap(_hitArea, enemy))
+			//{
+				//enemy.hit(getDamage(), x, y);
+				//enemyHit = true;
+				//_playState.level.spladder(enemy.x + GameProperties.TileSize/2, enemy.y + GameProperties.TileSize/2);
+			//}
+		//}
+		//if(!enemyHit)
+		//{
+			//for(npc in _playState.level.npcs)
+			//{
+				//if (npc.alive)
+				//{
+					//if(FlxG.overlap(_hitArea, npc))
+					//{
+						//npc.interact();
+						//_npcInteraction = true;
+						//_interactingNPC = npc;
+					//}
+				//}
+			//}
+		//}
 	}
 
     //#################################################################
 
     public function getDamage() : Float
     {
-        return GameProperties.PlayerAttackBaseDamage + Math.pow(strength + strengthBonus, 0.25) * 3;
+        //return GameProperties.PlayerAttackBaseDamage + Math.pow(strength + strengthBonus, 0.25) * 3;
+		return 1;
     }
 
     //#################################################################
@@ -456,11 +341,11 @@ class Player extends FlxSprite
 		var lastPosition    = new FlxVector(x, y);
 		var initialPosition = new FlxVector(x, y);
 
-		if(GameProperties.SoundTimeout <= 0.0)
-		{
-			_dashSound.play();	
-			GameProperties.SoundTimeout = GameProperties.SoundTimeoutMax;
-		}
+		//if(GameProperties.SoundTimeout <= 0.0)
+		//{
+			//_dashSound.play();	
+			//GameProperties.SoundTimeout = GameProperties.SoundTimeoutMax;
+		//}
 
 		while(currentStep < GameProperties.PlayerMovementMaxDashLength)
 		{
@@ -468,12 +353,13 @@ class Player extends FlxSprite
 
 			setPosition(x + _dashDir.x * stepSize, y + _dashDir.y * stepSize);
 
-			if(FlxG.overlap(this, _playState.level.collisionMap))
-			{
-				setPosition(lastPosition.x, lastPosition.y);
-				break;
-			}
-
+			// TODO check if player is not stuck in a wall
+			//if(FlxG.overlap(this, _playState.level.collisionMap))
+			//{
+				//setPosition(lastPosition.x, lastPosition.y);
+				//break;
+			//}
+//
 			currentStep += stepSize;
 		}
 
@@ -516,20 +402,11 @@ class Player extends FlxSprite
 	{
 		_healthBar.draw();
 		_dashCooldownBar.draw();
-		_coinsText.draw();
 		
-		if(_showInventory)
-		{
-			_inventory.draw();
-		}
+		// TODO draw inventory
 	}
 
     //#################################################################
-	
-	public function pickUpCoins() 
-	{
-		coins += 1;
-	}
 	
 	public function heal(f:Float)
 	{
@@ -547,17 +424,17 @@ class Player extends FlxSprite
 	public function takeDamage(d:Float)
 	{
 		health -= d;
-		if(GameProperties.SoundTimeout <= 0.0)
-		{
-			_takeDamageSound.pitch = GameProperties.rng.float(0.8, 1.2);
-			_takeDamageSound.play();
-
-			GameProperties.SoundTimeout = GameProperties.SoundTimeoutMax;
-		}
+		//if(GameProperties.SoundTimeout <= 0.0)
+		//{
+			//_takeDamageSound.pitch = GameProperties.rng.float(0.8, 1.2);
+			//_takeDamageSound.play();
+//
+			//GameProperties.SoundTimeout = GameProperties.SoundTimeoutMax;
+		//}
 
 		FlxTween.color(this, 0.18, FlxColor.RED, FlxColor.WHITE, { type : FlxTween.PERSIST} );
-		_takeDamageSound.pitch = GameProperties.rng.float(0.8, 1.2);
-		_takeDamageSound.play();
+		//_takeDamageSound.pitch = GameProperties.rng.float(0.8, 1.2);
+		//_takeDamageSound.play();
 
 		if (health <= 0)
 		{
@@ -565,17 +442,6 @@ class Player extends FlxSprite
 		}
 	}
 
-    //#################################################################
-	
-	public function dropAllItems()
-	{
-		headItem   = null;
-		torsoItem  = null;
-		legsItem   = null;
-		weaponItem = null;
-		
-		recalculateBonuses();
-	}
 
     //#################################################################
 	
