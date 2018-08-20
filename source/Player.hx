@@ -286,7 +286,7 @@ class Player extends FlxSprite
 	{
 		trace("attack");
 		_attackCooldown += GameProperties.PlayerAttackCooldown;
-		//_slashSprite.animation.play("slash", true);
+		_slashSprite.animation.play("slash", true);
 
 		//if(GameProperties.SoundTimeout <= 0.0)
 		//{
