@@ -27,7 +27,7 @@ class PlayState extends FlxState
 	
 	private var player : Player;
 	
-	
+	private var level : TiledLevel;
 	
 	
 	/**
@@ -49,8 +49,14 @@ class PlayState extends FlxState
 		////SpriteFunctions.shadeSpriteWithBorder(spr, Palette.color3, Palette.color5);
 		//add(spr);
 		
+		
+		level = new TiledLevel("assets/data/level_N.tmx");
+		add(level.baseTiles);
+		
 		player = new Player(this);
 		add(player);
+		
+		
 		
 		
 		ending = false;
@@ -99,12 +105,16 @@ class PlayState extends FlxState
 		MyInput.update();
 		scoreText.text = "Score: " + Std.string(Score);
 		
+		
+		
 		var dec: Int = Std.int((timer * 10) % 10);
 		if (dec < 0) dec *= -1;
 		timerText.text = "Timer: " + Std.string(Std.int(timer) + "." + Std.string(dec));
 		
 		if (!ending)
 		{
+			
+			FlxG.collide(player, level.collisionMap);
 			
 			if (timer <= 0)
 			{
