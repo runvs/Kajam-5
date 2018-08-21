@@ -128,7 +128,7 @@ class Player extends FlxSprite
     public override function update(elapsed: Float)
     {
         super.update(elapsed);
-		dustparticles.update(elapsed);
+		//dustparticles.update(elapsed);
 		_slashSprite.update(elapsed);
 		_slashSprite.setPosition(_hitArea.x, _hitArea.y);
 		
@@ -189,27 +189,27 @@ class Player extends FlxSprite
 		else
 		{
 			dustTime -= elapsed;
-			if (dustTime <= 0)
-			{
-				dustTime += 0.25;
-				dustparticles.Spawn( 3,
-				function (s : FlxSprite) : Void
-				{
-					s.alive = true;
-					var T : Float = 1.25;
-					s.setPosition(x + FlxG.random.float(0, this.width) , y + height + FlxG.random.float( 0, 1) );
-					s.alpha = FlxG.random.float(0.125, 0.35);
-					FlxTween.tween(s, { alpha:0 }, T, { onComplete: function(t:FlxTween) : Void { s.alive = false; } } );
-					var v : Float = FlxG.random.float(0.75, 1.0);
-					s.scale.set(v, v);
-					FlxTween.tween(s.scale, { x: 2.5, y:2.5 }, T);
-				},
-				function(s:FlxSprite) : Void 
-				{
-					s.makeGraphic(7, 7, FlxColor.TRANSPARENT);
-					s.drawCircle(4, 4, 3, FlxColor.WHITE);
-				});
-			}
+			//if (dustTime <= 0)
+			//{
+				//dustTime += 0.25;
+				//dustparticles.Spawn( 3,
+				//function (s : FlxSprite) : Void
+				//{
+					//s.alive = true;
+					//var T : Float = 1.25;
+					//s.setPosition(x + FlxG.random.float(0, this.width) , y + height + FlxG.random.float( 0, 1) );
+					//s.alpha = FlxG.random.float(0.125, 0.35);
+					//FlxTween.tween(s, { alpha:0 }, T, { onComplete: function(t:FlxTween) : Void { s.alive = false; } } );
+					//var v : Float = FlxG.random.float(0.75, 1.0);
+					//s.scale.set(v, v);
+					//FlxTween.tween(s.scale, { x: 2.5, y:2.5 }, T);
+				//},
+				//function(s:FlxSprite) : Void 
+				//{
+					//s.makeGraphic(7, 7, FlxColor.TRANSPARENT);
+					//s.drawCircle(4, 4, 3, FlxColor.WHITE);
+				//});
+			//}
 		}
 		
         //var healthFactor = health / healthMax;

@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -19,11 +20,6 @@ class PlayState extends FlxState
 	public var overlay : FlxSprite;
 	private var ending : Bool;
 	
-	public var Score : Int = 0;
-	private var scoreText : FlxText;
-	
-	private var timer : Float;
-	private var timerText : FlxText;
 	
 	private var player : Player;
 	
@@ -41,22 +37,19 @@ class PlayState extends FlxState
 		backgroundSprite.color = Palette.color1;
 		add(backgroundSprite);
 		
+		FlxG.camera.pixelPerfectRender = true;
+		FlxG.camera.zoom = 2;
 		
-		// add stuff here
-		
-		//var spr : FlxSprite = new FlxSprite(100, 100);
-		//SpriteFunctions.createRoundedCornerBox(spr, 100, 100, 4);
-		////SpriteFunctions.shadeSpriteWithBorder(spr, Palette.color3, Palette.color5);
-		//add(spr);
-		
-		
-		level = new TiledLevel("assets/data/level_N.tmx");
+		level = new TiledLevel("assets/data/Wimborne.tmx");
 		add(level.baseTiles);
+		add(level.midTiles);
 		
 		player = new Player(this);
 		add(player);
+		FlxG.camera.follow(player, flixel.FlxCameraFollowStyle.TOPDOWN);
 		
 		
+		add(level.topTiles);
 		
 		
 		ending = false;
@@ -68,13 +61,6 @@ class PlayState extends FlxState
 	
 		FlxTween.tween (overlay, { alpha : 0 }, 0.25);
 		
-		timer = 25;
-		timerText = new FlxText(10, 10, 0, "0", 16);
-		timerText.color = Palette.color5;
-		add(timerText);
-		scoreText = new FlxText(10, 32, 0, "0", 16);
-		scoreText.color = Palette.color5;
-		add(scoreText);
 		
 	}
 	
@@ -103,24 +89,13 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 		MyInput.update();
-		scoreText.text = "Score: " + Std.string(Score);
 		
 		
-		
-		var dec: Int = Std.int((timer * 10) % 10);
-		if (dec < 0) dec *= -1;
-		timerText.text = "Timer: " + Std.string(Std.int(timer) + "." + Std.string(dec));
 		
 		if (!ending)
 		{
 			
 			FlxG.collide(player, level.collisionMap);
-			
-			if (timer <= 0)
-			{
-				EndGame();
-			}
-			timer -= FlxG.elapsed;
 		}
 	}	
 	
@@ -137,7 +112,7 @@ class PlayState extends FlxState
 			FlxTween.tween(overlay, {alpha : 1.0}, 0.9);
 			
 			var t: FlxTimer = new FlxTimer();
-			t.start(1,function(t:FlxTimer): Void {MenuState.setNewScore(Score); FlxG.switchState(new MenuState()); } );
+			t.start(1,function(t:FlxTimer): Void {MenuState.setNewScore(0); FlxG.switchState(new MenuState()); } );
 		}
 		
 	}
