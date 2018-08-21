@@ -98,7 +98,7 @@ class Player extends FlxSprite
 
 		_playState = playState;
 
-		setPosition(8 * GameProperties.TileSize, 2 * GameProperties.TileSize);
+		setPosition(12 * GameProperties.TileSize, 9 * GameProperties.TileSize);
 		
 		health = healthMax = GameProperties.PlayerHealthMaxDefault;
 		

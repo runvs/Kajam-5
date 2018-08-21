@@ -21,6 +21,6 @@ class NPC_Guard extends NPCIdle
 	
 	override public function onCloseRange():Void 
 	{
-		trace("close to guard");
+		//trace("close to guard");
 	}
 }

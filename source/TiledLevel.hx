@@ -49,6 +49,7 @@ class TiledLevel extends TiledMap
 	public var collisionMap : FlxSpriteGroup;
 	
 	public var exits : FlxTypedGroup<Exit>;
+	public var entries : FlxTypedGroup<Entry>;
 	
 	public var enemies : AdministratedList<Enemy>;
 	
@@ -77,7 +78,7 @@ class TiledLevel extends TiledMap
 		collisionMap = new FlxSpriteGroup();
 		
 		exits = new FlxTypedGroup<Exit>();
-		
+		entries = new FlxTypedGroup<Entry>();
 		
 		enemies = new AdministratedList<Enemy>();
 		enemies.DestroyCallBack.push( function (e : Enemy ) : Void  { addDeadEnemy(e); } );
@@ -241,9 +242,48 @@ class TiledLevel extends TiledMap
 					{
 						loadNSC( o, objectLayer);
 					}
-					
+					else if (o.type.toLowerCase() == "entry")
+					{
+						loadEntry(o, objectLayer);
+					}
+					else if (o.type.toLowerCase() == "exit")
+					{
+						loadExit(o, objectLayer);
+					}
 				}
 			}
+		}
+	}
+	
+	private function loadEntry(o:TiledObject, g:TiledObjectLayer)
+	{
+		//trace("load object of type " + o.type);
+		var x:Int = o.x;
+		var y:Int = o.y;
+		
+		var entryid = o.properties.get("entryid");
+		if (entryid != null)
+		{
+			var id : Int = Std.parseInt(entryid);		
+			var e :Entry = new Entry(x, y, id);
+			entries.add(e);
+		}
+	}
+	
+	private function loadExit(o:TiledObject, g:TiledObjectLayer)
+	{
+		//trace("load object of type " + o.type);
+		var x:Int = o.x;
+		var y:Int = o.y -1;
+		
+		
+		var entryid = o.properties.get("entryid");
+		var target = o.properties.get("target");
+		if (entryid != null && target != null)
+		{
+			var id : Int = Std.parseInt(entryid);		
+			var e : Exit = new Exit(x, y, o.width, o.height,target, id);
+			exits.add(e);
 		}
 	}
 	
@@ -259,7 +299,7 @@ class TiledLevel extends TiledMap
 		{
 			if (nsctype.toLowerCase() == "guard")
 			{
-				trace(x);
+				//trace(x);
 				var n : NPC_Guard = new NPC_Guard(_state);
 				n.setPosition(x , y );
 				n.objectName = o.name;
@@ -314,5 +354,16 @@ class TiledLevel extends TiledMap
 		e.scale.set(0.9,1);
 		e.angle = 90;
 		deadEnemies.add(e);
+	}
+	
+	public function getEntry (entryid : Int ) :Entry
+	{
+		for (ei in entries)
+		{
+			var e : Entry = ei;
+			if (e.entryID == entryid)
+				return e;
+		}
+		return null;
 	}
 }

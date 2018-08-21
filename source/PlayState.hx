@@ -4,6 +4,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxButton;
@@ -23,6 +24,7 @@ class PlayState extends FlxState
 	
 	public var player : Player;
 	
+	public var world : World;
 	public var level : TiledLevel;
 	
 	
@@ -40,17 +42,19 @@ class PlayState extends FlxState
 		FlxG.camera.pixelPerfectRender = true;
 		FlxG.camera.zoom = 2;
 		
-		level = new TiledLevel("assets/data/Wimborne.tmx", this);
-		add(level.baseTiles);
-		add(level.midTiles);
+		world = new World(this);
+		
+		level = world.getLevelByName("wimborne.tmx");
+		//add(level.baseTiles);
+		//add(level.midTiles);
 		
 		player = new Player(this);
-		add(player);
+		//add(player);
 		FlxG.camera.follow(player, flixel.FlxCameraFollowStyle.TOPDOWN);
 		
-		add(level.allNSCs);
+		//add(level.allNSCs);
 		
-		add(level.topTiles);
+		//add(level.topTiles);
 		
 		
 		ending = false;
@@ -58,7 +62,7 @@ class PlayState extends FlxState
 		overlay.makeGraphic(FlxG.width, FlxG.height);
 		overlay.color = Palette.color1;
 		overlay.alpha = 1;
-		add(overlay);
+		//add(overlay);
 	
 		FlxTween.tween (overlay, { alpha : 0 }, 0.25);
 		
@@ -81,6 +85,49 @@ class PlayState extends FlxState
 	{
 		super.draw();
 		
+		level.baseTiles.draw();
+		
+		player.draw();
+		
+		level.allNSCs.draw();
+		
+		level.midTiles.draw();
+		level.topTiles.draw();
+		
+		overlay.draw();
+		
+	}
+	
+	
+	public function switchLevel ( target : String, entryid : Int)
+	{
+		ending = true;
+		
+		trace("switch level: " + target);
+		
+		FlxTween.tween(overlay, { alpha: 1 }, 0.75, { onComplete : 
+		function (t) : Void 
+		{ 
+			var newLevel : TiledLevel = world.getLevelByName(target);
+			if (level == null) 
+			{
+				trace ("warning: Level not found!!");
+				return;
+			}
+			level =  newLevel;
+			var entry : Entry = level.getEntry(entryid);
+			if (entry != null)
+				player.setPosition(entry.x, entry.y);
+			else
+			{
+				player.setPosition(0, 0);
+				trace("warning: no entry found!");
+			}
+			
+			ending = false; 
+			overlay.alpha = 0; 
+		}
+		} );
 	}
 	
 	/**
@@ -91,14 +138,33 @@ class PlayState extends FlxState
 		super.update(elapsed);
 		MyInput.update();
 		
-		
-		
 		if (!ending)
 		{
-			
+			player.update(elapsed);
+			level.allNSCs.update(elapsed);
 			FlxG.collide(player, level.collisionMap);
+			
+			CheckForLevelChange();
 		}
 	}	
+	
+	function CheckForLevelChange() 
+	{
+		for (ei  in level.exits)
+		{
+			var exit : Exit = ei;
+			
+			var p : FlxPoint = new FlxPoint(player.x + player.width / 2, player.y + player.height / 2);
+			trace("checking overlap");
+			trace(p);
+			trace(exit.x + " " + exit.y);
+			if (exit.overlapsPoint(p))
+			{
+				switchLevel(exit.target, exit.entryid);
+			}
+			
+		}
+	}
 	
 
 	

@@ -1,19 +1,21 @@
 package;
 
-import flixel.FlxSprite;
-import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.FlxObject;
 
 /**
  * ...
  * @author 
  */
-class Exit extends FlxSprite
+class Exit extends FlxObject
 {
 
-	public function new(?X:Float=0, ?Y:Float=0) 
+	public var target : String = "";
+	public var entryid : Int = 0;
+	public function new(X:Float=0, Y:Float=0, Width:Float=0, Height:Float=0, t : String, eid : Int) 
 	{
-		super(X, Y);
-		
+		super(X, Y, Width, Height);
+		target = t;
+		entryid = eid;
 	}
 	
 }
