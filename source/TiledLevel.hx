@@ -50,19 +50,21 @@ class TiledLevel extends TiledMap
 	
 	public var exits : FlxTypedGroup<Exit>;
 	
-	public var enemies : FlxTypedGroup<Enemy>;
+	public var enemies : AdministratedList<Enemy>;
 	
-	private var enemyAreas : FlxSpriteGroup;
+	public var allNSCs : AdministratedList<NPC>;
 	
 	public var goreLayer : FlxSprite;
 	
 	public var deadEnemies : FlxSpriteGroup;
 	
+	private var _state : PlayState;
 	
 	
-	public function new(tiledLevel:Dynamic)
+	public function new(tiledLevel:Dynamic, s : PlayState)
 	{
 		super(tiledLevel);
+		_state = s;
 		
 		levelPath = tiledLevel ;
 
@@ -76,9 +78,11 @@ class TiledLevel extends TiledMap
 		
 		exits = new FlxTypedGroup<Exit>();
 		
-		enemyAreas = new FlxSpriteGroup();
-		enemies = new FlxTypedGroup<Enemy>();
 		
+		enemies = new AdministratedList<Enemy>();
+		enemies.DestroyCallBack.push( function (e : Enemy ) : Void  { addDeadEnemy(e); } );
+		
+		allNSCs = new AdministratedList<NPC>();
 		
 		tileSet = tilesets["tileset.png"];
 		
@@ -117,6 +121,16 @@ class TiledLevel extends TiledMap
 						s.animation.add("idle", [tileType-1]);
 						s.animation.play("idle");
 						topTiles.add(s);
+					}
+					else if (tileLayer.name == "mid")
+					{
+						var tileType : Int = tileLayer.tileArray[idx];// tilemap.getTile(i, j);
+						var s : FlxSprite = new FlxSprite(i * 16, j * 16);
+						s.immovable = true;
+						s.loadGraphic(AssetPaths.tileset__png, true, 16, 16);
+						s.animation.add("idle", [tileType-1]);
+						s.animation.play("idle");
+						midTiles.add(s);
 					}
 					else
 					{
@@ -216,37 +230,44 @@ class TiledLevel extends TiledMap
 
 			
 			//objects layer
-			if (layer.name == "objects" || layer.name == "enemies")
+			if (layer.name == "objects" )
 			{
-				for (o in objectLayer.objects)
+				trace("load object layer");
+				for (oi in objectLayer.objects)
 				{
-					loadObject( o, objectLayer);
+					var o : TiledObject = oi;
+					trace("load object: " + o.name);
+					if (o.type.toLowerCase() == "npc")
+					{
+						loadNSC( o, objectLayer);
+					}
+					
 				}
 			}
 		}
 	}
 	
-	private function loadObject(o:TiledObject, g:TiledObjectLayer)
+	private function loadNSC(o:TiledObject, g:TiledObjectLayer)
 	{
 		//trace("load object of type " + o.type);
 		var x:Int = o.x;
-		var y:Int = o.y;
-		//
-		//// objects in tiled are aligned bottom-left (top-left in flixel)
-		if (o.gid != -1)
-			y -= g.map.getGidOwner(o.gid).tileHeight;
-
-
-			// TODO load exits
-		//switch (o.type.toLowerCase())
-		//{
-			//case "exit":
-				//var dir: String = o.properties.get("direction");
-				//var w : Int = o.width;
-				//var h : Int = o.height;
-				//var e : Exit = new Exit(x, y, w, h);
-				//exits.add(e);
-		//}
+		var y:Int = o.y -1;
+		
+		
+		var nsctype = o.properties.get("npctype");
+		if (nsctype != null)
+		{
+			if (nsctype.toLowerCase() == "guard")
+			{
+				trace(x);
+				var n : NPC_Guard = new NPC_Guard(_state);
+				n.setPosition(x , y );
+				n.objectName = o.name;
+				allNSCs.add(n);
+				trace("add nsc guard '" +  n.objectName + "'");
+			}
+		}
+		
 	}
 	
 	function refineCollisions(wit: Int, hit: Int):Void 

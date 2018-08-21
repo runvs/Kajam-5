@@ -21,9 +21,9 @@ class PlayState extends FlxState
 	private var ending : Bool;
 	
 	
-	private var player : Player;
+	public var player : Player;
 	
-	private var level : TiledLevel;
+	public var level : TiledLevel;
 	
 	
 	/**
@@ -40,7 +40,7 @@ class PlayState extends FlxState
 		FlxG.camera.pixelPerfectRender = true;
 		FlxG.camera.zoom = 2;
 		
-		level = new TiledLevel("assets/data/Wimborne.tmx");
+		level = new TiledLevel("assets/data/Wimborne.tmx", this);
 		add(level.baseTiles);
 		add(level.midTiles);
 		
@@ -48,6 +48,7 @@ class PlayState extends FlxState
 		add(player);
 		FlxG.camera.follow(player, flixel.FlxCameraFollowStyle.TOPDOWN);
 		
+		add(level.allNSCs);
 		
 		add(level.topTiles);
 		
