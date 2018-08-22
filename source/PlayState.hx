@@ -86,7 +86,10 @@ class PlayState extends FlxState
 		super.draw();
 		
 		level.baseTiles.draw();
+		level.midTiles.draw();
 		level.deadEnemies.draw();
+		
+		level.goreLayer.draw();
 		
 		player.draw();
 	
@@ -95,11 +98,11 @@ class PlayState extends FlxState
 			e.drawUnderlay();
 		}
 		
-		level.goreLayer.draw();
+		
 		level.allNSCs.draw();
 		level.allEnemies.draw();
 		
-		level.midTiles.draw();
+
 		level.topTiles.draw();
 		
 		overlay.draw();
@@ -116,6 +119,7 @@ class PlayState extends FlxState
 		
 		if (!ending)
 		{
+			level.midTiles.update(elapsed);
 			player.update(elapsed);
 			level.allEnemies.update(elapsed);
 			level.allNSCs.update(elapsed);
@@ -138,9 +142,9 @@ class PlayState extends FlxState
 			var exit : Exit = ei;
 			
 			var p : FlxPoint = new FlxPoint(player.x + player.width / 2, player.y + player.height / 2);
-			trace("checking overlap");
-			trace(p);
-			trace(exit.x + " " + exit.y);
+			//trace("checking overlap");
+			//trace(p);
+			//trace(exit.x + " " + exit.y);
 			if (exit.overlapsPoint(p))
 			{
 				switchLevel(exit.target, exit.entryid);

@@ -10,12 +10,11 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 
-class Enemy_SmashGround extends Enemy
+class Enemy_Runner extends Enemy
 {
     //#################################################################
 
-    public var AttackStrength : Float;
-	public var AttackTimer	  : Float;
+	public var AttackTimer : Float;
     
     public var aggroRangeInTiles   : Float;
     public var accel : Float;
@@ -41,8 +40,7 @@ class Enemy_SmashGround extends Enemy
     {
         super(playState);
 
-        AttackStrength = 1;
-		AttackTimer	   = 0.1;
+        AttackTimer	   = 0.1;
         MaxHealth      = health;
         aggroRangeInTiles   = 4.5;
 		accel = 550;
@@ -52,7 +50,7 @@ class Enemy_SmashGround extends Enemy
         _thinkTime    = GameProperties.EnemyMovementRandomWalkThinkTime;
         _playerLocked = false;
 
-        makeGraphic(16, 16, flixel.util.FlxColor.fromRGB(255, 0, 255));
+        makeGraphic(16, 12, flixel.util.FlxColor.fromRGB(255, 0, 0));
 		//this.loadGraphic(AssetPaths.enemy__png, true, 16, 16);
 		//this.animation.add("walk_south", [0, 8, 16,  24], 8);
 		//this.animation.add("walk_west",  [1, 9, 17,  25], 8);
@@ -65,8 +63,10 @@ class Enemy_SmashGround extends Enemy
 		
 		_facing = Facing.SOUTH;
 		
+		this.color = FlxColor.WHITE;
+
         drag.set(250,250);
-        maxVelocity.set(45,45);
+        maxVelocity.set(55,55);
 		
 		_distanceToPlayer = 0;
 		

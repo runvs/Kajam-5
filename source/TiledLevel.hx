@@ -141,6 +141,9 @@ class TiledLevel extends TiledMap
 						s.animation.add("idle", [tileType-1]);
 						s.animation.play("idle");
 						baseTiles.add(s);
+						
+						CheckForRandomOverlays(i,j,tileType);
+						
 						CreateCollisionTile(i, j, tileType);
 					}
 				}
@@ -152,6 +155,25 @@ class TiledLevel extends TiledMap
 		loadObjects();
 		
 		goreLayer.makeGraphic(this.fullWidth, fullHeight, FlxColor.TRANSPARENT, true);
+	}
+	
+	function CheckForRandomOverlays(i: Int, j : Int , tileType:Int) 
+	{
+		if (tileType == 2)
+		{
+			trace("spawn grass");
+			if (FlxG.random.bool(50))
+			{
+				
+				var ot : Int = FlxG.random.int(0, 7);
+				var s : FlxSprite = new FlxSprite();
+				s.loadGraphic(AssetPaths.grass_overlay__png, true, 16, 16, false);
+				s.animation.add("idle", [ot,ot,ot,ot,ot,ot,ot,ot,ot,ot,ot,ot, ot+8], 3, true);
+				s.animation.play("idle",false, false, -1);
+				s.setPosition(i * GameProperties.TileSize, j * GameProperties.TileSize);
+				midTiles.add(s);
+			}
+		}
 	}
 	
 	
@@ -274,6 +296,13 @@ class TiledLevel extends TiledMap
 		{
 			//trace();
 			var e : Enemy_SmashGround = new Enemy_SmashGround(_state);
+			e.setPosition(x, y);
+			allEnemies.add(e);
+		}
+		else if (o.type.toLowerCase() == "runner")
+		{
+			//trace();
+			var e : Enemy_Runner = new Enemy_Runner(_state);
 			e.setPosition(x, y);
 			allEnemies.add(e);
 		}
