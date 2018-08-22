@@ -298,15 +298,15 @@ class Player extends FlxSprite
 		
 		var enemyHit = false;
 		// TODO check if enemy is hit
-		//for(enemy in _playState.level.enemies)
-		//{
-			//if(FlxG.overlap(_hitArea, enemy))
-			//{
-				//enemy.hit(getDamage(), x, y);
-				//enemyHit = true;
-				//_playState.level.spladder(enemy.x + GameProperties.TileSize/2, enemy.y + GameProperties.TileSize/2);
-			//}
-		//}
+		for(enemy in _playState.level.allEnemies)
+		{
+			if(FlxG.overlap(_hitArea, enemy))
+			{
+				enemy.hit(getDamage(), x, y);
+				enemyHit = true;
+				_playState.level.spladder(enemy.x + GameProperties.TileSize/2, enemy.y + GameProperties.TileSize/2);
+			}
+		}
 		//if(!enemyHit)
 		//{
 			//for(npc in _playState.level.npcs)
@@ -329,7 +329,7 @@ class Player extends FlxSprite
     public function getDamage() : Float
     {
         //return GameProperties.PlayerAttackBaseDamage + Math.pow(strength + strengthBonus, 0.25) * 3;
-		return 1;
+		return 100;
     }
 
     //#################################################################
