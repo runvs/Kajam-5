@@ -10,7 +10,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 
-class SmashGroundEnemy extends Enemy
+class Enemy_SmashGround extends Enemy
 {
     //#################################################################
 
@@ -29,6 +29,7 @@ class SmashGroundEnemy extends Enemy
 	var _attacking:Bool;
 	public var _attackingUnderlay : FlxSprite;
 	
+	var AttackComingDownTimer : FlxTimer;
 	
 	
 	//var attackSound : FlxSound;
@@ -85,6 +86,14 @@ class SmashGroundEnemy extends Enemy
 		
     }
 
+	override public function onDeath() 
+	{
+		super.onDeath();
+		
+		if (AttackComingDownTimer != null)
+			AttackComingDownTimer.cancel();
+	}
+
     //#################################################################
 
     public override function update(elapsed)
@@ -136,8 +145,8 @@ class SmashGroundEnemy extends Enemy
 				_attackingUnderlay.alive = true;
 				_attackingUnderlay.scale.set(1, 1);
 				
-				var t : FlxTimer = new FlxTimer();
-				t.start(0.65, function(t: FlxTimer) 
+				AttackComingDownTimer = new FlxTimer();
+				AttackComingDownTimer.start(0.65, function(t: FlxTimer) 
 				{
 					FlxG.camera.shake(0.0025, 0.2);
 					//attackSound.pitch = FlxG.random.float(0.2, 0.4);

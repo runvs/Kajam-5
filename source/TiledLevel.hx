@@ -273,7 +273,7 @@ class TiledLevel extends TiledMap
 		if (o.type.toLowerCase() == "smashground")
 		{
 			//trace();
-			var e : SmashGroundEnemy = new SmashGroundEnemy(_state);
+			var e : Enemy_SmashGround = new Enemy_SmashGround(_state);
 			e.setPosition(x, y);
 			allEnemies.add(e);
 		}

@@ -85,9 +85,14 @@ class Enemy extends FlashSprite
         if(health <= 0.0)
         {
             alive = false;
+			onDeath();
 			trace('I am dead');
         }
     }
 
+	public function onDeath()
+	{
+		
+	}
 	
 }

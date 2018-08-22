@@ -95,6 +95,7 @@ class PlayState extends FlxState
 			e.drawUnderlay();
 		}
 		
+		level.goreLayer.draw();
 		level.allNSCs.draw();
 		level.allEnemies.draw();
 		
