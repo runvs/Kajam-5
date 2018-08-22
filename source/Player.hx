@@ -416,7 +416,7 @@ class Player extends FlxSprite
 		if (f >= healthMax)
 		f = healthMax;
 		
-		FlxTween.color(this, 0.25, FlxColor.GREEN, FlxColor.WHITE, { type : FlxTween.PERSIST} );
+		FlxTween.color(this, 0.25, FlxColor.GREEN, FlxColor.WHITE, { type : FlxTweenType.PERSIST} );
 	}
 
     //#################################################################
@@ -432,7 +432,7 @@ class Player extends FlxSprite
 			//GameProperties.SoundTimeout = GameProperties.SoundTimeoutMax;
 		//}
 
-		FlxTween.color(this, 0.18, FlxColor.RED, FlxColor.WHITE, { type : FlxTween.PERSIST} );
+		FlxTween.color(this, 0.18, FlxColor.RED, FlxColor.WHITE, { type : FlxTweenType.PERSIST} );
 		//_takeDamageSound.pitch = GameProperties.rng.float(0.8, 1.2);
 		//_takeDamageSound.play();
 

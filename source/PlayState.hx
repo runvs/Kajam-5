@@ -86,10 +86,17 @@ class PlayState extends FlxState
 		super.draw();
 		
 		level.baseTiles.draw();
+		level.deadEnemies.draw();
 		
 		player.draw();
+	
+		for (e in level.allEnemies)
+		{
+			e.drawUnderlay();
+		}
 		
 		level.allNSCs.draw();
+		level.allEnemies.draw();
 		
 		level.midTiles.draw();
 		level.topTiles.draw();
@@ -98,7 +105,48 @@ class PlayState extends FlxState
 		
 	}
 	
+	/**
+	 * Function that is called once every frame.
+	 */
+	override public function update(elapsed : Float):Void
+	{
+		super.update(elapsed);
+		MyInput.update();
+		
+		if (!ending)
+		{
+			player.update(elapsed);
+			level.allEnemies.update(elapsed);
+			level.allNSCs.update(elapsed);
+			FlxG.collide(player, level.collisionMap);
+			for (e  in level.allEnemies.getList())
+			{
+				FlxG.collide(e, level.collisionMap);
+			}
+			//FlxG.collide(level.allEnemies, level.collisionMap);
+			
+			
+			CheckForLevelChange();
+		}
+	}	
 	
+	function CheckForLevelChange() 
+	{
+		for (ei  in level.exits)
+		{
+			var exit : Exit = ei;
+			
+			var p : FlxPoint = new FlxPoint(player.x + player.width / 2, player.y + player.height / 2);
+			trace("checking overlap");
+			trace(p);
+			trace(exit.x + " " + exit.y);
+			if (exit.overlapsPoint(p))
+			{
+				switchLevel(exit.target, exit.entryid);
+			}
+			
+		}
+	}
 	public function switchLevel ( target : String, entryid : Int)
 	{
 		ending = true;
@@ -129,43 +177,6 @@ class PlayState extends FlxState
 		}
 		} );
 	}
-	
-	/**
-	 * Function that is called once every frame.
-	 */
-	override public function update(elapsed : Float):Void
-	{
-		super.update(elapsed);
-		MyInput.update();
-		
-		if (!ending)
-		{
-			player.update(elapsed);
-			level.allNSCs.update(elapsed);
-			FlxG.collide(player, level.collisionMap);
-			
-			CheckForLevelChange();
-		}
-	}	
-	
-	function CheckForLevelChange() 
-	{
-		for (ei  in level.exits)
-		{
-			var exit : Exit = ei;
-			
-			var p : FlxPoint = new FlxPoint(player.x + player.width / 2, player.y + player.height / 2);
-			trace("checking overlap");
-			trace(p);
-			trace(exit.x + " " + exit.y);
-			if (exit.overlapsPoint(p))
-			{
-				switchLevel(exit.target, exit.entryid);
-			}
-			
-		}
-	}
-	
 
 	
 	function EndGame() 

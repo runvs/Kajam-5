@@ -18,9 +18,9 @@ class SmashGroundEnemy extends Enemy
 	public var AttackTimer	  : Float;
     public var MaxHealth      : Float;
     public var CurrentHealth  : Float;
-    public var Aggressivity   : Float;
-    
-    private var _playState    : PlayState;
+    public var attackRangeInTiles   : Float;
+    public var accel : Float;
+	
     private var _thinkTime    : Float;
     private var _playerLocked : Bool;
 	
@@ -30,48 +30,49 @@ class SmashGroundEnemy extends Enemy
 	var _attacking:Bool;
 	public var _attackingUnderlay : FlxSprite;
 	
-	var _facing         : Facing;
 	
-	var attackSound : FlxSound;
+	
+	//var attackSound : FlxSound;
 	
 	var colorTween : FlxTween = null;
 	
 
     //#################################################################
 
-    public function new(attackStrength: Float, maxHealth: Float, aggressivity: Float, playState: PlayState)
+    public function new( playState: PlayState)
     {
-        super();
+        super(playState);
 
-        AttackStrength = attackStrength;
+        AttackStrength = 1;
 		AttackTimer	   = 0.1;
-        MaxHealth      = maxHealth;
-        CurrentHealth  = maxHealth;
-        Aggressivity   = aggressivity;
+        MaxHealth      = 1;
+        CurrentHealth  = 1;
+        attackRangeInTiles   = 4.5;
+		accel = 550;
 		_attacking 	   = false;
 
         _playState    = playState;
         _thinkTime    = GameProperties.EnemyMovementRandomWalkThinkTime;
         _playerLocked = false;
 
-        //makeGraphic(16, 16, flixel.util.FlxColor.fromRGB(255, 0, 255));
-		this.loadGraphic(AssetPaths.enemy__png, true, 16, 16);
-		this.animation.add("walk_south", [0, 8, 16,  24], 8);
-		this.animation.add("walk_west",  [1, 9, 17,  25], 8);
-		this.animation.add("walk_north", [2, 10, 18, 26], 8);
-		this.animation.add("walk_east",  [3, 11, 19, 27], 8);
-		this.animation.add("attackUP",   [4, 12], 3, false);
-		this.animation.add("attackDOWN", [12, 20, 28,28,28], 4, false);
-		this.animation.add("idle", [0]);
-		this.animation.play("idle");
+        makeGraphic(16, 16, flixel.util.FlxColor.fromRGB(255, 0, 255));
+		//this.loadGraphic(AssetPaths.enemy__png, true, 16, 16);
+		//this.animation.add("walk_south", [0, 8, 16,  24], 8);
+		//this.animation.add("walk_west",  [1, 9, 17,  25], 8);
+		//this.animation.add("walk_north", [2, 10, 18, 26], 8);
+		//this.animation.add("walk_east",  [3, 11, 19, 27], 8);
+		//this.animation.add("attackUP",   [4, 12], 3, false);
+		//this.animation.add("attackDOWN", [12, 20, 28,28,28], 4, false);
+		//this.animation.add("idle", [0]);
+		//this.animation.play("idle");
 		
 		_facing = Facing.SOUTH;
 		
         setPosition(128, 160);
 		this.color = FlxColor.WHITE;
 
-        drag        = GameProperties.EnemyMovementDrag;
-        maxVelocity = GameProperties.EnemyMovementMaxVelocity;
+        drag.set(250,250);
+        maxVelocity.set(55,55);
 		
 		_distanceToPlayer = 0;
 		_idleTimer = 0;
@@ -84,7 +85,7 @@ class SmashGroundEnemy extends Enemy
 		_attackingUnderlay.offset.set(ofs, ofs);
 		_attackingUnderlay.alpha = 0;
 		
-		attackSound = FlxG.sound.load(AssetPaths.takeHit__ogg, 0.125);
+		//attackSound = FlxG.sound.load(AssetPaths.takeHit__ogg, 0.125);
 		
     }
 
@@ -140,17 +141,17 @@ class SmashGroundEnemy extends Enemy
 				_attackingUnderlay.scale.set(1, 1);
 				
 				var t : FlxTimer = new FlxTimer();
-				t.start(GameProperties.EnemyAttackingTime, function(t: FlxTimer) 
+				t.start(0.65, function(t: FlxTimer) 
 				{
 					FlxG.camera.shake(0.0025, 0.2);
-					attackSound.pitch = FlxG.random.float(0.2, 0.4);
-					attackSound.play();
+					//attackSound.pitch = FlxG.random.float(0.2, 0.4);
+					//attackSound.play();
 					
 					
 					this.animation.play("attackDOWN");
 					_attacking = false; 
 					_idleTimer = 0.2;  
-					AttackTimer = GameProperties.EnemyAttackTimerMax;
+					AttackTimer = 0.45;
 					this.velocity.set();
 					this.acceleration.set();
 					_attackingUnderlay.alpha = 1.0;
@@ -158,7 +159,7 @@ class SmashGroundEnemy extends Enemy
 					FlxTween.tween(_attackingUnderlay.scale, { x:1.5, y:1.5 }, 0.15,{startDelay:0.05});
 				});
 				
-				FlxTween.tween(_attackingUnderlay, { alpha:0.5 }, GameProperties.EnemyAttackingTime*0.9);
+				FlxTween.tween(_attackingUnderlay, { alpha:0.5 }, 0.45*0.9);
 			}
 		}
 	}
@@ -174,7 +175,7 @@ class SmashGroundEnemy extends Enemy
 		var dir : FlxVector = new FlxVector (x -px, y - py);
 		dir = dir.normalize();
 		
-		this.velocity.set(dir.x * 350, dir.y * 350);
+		this.velocity.set(dir.x * accel, dir.y * accel);
 		_idleTimer = 0.35;
 		
 		if (colorTween != null)
@@ -189,7 +190,8 @@ class SmashGroundEnemy extends Enemy
         {
             alive = false;
 			trace('I am dead');
-			_playState.level.spawnCoins(this);
+			// TODO
+			//_playState.level.spawnCoins(this);
 			
 			if (colorTween != null)
 			{
@@ -202,12 +204,13 @@ class SmashGroundEnemy extends Enemy
 
     function doMovement()
     {
+		
         var playerVector = new FlxVector(_playState.player.x, _playState.player.y);
         var enemyVector = new FlxVector(x, y);
 		
 		_distanceToPlayer = playerVector.dist(enemyVector);
 
-        if(_distanceToPlayer <= Aggressivity * GameProperties.TileSize)
+        if(_distanceToPlayer <= attackRangeInTiles * GameProperties.TileSize)
         {
             if(_distanceToPlayer > GameProperties.TileSize)
             {
@@ -215,8 +218,8 @@ class SmashGroundEnemy extends Enemy
 
                 var direction = playerVector.subtractNew(enemyVector).normalize();
                 acceleration.set(
-                    direction.x * GameProperties.EnemyMovementAccelerationScale,
-                    direction.y * GameProperties.EnemyMovementAccelerationScale
+                    direction.x * accel,
+                    direction.y * accel
                 );
             }
             else
@@ -242,8 +245,8 @@ class SmashGroundEnemy extends Enemy
                 _thinkTime += GameProperties.EnemyMovementRandomWalkThinkTime;
                 
                 acceleration.set(
-                    FlxG.random.float(-1.0, 1.0) * GameProperties.EnemyMovementAccelerationScale / 2,
-                    FlxG.random.float(-1.0, 1.0) * GameProperties.EnemyMovementAccelerationScale / 2
+                    FlxG.random.float(-1.0, 1.0) * accel ,
+                    FlxG.random.float(-1.0, 1.0) * accel 
                 );
             }
             else
@@ -253,45 +256,11 @@ class SmashGroundEnemy extends Enemy
         }
     }
 	
-	function doAnimations():Void 
-	{
-		var vx : Float = velocity.x;
-		var vy : Float = velocity.y;
-		
-		if (vx * vx + vy * vy > GameProperties.EnemyMovementMaxVelocity.x * GameProperties.EnemyMovementMaxVelocity.y / 8 / 8)
-		{
-			if(vx > 0)
-			{
-				_facing = Facing.EAST;
-				this.animation.play("walk_east",false);
-			
-			}
-			else if(vx < 0)
-			{
-				_facing = Facing.WEST;
-				this.animation.play("walk_west",false);
-				
-			}
-			else
-			{
-				if (vy > 0) 
-				{
-					_facing = Facing.SOUTH;
-					this.animation.play("walk_south",false);
-				}
-				
-				if (vy < 0) 
-				{
-					_facing = Facing.NORTH;
-					this.animation.play("walk_north",false);
-				}
-			}
-		}
-	}
+
 
     //#################################################################
 
-	public function drawUnderlay()
+	public override function drawUnderlay()
 	{
 		_attackingUnderlay.draw();
 	}

@@ -51,13 +51,12 @@ class TiledLevel extends TiledMap
 	public var exits : FlxTypedGroup<Exit>;
 	public var entries : FlxTypedGroup<Entry>;
 	
-	public var enemies : AdministratedList<Enemy>;
+	public var allEnemies : AdministratedList<Enemy>;
+	public var deadEnemies : FlxSpriteGroup;
 	
 	public var allNSCs : AdministratedList<NPC>;
 	
 	public var goreLayer : FlxSprite;
-	
-	public var deadEnemies : FlxSpriteGroup;
 	
 	private var _state : PlayState;
 	
@@ -80,8 +79,8 @@ class TiledLevel extends TiledMap
 		exits = new FlxTypedGroup<Exit>();
 		entries = new FlxTypedGroup<Entry>();
 		
-		enemies = new AdministratedList<Enemy>();
-		enemies.DestroyCallBack.push( function (e : Enemy ) : Void  { addDeadEnemy(e); } );
+		allEnemies = new AdministratedList<Enemy>();
+		allEnemies.DestroyCallBack.push( function (e : Enemy ) : Void  { addDeadEnemy(e); } );
 		
 		allNSCs = new AdministratedList<NPC>();
 		
@@ -252,6 +251,31 @@ class TiledLevel extends TiledMap
 					}
 				}
 			}
+			else if (layer.name == "enemies")
+			{
+				trace("load enemy layer");
+				for (oi in objectLayer.objects)
+				{
+					var o : TiledObject = oi;
+					loadEnemy(o, objectLayer);
+				}
+			}
+		}
+	}
+	
+	
+	private function loadEnemy(o:TiledObject, g:TiledObjectLayer)
+	{
+		//trace("load object of type " + o.type);
+		var x:Int = o.x;
+		var y:Int = o.y;
+		
+		if (o.type.toLowerCase() == "smashground")
+		{
+			//trace();
+			var e : SmashGroundEnemy = new SmashGroundEnemy(_state);
+			e.setPosition(x, y);
+			allEnemies.add(e);
 		}
 	}
 	

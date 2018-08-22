@@ -27,11 +27,14 @@ class GameProperties
     public static var PlayerAttackBaseDamage      : Float    = 10.0;
     public static var PlayerAttackCooldown        : Float    = 0.45;
 	public static var PlayerHealthMaxDefault      : Float    = 1.0;
+	
 
     // ################################################################
     // # Enemy ########################################################
     // ################################################################
     
+	static public var EnemyMovementRandomWalkThinkTime (default, null): Float  = 1;
+	
     // ################################################################
     // # NPC ##########################################################
     // ################################################################

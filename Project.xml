@@ -30,6 +30,7 @@
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	<classpath name="source/RunvsTools" />
+	<classpath name="source/Enemies" />
 	<classpath name="source/NPCs" />
 	<classpath name="source/NPCs/Impl" />
 	<assets path="assets" />
