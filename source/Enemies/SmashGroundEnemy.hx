@@ -16,9 +16,8 @@ class SmashGroundEnemy extends Enemy
 
     public var AttackStrength : Float;
 	public var AttackTimer	  : Float;
-    public var MaxHealth      : Float;
-    public var CurrentHealth  : Float;
-    public var attackRangeInTiles   : Float;
+    
+    public var aggroRangeInTiles   : Float;
     public var accel : Float;
 	
     private var _thinkTime    : Float;
@@ -26,15 +25,13 @@ class SmashGroundEnemy extends Enemy
 	
 	private var _distanceToPlayer : Float;
 	
-	private var _idleTimer : Float;
+	
 	var _attacking:Bool;
 	public var _attackingUnderlay : FlxSprite;
 	
 	
 	
 	//var attackSound : FlxSound;
-	
-	var colorTween : FlxTween = null;
 	
 
     //#################################################################
@@ -45,9 +42,8 @@ class SmashGroundEnemy extends Enemy
 
         AttackStrength = 1;
 		AttackTimer	   = 0.1;
-        MaxHealth      = 1;
-        CurrentHealth  = 1;
-        attackRangeInTiles   = 4.5;
+        MaxHealth      = health;
+        aggroRangeInTiles   = 4.5;
 		accel = 550;
 		_attacking 	   = false;
 
@@ -75,7 +71,7 @@ class SmashGroundEnemy extends Enemy
         maxVelocity.set(55,55);
 		
 		_distanceToPlayer = 0;
-		_idleTimer = 0;
+		
 		
 		
 		_attackingUnderlay = new FlxSprite(x, y);
@@ -166,40 +162,7 @@ class SmashGroundEnemy extends Enemy
 
     //#################################################################
 
-    public function hit(damage: Float, px:Float, py:Float)
-    {
-        CurrentHealth -= damage;
-        //trace(CurrentHealth);
-		
-		// calculate pushback
-		var dir : FlxVector = new FlxVector (x -px, y - py);
-		dir = dir.normalize();
-		
-		this.velocity.set(dir.x * accel, dir.y * accel);
-		_idleTimer = 0.35;
-		
-		if (colorTween != null)
-		{
-			colorTween.cancel();
-			color = FlxColor.WHITE;
-		}
-		
-		colorTween = FlxTween.color(this, 0.18, FlxColor.RED, FlxColor.WHITE, { type : FlxTween.PERSIST} );
-
-        if(CurrentHealth <= 0.0)
-        {
-            alive = false;
-			trace('I am dead');
-			// TODO
-			//_playState.level.spawnCoins(this);
-			
-			if (colorTween != null)
-			{
-				colorTween.cancel();
-			}			
-        }
-    }
-
+    
     //#################################################################
 
     function doMovement()
@@ -210,7 +173,7 @@ class SmashGroundEnemy extends Enemy
 		
 		_distanceToPlayer = playerVector.dist(enemyVector);
 
-        if(_distanceToPlayer <= attackRangeInTiles * GameProperties.TileSize)
+        if(_distanceToPlayer <= aggroRangeInTiles * GameProperties.TileSize)
         {
             if(_distanceToPlayer > GameProperties.TileSize)
             {
