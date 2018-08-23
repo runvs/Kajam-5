@@ -19,14 +19,14 @@ class Enemy_Runner extends Enemy
     public var aggroRangeInTiles   : Float = 5.5;
     public var accel : Float = 550;
 	
-    private var _thinkTime    : Float;
-    private var _playerLocked : Bool;
+    private var _thinkTime    : Float = 0;
+    private var _playerLocked : Bool = false;
 	
-	private var _distanceToPlayer : Float;
+	private var _distanceToPlayer : Float = 0;
 	private var _chargeTime : Float = _recoverTime;
 	
 	
-	private static var _normalRandomWalkSpeed : Float = 45;
+	private static var _normalRandomWalkSpeed : Float = 58;
 	private static var _normalDrag : Float  = 250;
 	
 	private static var _chargeDrag : Float = 10;
@@ -51,10 +51,6 @@ class Enemy_Runner extends Enemy
         super(playState);
 
         MaxHealth      = health;
-
-        _playState    = playState;
-        _thinkTime    = GameProperties.EnemyMovementRandomWalkThinkTime;
-        _playerLocked = false;
 
         makeGraphic(16, 12);
 		//this.loadGraphic(AssetPaths.enemy__png, true, 16, 16);
@@ -108,7 +104,7 @@ class Enemy_Runner extends Enemy
     {
 		
 		_chargeTime -= FlxG.elapsed;
-		trace(_chargeTime);
+		//trace(_chargeTime);
         var playerVector = new FlxVector(_playState.player.x + _playState.player.width/2.0, _playState.player.y + _playState.player.height/2.0);
         var enemyVector = new FlxVector(x + width/2.0, y + height/2);
 		

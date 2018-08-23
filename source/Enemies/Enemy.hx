@@ -22,6 +22,7 @@ class Enemy extends FlashSprite
 	public function new(s : PlayState) 
 	{
 		super();
+		_playState = s;
 		_idleTimer = 0;
 		
 	}

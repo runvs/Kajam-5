@@ -53,6 +53,7 @@ class TiledLevel extends TiledMap
 	
 	public var allEnemies : AdministratedList<Enemy>;
 	public var deadEnemies : FlxSpriteGroup;
+	public var allEnemyShots : AdministratedList<EnemyShot>;
 	
 	public var allNSCs : AdministratedList<NPC>;
 	
@@ -81,6 +82,8 @@ class TiledLevel extends TiledMap
 		
 		allEnemies = new AdministratedList<Enemy>();
 		allEnemies.DestroyCallBack.push( function (e : Enemy ) : Void  { addDeadEnemy(e); } );
+		
+		allEnemyShots = new  AdministratedList<EnemyShot>();
 		
 		allNSCs = new AdministratedList<NPC>();
 		
@@ -161,7 +164,7 @@ class TiledLevel extends TiledMap
 	{
 		if (tileType == 2)
 		{
-			trace("spawn grass");
+			//trace("spawn grass");
 			if (FlxG.random.bool(50))
 			{
 				
@@ -305,6 +308,17 @@ class TiledLevel extends TiledMap
 			var e : Enemy_Runner = new Enemy_Runner(_state);
 			e.setPosition(x, y);
 			allEnemies.add(e);
+		}
+		else if (o.type.toLowerCase() == "shooter")
+		{
+			//trace();
+			var e : Enemy_Shooter = new Enemy_Shooter(_state);
+			e.setPosition(x, y);
+			allEnemies.add(e);
+		}
+		else
+		{
+			trace("ERROR: unknown enemy Type");
 		}
 	}
 	

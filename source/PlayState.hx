@@ -102,6 +102,7 @@ class PlayState extends FlxState
 		level.allNSCs.draw();
 		level.allEnemies.draw();
 		
+		level.allEnemyShots.draw();
 
 		level.topTiles.draw();
 		
@@ -123,12 +124,19 @@ class PlayState extends FlxState
 			player.update(elapsed);
 			level.allEnemies.update(elapsed);
 			level.allNSCs.update(elapsed);
+			level.allEnemyShots.update(elapsed);
 			FlxG.collide(player, level.collisionMap);
 			for (e  in level.allEnemies.getList())
 			{
 				FlxG.collide(e, level.collisionMap);
 			}
-			//FlxG.collide(level.allEnemies, level.collisionMap);
+			for (s in level.allEnemyShots)
+			{
+				if (FlxG.overlap(s, level.collisionMap))
+				{
+					s.alive = false;
+				}
+			}
 			
 			
 			CheckForLevelChange();
@@ -158,13 +166,16 @@ class PlayState extends FlxState
 		
 		trace("switch level: " + target);
 		
+		for (s in level.allEnemyShots)
+			s.alive = false;
+		
 		FlxTween.tween(overlay, { alpha: 1 }, 0.75, { onComplete : 
 		function (t) : Void 
 		{ 
 			var newLevel : TiledLevel = world.getLevelByName(target);
-			if (level == null) 
+			if (newLevel == null) 
 			{
-				trace ("warning: Level not found!!");
+				trace ("warning: Level: " + target + " not found!!");
 				return;
 			}
 			level =  newLevel;

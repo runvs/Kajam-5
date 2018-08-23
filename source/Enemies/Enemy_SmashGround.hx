@@ -47,8 +47,7 @@ class Enemy_SmashGround extends Enemy
         aggroRangeInTiles   = 4.5;
 		accel = 550;
 		_attacking 	   = false;
-
-        _playState    = playState;
+		
         _thinkTime    = GameProperties.EnemyMovementRandomWalkThinkTime;
         _playerLocked = false;
 
