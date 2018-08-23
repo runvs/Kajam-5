@@ -359,6 +359,13 @@ class TiledLevel extends TiledMap
 				allNSCs.add(n);
 				trace("add nsc guard '" +  n.objectName + "'");
 			}
+			if (nsctype.toLowerCase() == "smith")
+			{
+				var n : NPC_Smith = new NPC_Smith(_state);
+				n.setPosition(x, y);
+				n.objectName = o.name;
+				allNSCs.add(n);
+			}
 		}
 		
 	}
