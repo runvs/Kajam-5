@@ -14,21 +14,31 @@ class Enemy_Runner extends Enemy
 {
     //#################################################################
 
-	public var AttackTimer : Float;
+	public var AttackTimer : Float = 0.1;
     
-    public var aggroRangeInTiles   : Float;
-    public var accel : Float;
+    public var aggroRangeInTiles   : Float = 5.5;
+    public var accel : Float = 550;
 	
     private var _thinkTime    : Float;
     private var _playerLocked : Bool;
 	
 	private var _distanceToPlayer : Float;
+	private var _chargeTime : Float = _recoverTime;
 	
 	
-	var _attacking:Bool;
-	public var _attackingUnderlay : FlxSprite;
+	private static var _normalRandomWalkSpeed : Float = 45;
+	private static var _normalDrag : Float  = 250;
 	
-	var AttackComingDownTimer : FlxTimer;
+	private static var _chargeDrag : Float = 10;
+	private static var _chargeSpeed : Float = 180;
+	
+	
+	private static var _timeInChargeMax : Float = -0.6;
+	private static var _recoverTime : Float = _timeInChargeMax -  1.25;
+	
+	
+	var dashRangeInTiles : Float  = 3.0;
+	
 	
 	
 	//var attackSound : FlxSound;
@@ -40,17 +50,13 @@ class Enemy_Runner extends Enemy
     {
         super(playState);
 
-        AttackTimer	   = 0.1;
         MaxHealth      = health;
-        aggroRangeInTiles   = 4.5;
-		accel = 550;
-		_attacking 	   = false;
 
         _playState    = playState;
         _thinkTime    = GameProperties.EnemyMovementRandomWalkThinkTime;
         _playerLocked = false;
 
-        makeGraphic(16, 12, flixel.util.FlxColor.fromRGB(255, 0, 0));
+        makeGraphic(16, 12);
 		//this.loadGraphic(AssetPaths.enemy__png, true, 16, 16);
 		//this.animation.add("walk_south", [0, 8, 16,  24], 8);
 		//this.animation.add("walk_west",  [1, 9, 17,  25], 8);
@@ -65,19 +71,14 @@ class Enemy_Runner extends Enemy
 		
 		this.color = FlxColor.WHITE;
 
-        drag.set(250,250);
-        maxVelocity.set(55,55);
+        drag.set(_normalDrag,_normalDrag);
+        maxVelocity.set(_normalRandomWalkSpeed,_normalRandomWalkSpeed);
 		
 		_distanceToPlayer = 0;
 		
 		
 		
-		_attackingUnderlay = new FlxSprite(x, y);
-		var sf : Float = 3.5;
-		_attackingUnderlay.makeGraphic(Std.int(GameProperties.TileSize * sf), Std.int(GameProperties.TileSize * sf));
-		var ofs : Float = -GameProperties.TileSize * 0.5 + GameProperties.TileSize * sf * 0.5;
-		_attackingUnderlay.offset.set(ofs, ofs);
-		_attackingUnderlay.alpha = 0;
+		
 		
 		//attackSound = FlxG.sound.load(AssetPaths.takeHit__ogg, 0.125);
 		
@@ -87,8 +88,6 @@ class Enemy_Runner extends Enemy
 	{
 		super.onDeath();
 		
-		if (AttackComingDownTimer != null)
-			AttackComingDownTimer.cancel();
 	}
 
     //#################################################################
@@ -96,133 +95,135 @@ class Enemy_Runner extends Enemy
     public override function update(elapsed)
     {
 		super.update(elapsed);
-		_attackingUnderlay.setPosition(x, y);
 		
-		if (_attacking)
-		{
-			velocity.set();
-			acceleration.set();
-			immovable = true;
-			
-		}
-		else
-		{
-			
-			immovable = false;
-			_idleTimer -= elapsed;
-			AttackTimer -= elapsed;
-			
-			if (_idleTimer <= 0)
-			{
-				doMovement();
-				
-				doAnimations();
-				
-				
-				
-				if (_distanceToPlayer <= GameProperties.TileSize * 2.2)
-				{
-					Attack();	
-				}
-			}
-			
-			
-		}
-        
+		doMovement();
+		doAnimations();
+		
+		
     }
 	
-	function Attack() 
-	{
-		if (!_attacking)
-		{
-			if (AttackTimer <= 0)
-			{
-				_attacking = true;
-				this.animation.play("attackUP", true);
-				_attackingUnderlay.alive = true;
-				_attackingUnderlay.scale.set(1, 1);
-				
-				AttackComingDownTimer = new FlxTimer();
-				AttackComingDownTimer.start(0.65, function(t: FlxTimer) 
-				{
-					FlxG.camera.shake(0.0025, 0.2);
-					//attackSound.pitch = FlxG.random.float(0.2, 0.4);
-					//attackSound.play();
-					
-					
-					this.animation.play("attackDOWN");
-					_attacking = false; 
-					_idleTimer = 0.2;  
-					AttackTimer = 0.45;
-					this.velocity.set();
-					this.acceleration.set();
-					_attackingUnderlay.alpha = 1.0;
-					FlxTween.tween(_attackingUnderlay, { alpha:0.0 }, 0.2);
-					FlxTween.tween(_attackingUnderlay.scale, { x:1.5, y:1.5 }, 0.15,{startDelay:0.05});
-				});
-				
-				FlxTween.tween(_attackingUnderlay, { alpha:0.5 }, 0.45*0.9);
-			}
-		}
-	}
-
-    //#################################################################
-
-    
     //#################################################################
 
     function doMovement()
     {
 		
-        var playerVector = new FlxVector(_playState.player.x, _playState.player.y);
-        var enemyVector = new FlxVector(x, y);
+		_chargeTime -= FlxG.elapsed;
+		trace(_chargeTime);
+        var playerVector = new FlxVector(_playState.player.x + _playState.player.width/2.0, _playState.player.y + _playState.player.height/2.0);
+        var enemyVector = new FlxVector(x + width/2.0, y + height/2);
 		
 		_distanceToPlayer = playerVector.dist(enemyVector);
-
-        if(_distanceToPlayer <= aggroRangeInTiles * GameProperties.TileSize)
-        {
-            if(_distanceToPlayer > GameProperties.TileSize)
-            {
-                _playerLocked = true;
-
-                var direction = playerVector.subtractNew(enemyVector).normalize();
-                acceleration.set(
-                    direction.x * accel,
-                    direction.y * accel
-                );
-            }
-            else
-            {
-                acceleration.set(0, 0);
-            }
-        }
-        else
-        {
-            if(_playerLocked)
-            {
-                acceleration.set(0, 0);
-                _playerLocked = false;
-            }
-            else
-            {
-                acceleration.set(acceleration.x / 10, acceleration.y / 10);
-            }
-
-            if(_thinkTime <= 0.0)
-            {
-                // Decide for a new direction to walk to
-                _thinkTime += GameProperties.EnemyMovementRandomWalkThinkTime;
-                
-                acceleration.set(
-                    FlxG.random.float(-1.0, 1.0) * accel ,
-                    FlxG.random.float(-1.0, 1.0) * accel 
-                );
-            }
-            else
-            {
-                _thinkTime -= FlxG.elapsed;
-            }
-        }
+		var direction :FlxVector = playerVector.subtractNew(enemyVector).normalize();
+		
+		if (!_playerLocked) 
+		{
+			if ( _chargeTime <= _recoverTime)
+			{
+				color = FlxColor.WHITE;
+				maxVelocity.set(_normalRandomWalkSpeed, _normalRandomWalkSpeed);
+				_thinkTime -= FlxG.elapsed;
+				if (_thinkTime <= 0)
+				{
+					_thinkTime = GameProperties.EnemyMovementRandomWalkThinkTime;
+					velocity.set();
+					acceleration.set(
+						FlxG.random.float(-1.0, 1.0) * accel,
+						FlxG.random.float(-1.0, 1.0) * accel 
+					);
+				}
+				
+				if (_distanceToPlayer <= aggroRangeInTiles * GameProperties.TileSize)
+				{
+					
+					_thinkTime = GameProperties.EnemyMovementRandomWalkThinkTime;
+					_playerLocked = true;
+					velocity.set(direction.x * _normalRandomWalkSpeed, direction.y*_normalRandomWalkSpeed);
+				}
+			}
+			else
+			{
+				color = FlxColor.BROWN;
+				velocity.set();
+				acceleration.set();
+			}
+		}
+		else
+		{
+			// player is locked
+			
+			
+			
+			
+			
+			
+			// 
+			if (_chargeTime < _timeInChargeMax)
+			{	
+				// Trigger: start charging process
+				if (_distanceToPlayer <= dashRangeInTiles * GameProperties.TileSize)
+				{
+					color = FlxColor.BLUE;
+					_chargeTime = 0.75; 
+					this.velocity.set();
+					this.acceleration.set();
+				
+				}
+				// Trigger: loose track of player 
+				if (_distanceToPlayer >= aggroRangeInTiles * 1.2 * GameProperties.TileSize)
+				{
+					_playerLocked = false;
+					maxVelocity.set(_normalRandomWalkSpeed, _normalRandomWalkSpeed);
+					this.velocity.set();
+					this.acceleration.set();
+				}
+				else
+				{
+					color = FlxColor.RED;
+					acceleration.set(
+						direction.x * accel,
+						direction.y * accel
+					);
+				}
+			}
+			else if (_chargeTime <= 0)
+			{
+				color = FlxColor.GREEN;
+				
+				
+				// trigger: back to randomWalk
+				if (_chargeTime - FlxG.elapsed < _timeInChargeMax)
+				{
+					_playerLocked = false;
+					color = FlxColor.BROWN;
+					maxVelocity.set(_normalRandomWalkSpeed, _normalRandomWalkSpeed);
+					drag.set(_normalDrag, _normalDrag);
+					velocity.set();
+					acceleration.set();
+				}
+				
+				
+			}
+			else 	// charge time > 0
+			{
+				
+				color = FlxColor.YELLOW;
+				// charging and dont move
+				velocity.set();
+				acceleration.set();
+				// trigger: Charge 
+				if (_chargeTime - FlxG.elapsed <= 0)
+				{
+					maxVelocity.set(_chargeSpeed, _chargeSpeed);
+					this.drag.set(_chargeDrag, _chargeDrag);
+					this.velocity.set(direction.x * _chargeSpeed, direction.y * _chargeSpeed);
+					
+				}
+				
+			}
+			
+		}
+		
+		
     }
 	
 
@@ -231,7 +232,7 @@ class Enemy_Runner extends Enemy
 
 	public override function drawUnderlay()
 	{
-		_attackingUnderlay.draw();
+
 	}
 	
     public override function draw()
