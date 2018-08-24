@@ -106,6 +106,8 @@ class TiledLevel extends TiledMap
 		var wit : Int = this.width; 
 		var hit : Int = this.height; 
 		
+		FlxG.worldBounds.set(0, 0, this.fullWidth, fullHeight);
+		
 		FlxG.camera.setScrollBounds(0, this.fullWidth, 0, this.fullHeight);
 		
 		// Load Tile Maps

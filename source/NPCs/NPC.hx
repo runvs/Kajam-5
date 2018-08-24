@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.text.FlxText;
+import flixel.util.FlxColor;
 
 /**
  * ...
@@ -30,7 +31,7 @@ class NPC extends FlxSprite
 		this.immovable = true;
 		
 		_speechText = new FlxText(0, 0, 256, "");
-		_speechText.setBorderStyle(FlxTextBorderStyle.OUTLINE);
+		_speechText.setBorderStyle(FlxTextBorderStyle.OUTLINE,FlxColor.BLACK,1,1);
 		
 		age += FlxG.random.float(0, 1.5);
 	}
@@ -78,7 +79,7 @@ class NPC extends FlxSprite
 	
 	public function speak (str: String, time : Float = 1.5) : Void
 	{
-		_speechText.setPosition(x + width + 4, y - 12);
+		_speechText.setPosition(x + width +2, y - 12);
 		_speechText.text = str;
 		_speechDisplayTimer = time;
 	}
