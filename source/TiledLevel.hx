@@ -43,6 +43,8 @@ class TiledLevel extends TiledMap
 	public var midTiles:FlxGroup;
 	public var topTiles:FlxGroup;
 	
+	public var allShrines : FlxTypedGroup<Shrine>;
+	
 	// Array of Int used for collision
 	var collisionArray : Array<Int>;
 	// final collisionMap with refined collisions
@@ -94,6 +96,7 @@ class TiledLevel extends TiledMap
 	
 		collisionArray = new Array<Int>();
 		
+		allShrines = new FlxTypedGroup<Shrine>();
 			
 		
 		//trace(this.width);
@@ -274,6 +277,14 @@ class TiledLevel extends TiledMap
 					{
 						loadExit(o, objectLayer);
 					}
+					else if (o.type.toLowerCase() == "shrine")
+					{
+						loadShrine(o, objectLayer);
+					}
+					else
+					{
+						trace("Warning: unknown object: " + o.type + " with name: " + o.name);
+					}
 				}
 			}
 			else if (layer.name == "enemies")
@@ -285,6 +296,22 @@ class TiledLevel extends TiledMap
 					loadEnemy(o, objectLayer);
 				}
 			}
+		}
+	}
+	
+	function loadShrine(o:TiledObject, g:TiledObjectLayer) 
+	{
+		//trace("load object of type " + o.type);
+		var x:Int = o.x;
+		var y:Int = o.y;
+		
+		var shrineID = o.properties.get("id");
+		if (shrineID != null)
+		{
+			var id : Int = Std.parseInt(shrineID);		
+			var s :Shrine= new Shrine(x, y, id);
+			allShrines.add(s);
+			collisionMap.add(s);
 		}
 	}
 	

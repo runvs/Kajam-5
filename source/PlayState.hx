@@ -87,6 +87,7 @@ class PlayState extends FlxState
 		
 		level.baseTiles.draw();
 		level.midTiles.draw();
+		level.allShrines.draw();
 		level.deadEnemies.draw();
 		
 		level.goreLayer.draw();
@@ -105,6 +106,11 @@ class PlayState extends FlxState
 		level.allEnemyShots.draw();
 
 		level.topTiles.draw();
+		
+		for (s in level.allShrines)
+		{
+			s.drawOverlay();
+		}
 		
 		overlay.draw();
 		
@@ -125,6 +131,7 @@ class PlayState extends FlxState
 			level.allEnemies.update(elapsed);
 			level.allNSCs.update(elapsed);
 			level.allEnemyShots.update(elapsed);
+			level.allShrines.update(elapsed);
 			FlxG.collide(player, level.collisionMap);
 			for (e  in level.allEnemies.getList())
 			{
@@ -137,6 +144,8 @@ class PlayState extends FlxState
 					s.alive = false;
 				}
 			}
+			
+			
 			
 			
 			CheckForLevelChange();

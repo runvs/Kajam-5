@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="35" height="15" tilewidth="16" tileheight="16" nextobjectid="97">
+<map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="35" height="15" tilewidth="16" tileheight="16" nextobjectid="99">
  <tileset firstgid="1" name="tileset.png" tilewidth="16" tileheight="16" tilecount="112" columns="28">
   <image source="../images/tileset.png" width="448" height="64"/>
  </tileset>
@@ -28,7 +28,7 @@
   </data>
  </layer>
  <objectgroup name="objects">
-  <object id="90" name="entry_bot" type="entry" x="112" y="208" width="16" height="16">
+  <object id="90" name="entry_bot" type="entry" x="232" y="208" width="16" height="16">
    <properties>
     <property name="entryid" value="1"/>
    </properties>
@@ -37,6 +37,11 @@
    <properties>
     <property name="entryid" value="1"/>
     <property name="target" value="wimborne.tmx"/>
+   </properties>
+  </object>
+  <object id="97" name="Shrine" type="shrine" x="448" y="144" width="32" height="32">
+   <properties>
+    <property name="id" value="1"/>
    </properties>
   </object>
  </objectgroup>
