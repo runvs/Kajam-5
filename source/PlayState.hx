@@ -20,6 +20,8 @@ class PlayState extends FlxState
 	public var backgroundSprite : FlxSprite;
 	public var overlay : FlxSprite;
 	private var ending : Bool;
+	var lastEntryID:Int;
+	var lastTarget:String;
 	
 	
 	public var player : Player;
@@ -86,6 +88,7 @@ class PlayState extends FlxState
 		super.draw();
 		
 		level.baseTiles.draw();
+		level.allTraps.draw();
 		level.midTiles.draw();
 		level.allShrines.draw();
 		level.deadEnemies.draw();
@@ -146,11 +149,18 @@ class PlayState extends FlxState
 			}
 			
 			
+			CheckTraps();
+			
 			
 			
 			CheckForLevelChange();
 		}
 	}	
+	
+	function RestartLevel() 
+	{
+		switchLevel(lastTarget, lastEntryID);
+	}
 	
 	function CheckForLevelChange() 
 	{
@@ -173,7 +183,8 @@ class PlayState extends FlxState
 	{
 		ending = true;
 		
-		trace("switch level: " + target);
+		
+		//trace("switch level: " + target);
 		
 		for (s in level.allEnemyShots)
 			s.alive = false;
@@ -196,7 +207,9 @@ class PlayState extends FlxState
 				player.setPosition(0, 0);
 				trace("warning: no entry found!");
 			}
-			
+		
+			lastTarget = target;
+			lastEntryID = entryid;
 			ending = false; 
 			overlay.alpha = 0; 
 		}
@@ -218,6 +231,16 @@ class PlayState extends FlxState
 			t.start(1,function(t:FlxTimer): Void {MenuState.setNewScore(0); FlxG.switchState(new MenuState()); } );
 		}
 		
+	}
+	
+	function CheckTraps():Void 
+	{
+		if (player.timeSinceDash <= 0.2)
+			return;
+		if (FlxG.overlap(player, level.allTraps))
+		{
+			RestartLevel();
+		}
 	}
 	
 }

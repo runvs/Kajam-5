@@ -59,6 +59,8 @@ class TiledLevel extends TiledMap
 	
 	public var allNSCs : AdministratedList<NPC>;
 	
+	public var allTraps : FlxSpriteGroup;
+	
 	public var goreLayer : FlxSprite;
 	
 	private var _state : PlayState;
@@ -86,7 +88,7 @@ class TiledLevel extends TiledMap
 		allEnemies.DestroyCallBack.push( function (e : Enemy ) : Void  { addDeadEnemy(e); } );
 		
 		allEnemyShots = new  AdministratedList<EnemyShot>();
-		
+		allTraps = new FlxSpriteGroup();
 		allNSCs = new AdministratedList<NPC>();
 		
 		tileSet = tilesets["tileset.png"];
@@ -287,6 +289,14 @@ class TiledLevel extends TiledMap
 					}
 				}
 			}
+			else if (layer.name == "traps")
+			{
+				for (oi in objectLayer.objects)
+				{
+					var o : TiledObject = oi;
+					loadTrap(o,objectLayer);
+				}
+			}
 			else if (layer.name == "enemies")
 			{
 				trace("load enemy layer");
@@ -297,6 +307,19 @@ class TiledLevel extends TiledMap
 				}
 			}
 		}
+	}
+	
+	function loadTrap(o:TiledObject, objectLayer:TiledObjectLayer) 
+	{
+		var x:Int = o.x;
+		var y:Int = o.y;
+		
+		var w = o.width;
+		var h = o.height;
+		
+		var s : FlxSprite = new FlxSprite(x, y);
+		s.makeGraphic(w, h, FlxColor.BLACK);
+		allTraps.add(s);
 	}
 	
 	function loadShrine(o:TiledObject, g:TiledObjectLayer) 

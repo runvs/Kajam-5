@@ -31,6 +31,7 @@ class Player extends FlxSprite
 	var _dashSprite1    : FlxSprite;
 	var _dashSprite2    : FlxSprite;
 	var _dashSprite3    : FlxSprite;
+	var _dashSprite4    : FlxSprite;
 
 	var _playState      : PlayState;
 
@@ -51,6 +52,7 @@ class Player extends FlxSprite
 	var dustTime : Float = 0;
 	
 	var _slashSprite     :FlxSprite;
+	public var timeSinceDash : Float = 0; 
 	
 	
     //#################################################################
@@ -75,6 +77,9 @@ class Player extends FlxSprite
 		
 		_dashSprite3 = new FlxSprite();
 		_dashSprite3.makeGraphic(16, 16);
+		
+		_dashSprite4 = new FlxSprite();
+		_dashSprite4.makeGraphic(16, 16);
 		
 		dustparticles = new MyParticleSystem();
 		dustparticles.mySize = 500;
@@ -128,6 +133,7 @@ class Player extends FlxSprite
     public override function update(elapsed: Float)
     {
         super.update(elapsed);
+		timeSinceDash += elapsed;
 		//dustparticles.update(elapsed);
 		_slashSprite.update(elapsed);
 		_slashSprite.setPosition(_hitArea.x, _hitArea.y);
@@ -135,7 +141,7 @@ class Player extends FlxSprite
 		_dashSprite1.update(elapsed);
 		_dashSprite2.update(elapsed);
 		_dashSprite3.update(elapsed);
-
+		_dashSprite4.update(elapsed);
 		switch _facing
 		{
 			case Facing.EAST:
@@ -341,6 +347,8 @@ class Player extends FlxSprite
 		var lastPosition    = new FlxVector(x, y);
 		var initialPosition = new FlxVector(x, y);
 
+		timeSinceDash = - 0.2;
+		
 		//if(GameProperties.SoundTimeout <= 0.0)
 		//{
 			//_dashSound.play();	
@@ -365,18 +373,19 @@ class Player extends FlxSprite
 
 		var dashSprite2Position = lastPosition.subtractNew(initialPosition).scale(0.33);
 		var dashSprite3Position = lastPosition.subtractNew(initialPosition).scale(0.66);
-		
+		var dashSprite4Position = lastPosition.subtractNew(initialPosition).scale(1.0);
 		_dashSprite1.setPosition(initialPosition.x, initialPosition.y);
 		_dashSprite2.setPosition(initialPosition.x + dashSprite2Position.x, initialPosition.y + dashSprite2Position.y);
 		_dashSprite3.setPosition(initialPosition.x + dashSprite3Position.x, initialPosition.y + dashSprite3Position.y);
-
+		_dashSprite4.setPosition(initialPosition.x + dashSprite4Position.x, initialPosition.y + dashSprite4Position.y);
 		_dashSprite1.alpha = 0.9;
 		_dashSprite2.alpha = 0.8;
 		_dashSprite3.alpha = 0.7;
-
+		_dashSprite4.alpha = 0.6;
 		FlxTween.tween(_dashSprite1, { alpha: 0 }, 0.3);
 		FlxTween.tween(_dashSprite2, { alpha: 0 }, 0.4);
 		FlxTween.tween(_dashSprite3, { alpha: 0 }, 0.5);
+		FlxTween.tween(_dashSprite4, { alpha: 0 }, 0.55);
 	}
 
     //#################################################################
@@ -388,7 +397,7 @@ class Player extends FlxSprite
 		_dashSprite1.draw();
 		_dashSprite2.draw();
 		_dashSprite3.draw();
-		
+		_dashSprite4.draw();
 		super.draw();
 
 		_hitArea.draw();
