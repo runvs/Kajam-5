@@ -20,6 +20,7 @@ class NPC extends FlxSprite
 	{
 		super();
 		_state = s;
+		this.immovable = true;
 		
 	}
 	

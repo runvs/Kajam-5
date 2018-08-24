@@ -361,12 +361,12 @@ class Player extends FlxSprite
 
 			setPosition(x + _dashDir.x * stepSize, y + _dashDir.y * stepSize);
 
-			// TODO check if player is not stuck in a wall
-			//if(FlxG.overlap(this, _playState.level.collisionMap))
-			//{
-				//setPosition(lastPosition.x, lastPosition.y);
-				//break;
-			//}
+			 
+			if(FlxG.overlap(this, _playState.level.collisionMap))
+			{
+				setPosition(lastPosition.x, lastPosition.y);
+				break;
+			}
 //
 			currentStep += stepSize;
 		}

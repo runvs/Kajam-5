@@ -135,7 +135,14 @@ class PlayState extends FlxState
 			level.allNSCs.update(elapsed);
 			level.allEnemyShots.update(elapsed);
 			level.allShrines.update(elapsed);
+			
 			FlxG.collide(player, level.collisionMap);
+			
+			for (n in level.allNSCs.getList())
+			{
+				FlxG.collide(player, n);
+			}
+			
 			for (e  in level.allEnemies.getList())
 			{
 				FlxG.collide(e, level.collisionMap);
