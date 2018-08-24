@@ -11,6 +11,8 @@ import flixel.util.FlxTimer;
 class NPC_Guard extends NPCIdle
 {
 
+	
+	
 	public function new(s:PlayState) 
 	{
 		super(s);
@@ -28,6 +30,15 @@ class NPC_Guard extends NPCIdle
 	
 	override public function onCloseRange():Void 
 	{
-		//trace("close to guard");
+		if ( _speechDisplayTimer <= GameProperties.NPCSpeechFadeOutTime)
+		{
+			var i : Int = FlxG.random.int(0, 2);
+			if (i == 0)
+				speak("The city is safe!", 2);
+			else if (i == 1)
+				speak("pass on!", 2);
+			else
+				speak("law and order!", 2);
+		}
 	}
 }

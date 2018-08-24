@@ -110,9 +110,14 @@ class PlayState extends FlxState
 
 		level.topTiles.draw();
 		
+		
 		for (s in level.allShrines)
 		{
 			s.drawOverlay();
+		}
+		for (n in level.allNSCs)
+		{
+			n.drawOverlay();
 		}
 		
 		overlay.draw();
