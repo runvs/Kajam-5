@@ -166,6 +166,7 @@ class Player extends FlxSprite
 				animation.play("walk_north", false);
 				_slashSprite.angle = 0;
 				
+
 			case Facing.SOUTH:
 				_hitArea.setPosition(x, y + GameProperties.TileSize);
 				animation.play("walk_south", false);
@@ -247,6 +248,8 @@ class Player extends FlxSprite
 		var vy : Float = MyInput.yVal * _accelFactor;
 		var l : Float = Math.sqrt(vx * vx + vy * vy);
 
+		
+		
 		if (l >= 25)
 		{
 			_dashDir.set(vx / l, vy / l);
@@ -271,6 +274,11 @@ class Player extends FlxSprite
 		}
 		acceleration.set(vx, vy);
 		
+		if (acceleration.x > 0 && velocity.x < 0 || acceleration.x < 0 && velocity.x > 0)
+			velocity.x *= 0.3;
+		if (acceleration.y > 0 && velocity.y < 0 || acceleration.y < 0 && velocity.y > 0)
+			velocity.y *= 0.3;
+			
 		if (_dashCooldown <= 0)
 		{
 			if (MyInput.DashButtonJustPressed)

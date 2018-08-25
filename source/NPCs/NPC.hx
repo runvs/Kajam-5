@@ -22,6 +22,8 @@ class NPC extends FlxSprite
 	private var _speechText : FlxText;
 	private var _speechDisplayTimer : Float = -1;
 	
+	public  var overrideMessage: String = "";
+	
 	private var age : Float = 0;
 	
 	public function new(s : PlayState) 
@@ -79,8 +81,9 @@ class NPC extends FlxSprite
 	
 	public function speak (str: String, time : Float = 1.5) : Void
 	{
+		
 		_speechText.setPosition(x + width +2, y - 12);
-		_speechText.text = str;
+		_speechText.text = (overrideMessage == "") ?  str : overrideMessage;
 		_speechDisplayTimer = time;
 	}
 	
