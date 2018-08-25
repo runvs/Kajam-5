@@ -30,15 +30,16 @@ class Item extends FlxSprite
 	// ################################################################
 	// # Swords #######################################################
 	// ################################################################
-	public static GetShortSword() : Item
+	public static function GetShortSword() : Item
 	{
 		var item  = new Item();
-		item.name = 'ShortSword';
-		item.type = ItemType.Sword;
+		item.name = 'Short Sword';
+		item.type = ItemType.SWORD;
+		item.loadGraphic(AssetPaths.shortsword__png, true, 16, 16);
 
 		item.evasionMultiplier      = 1.1;
-		item.walkSpeedMultiplier    = 1.1;
-		item.dashDistanceMultiplier = 0.8;
+		item.walkSpeedMultiplier    = 5.1;
+		item.dashDistanceMultiplier = 5.8;
 		item.dashCooldownMultiplier = 1.0;
 
 		item.damageMultiplier       = 1.0;
@@ -49,11 +50,12 @@ class Item extends FlxSprite
 		return item;
 	}
 
-	public static GetDagger() : Item
+	public static function GetDagger() : Item
 	{
 		var item = new Item();
 		item.name = 'Dagger';
-		item.type = ItemType.Sword;
+		item.type = ItemType.SWORD;
+		item.loadGraphic(AssetPaths.dagger__png, true, 16, 16);
 
 		item.evasionMultiplier      = 1.5;
 		item.walkSpeedMultiplier    = 1.1;
@@ -68,11 +70,12 @@ class Item extends FlxSprite
 		return item;
 	}
 
-	public static GetClaymore() : Item
+	public static function GetClaymore() : Item
 	{
 		var item = new Item();
 		item.name = 'Claymore';
-		item.type = ItemType.Sword;
+		item.type = ItemType.SWORD;
+		item.loadGraphic(AssetPaths.claymore__png, true, 16, 16);
 
 		item.evasionMultiplier      = 0.9;
 		item.walkSpeedMultiplier    = 0.9;
@@ -87,11 +90,12 @@ class Item extends FlxSprite
 		return item;
 	}
 
-	public static GetKatana() : Item
+	public static function GetKatana() : Item
 	{
 		var item = new Item();
 		item.name = 'Katana';
-		item.type = ItemType.Sword;
+		item.type = ItemType.SWORD;
+		item.loadGraphic(AssetPaths.katana__png, true, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;
@@ -109,11 +113,12 @@ class Item extends FlxSprite
 	// ################################################################
 	// # Armor ########################################################
 	// ################################################################
-	public static GetRobe() : Item
+	public static function GetRobe() : Item
 	{
 		var item = new Item();
 		item.name = 'Robe';
-		item.type = ItemType.Armor;
+		item.type = ItemType.ARMOR;
+		item.loadGraphic(AssetPaths.robe__png, true, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;
@@ -128,11 +133,12 @@ class Item extends FlxSprite
 		return item;
 	}
 
-	public static GetLeatherArmor() : Item
+	public static function GetLeatherArmor() : Item
 	{
 		var item = new Item();
 		item.name = 'Leather Armor';
-		item.type = ItemType.Armor;
+		item.type = ItemType.ARMOR;
+		item.loadGraphic(AssetPaths.leatherarmor__png, true, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;
@@ -147,11 +153,12 @@ class Item extends FlxSprite
 		return item;
 	}
 
-	public static GetChainMail() : Item
+	public static function GetChainMail() : Item
 	{
 		var item = new Item();
 		item.name = 'Chain Mail';
-		item.type = ItemType.Armor;
+		item.type = ItemType.ARMOR;
+		item.loadGraphic(AssetPaths.chainmail__png, true, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;
@@ -166,11 +173,12 @@ class Item extends FlxSprite
 		return item;
 	}
 
-	public static GetPlateMail() : Item
+	public static function GetPlateMail() : Item
 	{
 		var item = new Item();
 		item.name = 'Plate Mail';
-		item.type = ItemType.Armor;
+		item.type = ItemType.ARMOR;
+		item.loadGraphic(AssetPaths.platemail__png, true, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;
@@ -188,11 +196,12 @@ class Item extends FlxSprite
 	// ################################################################
 	// # Bows #########################################################
 	// ################################################################
-	public static GetSelfbow() : Item
+	public static function GetSelfbow() : Item
 	{
 		var item = new Item();
 		item.name = 'Selfbow';
-		item.type = ItemType.Bow;
+		item.type = ItemType.BOW;
+		item.loadGraphic(AssetPaths.selfbow__png, true, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;
@@ -207,11 +216,12 @@ class Item extends FlxSprite
 		return item;
 	}
 
-	public static GetLongbow() : Item
+	public static function GetLongbow() : Item
 	{
 		var item = new Item();
 		item.name = 'Longbow';
-		item.type = ItemType.Bow;
+		item.type = ItemType.BOW;
+		item.loadGraphic(AssetPaths.longbow__png, true, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;
@@ -226,11 +236,12 @@ class Item extends FlxSprite
 		return item;
 	}
 
-	public static GetRecurveBow() : Item
+	public static function GetRecurveBow() : Item
 	{
 		var item = new Item();
 		item.name = 'Recurve bow';
-		item.type = ItemType.Bow;
+		item.type = ItemType.BOW;
+		item.loadGraphic(AssetPaths.recurvebow__png, true, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;
@@ -245,11 +256,12 @@ class Item extends FlxSprite
 		return item;
 	}
 
-	public static GetCrossbow() : Item
+	public static function GetCrossbow() : Item
 	{
 		var item = new Item();
 		item.name = 'Crossbow';
-		item.type = ItemType.Bow;
+		item.type = ItemType.BOW;
+		item.loadGraphic(AssetPaths.crossbow__png, true, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;
