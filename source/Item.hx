@@ -3,14 +3,6 @@ package;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 
-enum ItemType
-{
-	Sword;
-	Armor;
-	Bow;
-	Consumable;
-}
-
 /**
  * ...
  * @author 
