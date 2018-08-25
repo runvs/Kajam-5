@@ -59,11 +59,12 @@ class TiledLevel extends TiledMap
 	
 	public var allNSCs : AdministratedList<NPC>;
 	
-	public var allTraps : FlxSpriteGroup;
-	
+	public var allTraps : FlxTypedGroup<Trap>;
+	public var allTrigger : FlxTypedGroup<Trigger>;
 	public var goreLayer : FlxSprite;
 	
 	private var _state : PlayState;
+	
 	
 	
 	public function new(tiledLevel:Dynamic, s : PlayState)
@@ -88,10 +89,13 @@ class TiledLevel extends TiledMap
 		allEnemies.DestroyCallBack.push( function (e : Enemy ) : Void  { addDeadEnemy(e); } );
 		
 		allEnemyShots = new  AdministratedList<EnemyShot>();
-		allTraps = new FlxSpriteGroup();
 		allNSCs = new AdministratedList<NPC>();
 		
 		tileSet = tilesets["tileset.png"];
+		
+		
+		allTraps = new FlxTypedGroup<Trap>();
+		allTrigger = new FlxTypedGroup<Trigger>();
 		
 		goreLayer  = new FlxSprite(0, 0 );
 		deadEnemies = new FlxSpriteGroup();
@@ -285,6 +289,10 @@ class TiledLevel extends TiledMap
 					{
 						loadShrine(o, objectLayer);
 					}
+					else if (o.type.toLowerCase() == "trigger")
+					{
+						loadTrigger(o, objectLayer);
+					}
 					else
 					{
 						trace("Warning: unknown object: " + o.type + " with name: " + o.name);
@@ -311,7 +319,7 @@ class TiledLevel extends TiledMap
 		}
 	}
 	
-	function loadTrap(o:TiledObject, objectLayer:TiledObjectLayer) 
+	function loadTrigger(o:TiledObject, objectLayer:TiledObjectLayer) 
 	{
 		var x:Int = o.x;
 		var y:Int = o.y;
@@ -319,8 +327,37 @@ class TiledLevel extends TiledMap
 		var w = o.width;
 		var h = o.height;
 		
-		var s : FlxSprite = new FlxSprite(x, y);
+		var s : Trigger = new Trigger(x, y,w,h, _state);
+		s.name = o.name;
+		
+		s.action = o.properties.get("action");
+		s.type = o.properties.get("type");
+		var t : String = o.properties.get("target");
+		s.target = t.split(",");
+		
+		allTrigger.add(s);
+	}
+	
+	
+	function loadTrap(o:TiledObject, objectLayer:TiledObjectLayer) 
+	{
+		var x:Int = o.x;
+		var y:Int = o.y;
+		
+		var w = o.width;
+		var h = o.height;
+	
+		
+		var s : Trap = new Trap(x, y);
+		s.name = o.name;
 		s.makeGraphic(w, h, FlxColor.BLACK);
+		
+		var act : String = o.properties.get("activated");
+		if (act != null && act == "false")
+		{
+			s.activated = false;
+		}
+		
 		allTraps.add(s);
 	}
 	

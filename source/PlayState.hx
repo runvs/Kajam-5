@@ -88,7 +88,13 @@ class PlayState extends FlxState
 		super.draw();
 		
 		level.baseTiles.draw();
-		level.allTraps.draw();
+		level.allTrigger.draw();
+		//level.allTraps.draw();
+		for (ti in level.allTraps)
+		{
+			var t : Trap = ti;
+			if (t.activated) t.draw();
+		}
 		level.midTiles.draw();
 		level.allShrines.draw();
 		level.deadEnemies.draw();
@@ -160,6 +166,19 @@ class PlayState extends FlxState
 				}
 			}
 			
+			for (ti in level.allTrigger)
+			{
+				var t : Trigger = ti;
+				if (FlxG.overlap(player, t))
+				{
+					t.perform();
+					t.playerOn = true;
+				}
+				else
+				{
+					t.playerOn = false;
+				}
+			}
 			
 			CheckTraps();
 			
@@ -249,10 +268,18 @@ class PlayState extends FlxState
 	{
 		if (player.timeSinceDash <= 0.2)
 			return;
-		if (FlxG.overlap(player, level.allTraps))
+		
+		for (ti in level.allTraps)
 		{
-			RestartLevel();
+			var t : Trap = ti;
+			if (t.activated == false) continue;
+			
+			if (FlxG.overlap(player, t))
+			{
+				RestartLevel();
+			}	
 		}
+		
 	}
 	
 }
