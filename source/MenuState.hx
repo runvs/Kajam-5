@@ -62,6 +62,8 @@ class MenuState extends FlxState
 	{
 		super.create();
 	
+		
+		FlxG.sound.playMusic(AssetPaths.town_music__ogg);
 				
 #if(flash)
 		Kongregate.loadApi(function(api:KongregateApi) {
