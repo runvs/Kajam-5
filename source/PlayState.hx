@@ -47,6 +47,7 @@ class PlayState extends FlxState
 		world = new World(this);
 		
 		level = world.getLevelByName("wimborne.tmx");
+		//switchLevel("wimborne.tmx",1);
 		//add(level.baseTiles);
 		//add(level.midTiles);
 		
@@ -191,6 +192,7 @@ class PlayState extends FlxState
 	function RestartLevel() 
 	{
 		switchLevel(lastTarget, lastEntryID);
+		
 	}
 	
 	function CheckForLevelChange() 
@@ -243,6 +245,9 @@ class PlayState extends FlxState
 			lastEntryID = entryid;
 			ending = false; 
 			overlay.alpha = 0; 
+			
+			FlxG.worldBounds.set(0, 0, level.fullWidth, level.fullHeight);
+			FlxG.camera.setScrollBounds(0, level.fullWidth, 0, level.fullHeight);
 		}
 		} );
 	}
