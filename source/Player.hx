@@ -23,7 +23,7 @@ class Player extends FlxSprite
 
 	public var healthMax     : Float;
 	
-	
+	var _itemDashMultiplier : Float = 1.0;
     var _dashDir        : FlxPoint;
 	var _dashCooldown   : Float;
     var _dashSpeedMax   : Float;
@@ -60,6 +60,13 @@ class Player extends FlxSprite
     public function new(playState: PlayState)
     {
         super();
+
+		// Give the player some basic items
+		trace('Picking up items...');
+		pickupItem(Item.GetShortSword());
+		pickupItem(Item.GetSelfbow());
+		pickupItem(Item.GetRobe());
+		trace('Items picked up.');
 
 		//loadGraphic(AssetPaths.Hero__png, true, 16, 16);
 		//animation.add("walk_south", [0, 4, 8,  12], 8);
@@ -308,7 +315,7 @@ class Player extends FlxSprite
 		{
 			if(FlxG.overlap(_hitArea, enemy))
 			{
-				enemy.hit(getDamage(), x, y);
+				enemy.hit(getMeleeDamage(), x, y);
 				enemyHit = true;
 				_playState.level.spladder(enemy.x + GameProperties.TileSize/2, enemy.y + GameProperties.TileSize/2);
 			}
@@ -332,17 +339,55 @@ class Player extends FlxSprite
 
     //#################################################################
 
-    public function getDamage() : Float
+    public function getMeleeDamage() : Float
     {
-        //return GameProperties.PlayerAttackBaseDamage + Math.pow(strength + strengthBonus, 0.25) * 3;
-		return 100;
+		var damageMultiplier = (swordItem.damageMultiplier + armorItem.damageMultiplier) / 2;
+		return GameProperties.PlayerAttackBaseDamage * damageMultiplier;
     }
+
+	//#################################################################
+
+	public function getRangedDamage() : Float
+	{
+		var damageMultiplier = (bowItem.damageMultiplier + armorItem.damageMultiplier) / 2;
+		return GameProperties.PlayerAttackBaseDamage * damageMultiplier;
+	}
+
+	//#################################################################
+
+	function pickupItem(item : Item) : Void
+	{
+		trace('Picking up a ' + item.name);
+		trace(item);
+		if(item.type == ItemType.SWORD) {
+			swordItem = item;
+		} else if(item.type == ItemType.BOW) {
+			bowItem = item;
+		} else if(item.type == ItemType.ARMOR) {
+			armorItem = item;
+		}
+		
+		if(swordItem == null || bowItem == null || armorItem == null) return;
+		
+		var walkSpeedMultiplier = (
+			swordItem.walkSpeedMultiplier
+			+ bowItem.walkSpeedMultiplier
+			+ armorItem.walkSpeedMultiplier
+		) / 3;
+		maxVelocity = GameProperties.PlayerMovementMaxVelocity.scale(walkSpeedMultiplier);
+
+		_itemDashMultiplier = (
+			swordItem.dashDistanceMultiplier
+			+ bowItem.dashDistanceMultiplier
+			+ armorItem.dashDistanceMultiplier
+		) / 3;
+	}
 
     //#################################################################
 
 	function dash()
 	{
-		var stepSize = GameProperties.PlayerMovementMaxDashLength / GameProperties.TileSize / 2;
+		var stepSize = GameProperties.PlayerMovementMaxDashLength / GameProperties.TileSize / 2 * _itemDashMultiplier;
 		var currentStep = 0.0;
 		var lastPosition    = new FlxVector(x, y);
 		var initialPosition = new FlxVector(x, y);
@@ -355,7 +400,7 @@ class Player extends FlxSprite
 			//GameProperties.SoundTimeout = GameProperties.SoundTimeoutMax;
 		//}
 
-		while(currentStep < GameProperties.PlayerMovementMaxDashLength)
+		while(currentStep < GameProperties.PlayerMovementMaxDashLength * _itemDashMultiplier)
 		{
 			lastPosition = new FlxVector(x, y);
 
