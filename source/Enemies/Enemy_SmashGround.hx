@@ -10,15 +10,14 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 
-class SmashGroundEnemy extends Enemy
+class Enemy_SmashGround extends Enemy
 {
     //#################################################################
 
     public var AttackStrength : Float;
 	public var AttackTimer	  : Float;
-    public var MaxHealth      : Float;
-    public var CurrentHealth  : Float;
-    public var attackRangeInTiles   : Float;
+    
+    public var aggroRangeInTiles   : Float;
     public var accel : Float;
 	
     private var _thinkTime    : Float;
@@ -26,15 +25,14 @@ class SmashGroundEnemy extends Enemy
 	
 	private var _distanceToPlayer : Float;
 	
-	private var _idleTimer : Float;
+	
 	var _attacking:Bool;
 	public var _attackingUnderlay : FlxSprite;
 	
+	var AttackComingDownTimer : FlxTimer;
 	
 	
 	//var attackSound : FlxSound;
-	
-	var colorTween : FlxTween = null;
 	
 
     //#################################################################
@@ -45,13 +43,11 @@ class SmashGroundEnemy extends Enemy
 
         AttackStrength = 1;
 		AttackTimer	   = 0.1;
-        MaxHealth      = 1;
-        CurrentHealth  = 1;
-        attackRangeInTiles   = 4.5;
+        MaxHealth      = health;
+        aggroRangeInTiles   = 4.5;
 		accel = 550;
 		_attacking 	   = false;
-
-        _playState    = playState;
+		
         _thinkTime    = GameProperties.EnemyMovementRandomWalkThinkTime;
         _playerLocked = false;
 
@@ -68,14 +64,11 @@ class SmashGroundEnemy extends Enemy
 		
 		_facing = Facing.SOUTH;
 		
-        setPosition(128, 160);
-		this.color = FlxColor.WHITE;
-
         drag.set(250,250);
-        maxVelocity.set(55,55);
+        maxVelocity.set(45,45);
 		
 		_distanceToPlayer = 0;
-		_idleTimer = 0;
+		
 		
 		
 		_attackingUnderlay = new FlxSprite(x, y);
@@ -88,6 +81,14 @@ class SmashGroundEnemy extends Enemy
 		//attackSound = FlxG.sound.load(AssetPaths.takeHit__ogg, 0.125);
 		
     }
+
+	override public function onDeath() 
+	{
+		super.onDeath();
+		
+		if (AttackComingDownTimer != null)
+			AttackComingDownTimer.cancel();
+	}
 
     //#################################################################
 
@@ -140,8 +141,8 @@ class SmashGroundEnemy extends Enemy
 				_attackingUnderlay.alive = true;
 				_attackingUnderlay.scale.set(1, 1);
 				
-				var t : FlxTimer = new FlxTimer();
-				t.start(0.65, function(t: FlxTimer) 
+				AttackComingDownTimer = new FlxTimer();
+				AttackComingDownTimer.start(0.65, function(t: FlxTimer) 
 				{
 					FlxG.camera.shake(0.0025, 0.2);
 					//attackSound.pitch = FlxG.random.float(0.2, 0.4);
@@ -166,40 +167,7 @@ class SmashGroundEnemy extends Enemy
 
     //#################################################################
 
-    public function hit(damage: Float, px:Float, py:Float)
-    {
-        CurrentHealth -= damage;
-        //trace(CurrentHealth);
-		
-		// calculate pushback
-		var dir : FlxVector = new FlxVector (x -px, y - py);
-		dir = dir.normalize();
-		
-		this.velocity.set(dir.x * accel, dir.y * accel);
-		_idleTimer = 0.35;
-		
-		if (colorTween != null)
-		{
-			colorTween.cancel();
-			color = FlxColor.WHITE;
-		}
-		
-		colorTween = FlxTween.color(this, 0.18, FlxColor.RED, FlxColor.WHITE, { type : FlxTween.PERSIST} );
-
-        if(CurrentHealth <= 0.0)
-        {
-            alive = false;
-			trace('I am dead');
-			// TODO
-			//_playState.level.spawnCoins(this);
-			
-			if (colorTween != null)
-			{
-				colorTween.cancel();
-			}			
-        }
-    }
-
+    
     //#################################################################
 
     function doMovement()
@@ -210,7 +178,7 @@ class SmashGroundEnemy extends Enemy
 		
 		_distanceToPlayer = playerVector.dist(enemyVector);
 
-        if(_distanceToPlayer <= attackRangeInTiles * GameProperties.TileSize)
+        if(_distanceToPlayer <= aggroRangeInTiles * GameProperties.TileSize)
         {
             if(_distanceToPlayer > GameProperties.TileSize)
             {

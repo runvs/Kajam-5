@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" nextobjectid="91">
- <tileset firstgid="1" name="tileset.png" tilewidth="16" tileheight="16" tilecount="140" columns="28">
-  <image source="../images/tileset.png" width="448" height="80"/>
+<map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" nextobjectid="93">
+ <tileset firstgid="1" name="tileset.png" tilewidth="16" tileheight="16" tilecount="112" columns="28">
+  <image source="../images/tileset.png" width="448" height="64"/>
  </tileset>
  <layer name="base" width="50" height="50">
   <properties>
@@ -51,12 +51,22 @@
   <object id="88" name="exit_top" type="exit" x="144" y="0" width="48" height="24">
    <properties>
     <property name="entryid" value="1"/>
-    <property name="target" value="arena.tmx"/>
+    <property name="target" value="arena_3.tmx"/>
    </properties>
   </object>
   <object id="90" name="entry_top" type="entry" x="160" y="48" width="16" height="16">
    <properties>
     <property name="entryid" value="1"/>
+   </properties>
+  </object>
+  <object id="91" name="Smith" type="NPC" x="352" y="336" width="16" height="16">
+   <properties>
+    <property name="npctype" value="smith"/>
+   </properties>
+  </object>
+  <object id="92" name="Shrine" type="shrine" x="416" y="96" width="32" height="32">
+   <properties>
+    <property name="id" value="1"/>
    </properties>
   </object>
  </objectgroup>

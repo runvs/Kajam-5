@@ -20,6 +20,8 @@ class PlayState extends FlxState
 	public var backgroundSprite : FlxSprite;
 	public var overlay : FlxSprite;
 	private var ending : Bool;
+	var lastEntryID:Int;
+	var lastTarget:String;
 	
 	
 	public var player : Player;
@@ -45,6 +47,7 @@ class PlayState extends FlxState
 		world = new World(this);
 		
 		level = world.getLevelByName("wimborne.tmx");
+		//switchLevel("wimborne.tmx",1);
 		//add(level.baseTiles);
 		//add(level.midTiles);
 		
@@ -86,7 +89,18 @@ class PlayState extends FlxState
 		super.draw();
 		
 		level.baseTiles.draw();
+		level.allTrigger.draw();
+		//level.allTraps.draw();
+		for (ti in level.allTraps)
+		{
+			var t : Trap = ti;
+			if (t.activated) t.draw();
+		}
+		level.midTiles.draw();
+		level.allShrines.draw();
 		level.deadEnemies.draw();
+		
+		level.goreLayer.draw();
 		
 		player.draw();
 	
@@ -95,11 +109,23 @@ class PlayState extends FlxState
 			e.drawUnderlay();
 		}
 		
+		
 		level.allNSCs.draw();
 		level.allEnemies.draw();
 		
-		level.midTiles.draw();
+		level.allEnemyShots.draw();
+
 		level.topTiles.draw();
+		
+		
+		for (s in level.allShrines)
+		{
+			s.drawOverlay();
+		}
+		for (n in level.allNSCs)
+		{
+			n.drawOverlay();
+		}
 		
 		overlay.draw();
 		
@@ -115,20 +141,59 @@ class PlayState extends FlxState
 		
 		if (!ending)
 		{
+			level.midTiles.update(elapsed);
 			player.update(elapsed);
 			level.allEnemies.update(elapsed);
 			level.allNSCs.update(elapsed);
+			level.allEnemyShots.update(elapsed);
+			level.allShrines.update(elapsed);
+			
 			FlxG.collide(player, level.collisionMap);
+			
+			for (n in level.allNSCs.getList())
+			{
+				FlxG.collide(player, n);
+			}
+			
 			for (e  in level.allEnemies.getList())
 			{
 				FlxG.collide(e, level.collisionMap);
 			}
-			//FlxG.collide(level.allEnemies, level.collisionMap);
+			for (s in level.allEnemyShots)
+			{
+				if (FlxG.overlap(s, level.collisionMap))
+				{
+					s.alive = false;
+				}
+			}
+			
+			for (ti in level.allTrigger)
+			{
+				var t : Trigger = ti;
+				if (FlxG.overlap(player, t))
+				{
+					t.perform();
+					t.playerOn = true;
+				}
+				else
+				{
+					t.playerOn = false;
+				}
+			}
+			
+			CheckTraps();
+			
 			
 			
 			CheckForLevelChange();
 		}
 	}	
+	
+	function RestartLevel() 
+	{
+		switchLevel(lastTarget, lastEntryID);
+		
+	}
 	
 	function CheckForLevelChange() 
 	{
@@ -137,9 +202,9 @@ class PlayState extends FlxState
 			var exit : Exit = ei;
 			
 			var p : FlxPoint = new FlxPoint(player.x + player.width / 2, player.y + player.height / 2);
-			trace("checking overlap");
-			trace(p);
-			trace(exit.x + " " + exit.y);
+			//trace("checking overlap");
+			//trace(p);
+			//trace(exit.x + " " + exit.y);
 			if (exit.overlapsPoint(p))
 			{
 				switchLevel(exit.target, exit.entryid);
@@ -151,15 +216,19 @@ class PlayState extends FlxState
 	{
 		ending = true;
 		
-		trace("switch level: " + target);
+		
+		//trace("switch level: " + target);
+		
+		for (s in level.allEnemyShots)
+			s.alive = false;
 		
 		FlxTween.tween(overlay, { alpha: 1 }, 0.75, { onComplete : 
 		function (t) : Void 
 		{ 
 			var newLevel : TiledLevel = world.getLevelByName(target);
-			if (level == null) 
+			if (newLevel == null) 
 			{
-				trace ("warning: Level not found!!");
+				trace ("warning: Level: " + target + " not found!!");
 				return;
 			}
 			level =  newLevel;
@@ -171,9 +240,14 @@ class PlayState extends FlxState
 				player.setPosition(0, 0);
 				trace("warning: no entry found!");
 			}
-			
+		
+			lastTarget = target;
+			lastEntryID = entryid;
 			ending = false; 
 			overlay.alpha = 0; 
+			
+			FlxG.worldBounds.set(0, 0, level.fullWidth, level.fullHeight);
+			FlxG.camera.setScrollBounds(0, level.fullWidth, 0, level.fullHeight);
 		}
 		} );
 	}
@@ -191,6 +265,24 @@ class PlayState extends FlxState
 			
 			var t: FlxTimer = new FlxTimer();
 			t.start(1,function(t:FlxTimer): Void {MenuState.setNewScore(0); FlxG.switchState(new MenuState()); } );
+		}
+		
+	}
+	
+	function CheckTraps():Void 
+	{
+		if (player.timeSinceDash <= 0.2)
+			return;
+		
+		for (ti in level.allTraps)
+		{
+			var t : Trap = ti;
+			if (t.activated == false) continue;
+			
+			if (FlxG.overlap(player, t))
+			{
+				RestartLevel();
+			}	
 		}
 		
 	}

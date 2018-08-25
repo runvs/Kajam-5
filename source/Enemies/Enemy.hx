@@ -1,21 +1,29 @@
 package;
 
 import flixel.FlxSprite;
+import flixel.math.FlxVector;
 import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.util.FlxColor;
 
 /**
  * ...
  * @author 
  */
-class Enemy extends FlxSprite
+class Enemy extends FlashSprite
 {
 
 	private var _playState    : PlayState;
 	private var _facing       : Facing;
 	
+	public var MaxHealth      : Float;
+	
+	private var _idleTimer : Float;
+	
 	public function new(s : PlayState) 
 	{
 		super();
+		_playState = s;
+		_idleTimer = 0;
 		
 	}
 	
@@ -58,6 +66,34 @@ class Enemy extends FlxSprite
 				}
 			}
 		}
+	}
+	
+	
+	public function hit(damage: Float, px:Float, py:Float)
+    {
+        health -= damage;
+        //trace(CurrentHealth);
+		
+		// calculate pushback
+		var dir : FlxVector = new FlxVector (x -px, y - py);
+		dir = dir.normalize();
+		
+		this.velocity.set(dir.x * 300, dir.y * 300);
+		_idleTimer = 0.35;
+		
+		Flash(0.5, FlxColor.RED);
+		
+        if(health <= 0.0)
+        {
+            alive = false;
+			onDeath();
+			trace('I am dead');
+        }
+    }
+
+	public function onDeath()
+	{
+		
 	}
 	
 }

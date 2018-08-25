@@ -43,6 +43,8 @@ class TiledLevel extends TiledMap
 	public var midTiles:FlxGroup;
 	public var topTiles:FlxGroup;
 	
+	public var allShrines : FlxTypedGroup<Shrine>;
+	
 	// Array of Int used for collision
 	var collisionArray : Array<Int>;
 	// final collisionMap with refined collisions
@@ -53,12 +55,16 @@ class TiledLevel extends TiledMap
 	
 	public var allEnemies : AdministratedList<Enemy>;
 	public var deadEnemies : FlxSpriteGroup;
+	public var allEnemyShots : AdministratedList<EnemyShot>;
 	
 	public var allNSCs : AdministratedList<NPC>;
 	
+	public var allTraps : FlxTypedGroup<Trap>;
+	public var allTrigger : FlxTypedGroup<Trigger>;
 	public var goreLayer : FlxSprite;
 	
 	private var _state : PlayState;
+	
 	
 	
 	public function new(tiledLevel:Dynamic, s : PlayState)
@@ -82,15 +88,21 @@ class TiledLevel extends TiledMap
 		allEnemies = new AdministratedList<Enemy>();
 		allEnemies.DestroyCallBack.push( function (e : Enemy ) : Void  { addDeadEnemy(e); } );
 		
+		allEnemyShots = new  AdministratedList<EnemyShot>();
 		allNSCs = new AdministratedList<NPC>();
 		
 		tileSet = tilesets["tileset.png"];
+		
+		
+		allTraps = new FlxTypedGroup<Trap>();
+		allTrigger = new FlxTypedGroup<Trigger>();
 		
 		goreLayer  = new FlxSprite(0, 0 );
 		deadEnemies = new FlxSpriteGroup();
 	
 		collisionArray = new Array<Int>();
 		
+		allShrines = new FlxTypedGroup<Shrine>();
 			
 		
 		//trace(this.width);
@@ -98,7 +110,9 @@ class TiledLevel extends TiledMap
 		var wit : Int = this.width; 
 		var hit : Int = this.height; 
 		
-		FlxG.camera.setScrollBounds(0, this.fullWidth, 0, this.fullHeight);
+		
+		
+		
 		
 		// Load Tile Maps
 		for (layer in layers)
@@ -141,6 +155,9 @@ class TiledLevel extends TiledMap
 						s.animation.add("idle", [tileType-1]);
 						s.animation.play("idle");
 						baseTiles.add(s);
+						
+						CheckForRandomOverlays(i,j,tileType);
+						
 						CreateCollisionTile(i, j, tileType);
 					}
 				}
@@ -152,6 +169,25 @@ class TiledLevel extends TiledMap
 		loadObjects();
 		
 		goreLayer.makeGraphic(this.fullWidth, fullHeight, FlxColor.TRANSPARENT, true);
+	}
+	
+	function CheckForRandomOverlays(i: Int, j : Int , tileType:Int) 
+	{
+		if (tileType == 2)
+		{
+			//trace("spawn grass");
+			if (FlxG.random.bool(50))
+			{
+				
+				var ot : Int = FlxG.random.int(0, 7);
+				var s : FlxSprite = new FlxSprite();
+				s.loadGraphic(AssetPaths.grass_overlay__png, true, 16, 16, false);
+				s.animation.add("idle", [ot,ot,ot,ot,ot,ot,ot,ot,ot,ot,ot,ot, ot+8], 3, true);
+				s.animation.play("idle",false, false, -1);
+				s.setPosition(i * GameProperties.TileSize, j * GameProperties.TileSize);
+				midTiles.add(s);
+			}
+		}
 	}
 	
 	
@@ -249,6 +285,26 @@ class TiledLevel extends TiledMap
 					{
 						loadExit(o, objectLayer);
 					}
+					else if (o.type.toLowerCase() == "shrine")
+					{
+						loadShrine(o, objectLayer);
+					}
+					else if (o.type.toLowerCase() == "trigger")
+					{
+						loadTrigger(o, objectLayer);
+					}
+					else
+					{
+						trace("Warning: unknown object: " + o.type + " with name: " + o.name);
+					}
+				}
+			}
+			else if (layer.name == "traps")
+			{
+				for (oi in objectLayer.objects)
+				{
+					var o : TiledObject = oi;
+					loadTrap(o,objectLayer);
 				}
 			}
 			else if (layer.name == "enemies")
@@ -263,6 +319,64 @@ class TiledLevel extends TiledMap
 		}
 	}
 	
+	function loadTrigger(o:TiledObject, objectLayer:TiledObjectLayer) 
+	{
+		var x:Int = o.x;
+		var y:Int = o.y;
+		
+		var w = o.width;
+		var h = o.height;
+		
+		var s : Trigger = new Trigger(x, y,w,h, _state);
+		s.name = o.name;
+		
+		s.action = o.properties.get("action");
+		s.type = o.properties.get("type");
+		var t : String = o.properties.get("target");
+		s.target = t.split(",");
+		
+		allTrigger.add(s);
+	}
+	
+	
+	function loadTrap(o:TiledObject, objectLayer:TiledObjectLayer) 
+	{
+		var x:Int = o.x;
+		var y:Int = o.y;
+		
+		var w = o.width;
+		var h = o.height;
+	
+		
+		var s : Trap = new Trap(x, y);
+		s.name = o.name;
+		s.makeGraphic(w, h, FlxColor.BLACK);
+		
+		var act : String = o.properties.get("activated");
+		if (act != null && act == "false")
+		{
+			s.activated = false;
+		}
+		
+		allTraps.add(s);
+	}
+	
+	function loadShrine(o:TiledObject, g:TiledObjectLayer) 
+	{
+		//trace("load object of type " + o.type);
+		var x:Int = o.x;
+		var y:Int = o.y;
+		
+		var shrineID = o.properties.get("id");
+		if (shrineID != null)
+		{
+			var id : Int = Std.parseInt(shrineID);		
+			var s :Shrine= new Shrine(x, y, id);
+			allShrines.add(s);
+			collisionMap.add(s);
+		}
+	}
+	
 	
 	private function loadEnemy(o:TiledObject, g:TiledObjectLayer)
 	{
@@ -273,9 +387,27 @@ class TiledLevel extends TiledMap
 		if (o.type.toLowerCase() == "smashground")
 		{
 			//trace();
-			var e : SmashGroundEnemy = new SmashGroundEnemy(_state);
+			var e : Enemy_SmashGround = new Enemy_SmashGround(_state);
 			e.setPosition(x, y);
 			allEnemies.add(e);
+		}
+		else if (o.type.toLowerCase() == "runner")
+		{
+			//trace();
+			var e : Enemy_Runner = new Enemy_Runner(_state);
+			e.setPosition(x, y);
+			allEnemies.add(e);
+		}
+		else if (o.type.toLowerCase() == "shooter")
+		{
+			//trace();
+			var e : Enemy_Shooter = new Enemy_Shooter(_state);
+			e.setPosition(x, y);
+			allEnemies.add(e);
+		}
+		else
+		{
+			trace("ERROR: unknown enemy Type");
 		}
 	}
 	
@@ -329,6 +461,13 @@ class TiledLevel extends TiledMap
 				n.objectName = o.name;
 				allNSCs.add(n);
 				trace("add nsc guard '" +  n.objectName + "'");
+			}
+			if (nsctype.toLowerCase() == "smith")
+			{
+				var n : NPC_Smith = new NPC_Smith(_state);
+				n.setPosition(x, y);
+				n.objectName = o.name;
+				allNSCs.add(n);
 			}
 		}
 		
