@@ -37,7 +37,7 @@ class Enemy_Runner extends Enemy
 	private static var _recoverTime : Float = _timeInChargeMax -  1.25;
 	
 	
-	var dashRangeInTiles : Float  = 3.0;
+	var dashRangeInTiles : Float  = 4.0;
 	
 	
 	
@@ -159,7 +159,7 @@ class Enemy_Runner extends Enemy
 				if (_distanceToPlayer <= dashRangeInTiles * GameProperties.TileSize)
 				{
 					color = FlxColor.BLUE;
-					_chargeTime = 0.75; 
+					_chargeTime = 0.45; 
 					this.velocity.set();
 					this.acceleration.set();
 				

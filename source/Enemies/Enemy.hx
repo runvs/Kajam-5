@@ -19,17 +19,25 @@ class Enemy extends FlashSprite
 	
 	private var _idleTimer : Float;
 	
+	private var _takeDamageWallTime : Float = 0;
+	
 	public function new(s : PlayState) 
 	{
 		super();
 		_playState = s;
 		_idleTimer = 0;
-		
+		health = 30;
 	}
 	
 	public function drawUnderlay()
 	{
 		
+	}
+	
+	override public function update(elapsed:Float):Void 
+	{
+		super.update(elapsed);
+		_takeDamageWallTime -= elapsed;
 	}
 	
 	private function doAnimations():Void 
@@ -71,8 +79,12 @@ class Enemy extends FlashSprite
 	
 	public function hit(damage: Float, px:Float, py:Float)
     {
+		if (_takeDamageWallTime >= 0) return;
+		
+		
+		_takeDamageWallTime = 0.1;
         health -= damage;
-        //trace(CurrentHealth);
+        trace(health);
 		
 		// calculate pushback
 		var dir : FlxVector = new FlxVector (x -px, y - py);
