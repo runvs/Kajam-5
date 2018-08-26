@@ -31,7 +31,7 @@
   <object id="197" name="exit_top" type="exit" x="16" y="80" width="48" height="16">
    <properties>
     <property name="entryid" value="1"/>
-    <property name="target" value="puzzle_1.tmx"/>
+    <property name="target" value="ruin_hall.tmx"/>
    </properties>
   </object>
   <object id="198" name="entry_top" type="entry" x="32" y="112" width="16" height="16">
@@ -58,7 +58,6 @@
  <objectgroup name="enemies">
   <object id="135" name="runner" type="runner" x="48" y="304" width="16" height="16"/>
   <object id="201" name="runner" type="runner" x="200" y="168" width="16" height="16"/>
-  <object id="202" name="runner" type="runner" x="136" y="232" width="16" height="16"/>
   <object id="203" name="runner" type="runner" x="56" y="192" width="16" height="16"/>
   <object id="204" name="runner" type="runner" x="80" y="132" width="16" height="16"/>
  </objectgroup>
