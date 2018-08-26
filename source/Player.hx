@@ -253,7 +253,9 @@ class Player extends FlxSprite
 		var vy : Float = MyInput.yVal * _accelFactor;
 		var l : Float = Math.sqrt(vx * vx + vy * vy);
 
-		
+		if(MyInput.InventoryButtonJustPressed) {
+			_playerInfo.visible = !_playerInfo.visible;
+		}
 		
 		if (l >= 25)
 		{
@@ -460,8 +462,6 @@ class Player extends FlxSprite
 
 		_hitArea.draw();
 		_slashSprite.draw();
-
-		drawHud();
 	}
 
     //#################################################################

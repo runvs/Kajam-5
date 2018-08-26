@@ -12,10 +12,11 @@ class PlayerInfo extends FlxSprite
 	{
 		super();
 
-		x = 100;
-		y = 100;
+		x = 220;
+		y = 170;
 
-		makeGraphic(100, 100, FlxColor.MAGENTA);
+		loadGraphic(AssetPaths.playerInfoBg__png, false, 360, 260);
+		//makeGraphic(360, 260, FlxColor.MAGENTA);
 		
 		//origin.set(0, 0);
 		scrollFactor.set();
@@ -26,7 +27,7 @@ class PlayerInfo extends FlxSprite
 
 		_player = player;
 
-		visible = true;
+		visible = false;
 	}
 	
 	public override function update(elapsed : Float) : Void
@@ -39,5 +40,17 @@ class PlayerInfo extends FlxSprite
 	{
 		// _background.draw();
 		super.draw();
+
+		_player.swordItem.x = x + 148;
+		_player.swordItem.y = y + 46;
+		_player.swordItem.draw();
+
+		_player.bowItem.x = x + 172;
+		_player.bowItem.y = y + 46;
+		_player.bowItem.draw();
+
+		_player.armorItem.x = x + 196;
+		_player.armorItem.y = y + 46;
+		_player.armorItem.draw();
 	}
 }
