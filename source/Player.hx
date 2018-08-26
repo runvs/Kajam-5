@@ -42,6 +42,7 @@ class Player extends FlxSprite
 	
 	var _healthBar 		: HudBar;
 	var _dashCooldownBar: HudBar;
+	var _playerInfo     : PlayerInfo;
 
 	
 	//var _attackSound     : FlxSound;
@@ -121,6 +122,8 @@ class Player extends FlxSprite
 		_dashCooldownBar = new HudBar(10, 32, 48, 8, false, FlxColor.BLUE);
 		//_dashCooldownBar.color = GameProperties.ColorStaminaBar;
 		_dashCooldownBar._background.color = FlxColor.fromRGB(100, 100, 100, 100);
+
+		_playerInfo = new PlayerInfo(this);
 
 		
 		//_attackSound     = FlxG.sound.load(AssetPaths.attack1__ogg, 1);
@@ -437,6 +440,8 @@ class Player extends FlxSprite
 	
 	public override function draw() 
 	{
+		drawHud();
+		
 		dustparticles.draw();
 
 		_dashSprite1.draw();
@@ -454,8 +459,12 @@ class Player extends FlxSprite
 
 	public function drawHud()
 	{
-		_healthBar.draw();
-		_dashCooldownBar.draw();
+		//_healthBar.draw();
+		//_dashCooldownBar.draw();
+
+		if(_playerInfo.visible) {
+			_playerInfo.draw();
+		}
 		
 		// TODO draw inventory
 	}
