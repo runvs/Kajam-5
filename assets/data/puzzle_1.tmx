@@ -36,7 +36,7 @@
   <object id="96" name="exit_bot" type="exit" x="0" y="464" width="16" height="64">
    <properties>
     <property name="entryid" value="1"/>
-    <property name="target" value="ruinentrance.tmx"/>
+    <property name="target" value="arena2.tmx"/>
    </properties>
   </object>
   <object id="132" name="deactivate" type="trigger" x="304" y="176" width="32" height="32">

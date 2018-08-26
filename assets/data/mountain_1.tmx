@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="35" height="35" tilewidth="16" tileheight="16" nextobjectid="197">
+<map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="35" height="35" tilewidth="16" tileheight="16" nextobjectid="199">
  <tileset firstgid="1" name="tileset.png" tilewidth="16" tileheight="16" tilecount="112" columns="28">
   <image source="../images/tileset.png" width="448" height="64"/>
  </tileset>
@@ -52,7 +52,7 @@
   </object>
  </objectgroup>
  <objectgroup color="#ff0000" name="traps">
-  <object id="118" type="trap" x="112" y="488" width="32" height="40"/>
+  <object id="118" type="trap" x="120" y="488" width="24" height="40"/>
   <object id="119" type="trap" x="248" y="280" width="80" height="104"/>
   <object id="143" type="trap" x="128" y="528" width="16" height="16"/>
   <object id="144" type="trap" x="120" y="408" width="16" height="80"/>
@@ -94,6 +94,8 @@
   <object id="194" type="trap" x="408" y="16" width="16" height="60"/>
   <object id="195" type="trap" x="424" y="16" width="16" height="24"/>
   <object id="196" type="trap" x="440" y="16" width="20" height="12"/>
+  <object id="197" type="trap" x="208" y="192" width="24" height="40"/>
+  <object id="198" type="trap" x="208" y="312" width="24" height="72"/>
  </objectgroup>
  <objectgroup name="enemies">
   <object id="135" name="runner" type="runner" x="48" y="224" width="16" height="16"/>

@@ -31,7 +31,7 @@
   <object id="197" name="exit_top" type="exit" x="160" y="0" width="32" height="20">
    <properties>
     <property name="entryid" value="1"/>
-    <property name="target" value="puzzle_1.tmx"/>
+    <property name="target" value="arena_2.tmx"/>
    </properties>
   </object>
   <object id="198" name="entry_top" type="entry" x="168" y="32" width="16" height="16">
