@@ -69,14 +69,14 @@ class Player extends FlxSprite
 		pickupItem(Item.GetRobe());
 		trace('Items picked up.');
 
-		//loadGraphic(AssetPaths.Hero__png, true, 16, 16);
-		//animation.add("walk_south", [0, 4, 8,  12], 8);
-		//animation.add("walk_west",  [1, 5, 9,  13], 8);
-		//animation.add("walk_north", [2, 6, 10, 14], 8);
-		//animation.add("walk_east",  [3, 7, 11, 15], 8);
-		//animation.add("idle", [0]);
-		//animation.play("idle");
-		makeGraphic(16,16);
+		loadGraphic(AssetPaths.Thyl__png, true, 16, 16);
+		animation.add("walk_south", [0, 1, 2, 3], 8);
+		animation.add("walk_west",  [12, 13, 14,  15], 8);
+		animation.add("walk_north", [4, 5, 6, 7], 8);
+		animation.add("walk_east",  [8, 9, 10, 11], 8);
+		animation.add("idle", [0]);
+		animation.play("idle");
+		//makeGraphic(16,16);
 		_dashSprite1 = new FlxSprite();
 		_dashSprite1.makeGraphic(16, 16);
 		
@@ -201,7 +201,7 @@ class Player extends FlxSprite
 		var l : Float = velocity.distanceTo(new FlxPoint());
 		if (l <= GameProperties.PlayerMovementMaxVelocity.x / 8 )
 		{
-			//animation.play("idle", true);
+			animation.play("idle", true);
 		}
 		else
 		{
