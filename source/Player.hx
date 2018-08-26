@@ -232,6 +232,8 @@ class Player extends FlxSprite
         //var healthFactor = health / healthMax;
         //healthMax = GameProperties.PlayerHealthMaxDefault + healthBase + healthBonus;
         //health    = healthMax * healthFactor;
+
+		_playerInfo.update(elapsed);
 		
 		_healthBar.health = health / healthMax;
 		_healthBar.update(elapsed);
@@ -448,8 +450,6 @@ class Player extends FlxSprite
 	
 	public override function draw() 
 	{
-		drawHud();
-		
 		dustparticles.draw();
 
 		_dashSprite1.draw();
@@ -460,7 +460,8 @@ class Player extends FlxSprite
 
 		_hitArea.draw();
 		_slashSprite.draw();
-		
+
+		drawHud();
 	}
 
     //#################################################################
