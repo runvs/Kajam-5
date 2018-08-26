@@ -26,7 +26,7 @@ class Enemy_Runner extends Enemy
 	private var _chargeTime : Float = _recoverTime;
 	
 	
-	private static var _normalRandomWalkSpeed : Float = 58;
+	private static var _normalRandomWalkSpeed : Float = 35;
 	private static var _normalDrag : Float  = 250;
 	
 	private static var _chargeDrag : Float = 10;

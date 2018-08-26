@@ -453,22 +453,25 @@ class TiledLevel extends TiledMap
 		var nsctype = o.properties.get("npctype");
 		if (nsctype != null)
 		{
+			var n : NPC;
 			if (nsctype.toLowerCase() == "guard")
 			{
 				//trace(x);
-				var n : NPC_Guard = new NPC_Guard(_state);
+				n = new NPC_Guard(_state);
 				n.setPosition(x , y );
 				n.objectName = o.name;
 				allNSCs.add(n);
 				trace("add nsc guard '" +  n.objectName + "'");
 			}
-			if (nsctype.toLowerCase() == "smith")
+			else //if (nsctype.toLowerCase() == "smith")
 			{
-				var n : NPC_Smith = new NPC_Smith(_state);
+				n = new NPC_Smith(_state);
 				n.setPosition(x, y);
 				n.objectName = o.name;
 				allNSCs.add(n);
 			}
+			var msg : String = o.properties.get("message");
+			if (msg != null) n.overrideMessage = msg;
 		}
 		
 	}

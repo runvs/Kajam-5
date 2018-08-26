@@ -51,7 +51,7 @@
   <object id="88" name="exit_top" type="exit" x="144" y="0" width="48" height="24">
    <properties>
     <property name="entryid" value="1"/>
-    <property name="target" value="arena_3.tmx"/>
+    <property name="target" value="northofwimborne.tmx"/>
    </properties>
   </object>
   <object id="90" name="entry_top" type="entry" x="160" y="48" width="16" height="16">
@@ -62,11 +62,6 @@
   <object id="91" name="Smith" type="NPC" x="352" y="336" width="16" height="16">
    <properties>
     <property name="npctype" value="smith"/>
-   </properties>
-  </object>
-  <object id="92" name="Shrine" type="shrine" x="416" y="96" width="32" height="32">
-   <properties>
-    <property name="id" value="1"/>
    </properties>
   </object>
  </objectgroup>

@@ -39,15 +39,10 @@
     <property name="target" value="arena_2.tmx"/>
    </properties>
   </object>
-  <object id="97" name="Shrine" type="shrine" x="448" y="144" width="32" height="32">
-   <properties>
-    <property name="id" value="1"/>
-   </properties>
-  </object>
  </objectgroup>
  <objectgroup name="enemies">
-  <object id="92" type="runner" x="240" y="48" width="16" height="16"/>
-  <object id="93" type="smashground" x="48" y="48" width="16" height="16"/>
-  <object id="94" type="shooter" x="384" y="48" width="16" height="16"/>
+  <object id="92" name="runner" type="runner" x="240" y="48" width="16" height="16"/>
+  <object id="93" name="smashground" type="smashground" x="48" y="48" width="16" height="16"/>
+  <object id="94" name="shooter" type="shooter" x="384" y="48" width="16" height="16"/>
  </objectgroup>
 </map>

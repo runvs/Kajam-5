@@ -158,6 +158,7 @@ class PlayState extends FlxState
 			for (e  in level.allEnemies.getList())
 			{
 				FlxG.collide(e, level.collisionMap);
+				FlxG.collide(e, level.allTraps);
 			}
 			for (s in level.allEnemyShots)
 			{
