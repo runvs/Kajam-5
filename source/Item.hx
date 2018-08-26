@@ -26,6 +26,8 @@ class Item extends FlxSprite
 	public function new() 
 	{
 		super();
+
+		this.scrollFactor.set();
 	}
 
 	// ################################################################
@@ -37,7 +39,7 @@ class Item extends FlxSprite
 		item.name = 'Short Sword';
 		item.type = ItemType.SWORD;
 		item.tier = 1;
-		item.loadGraphic(AssetPaths.shortsword__png, true, 16, 16);
+		item.loadGraphic(AssetPaths.shortsword__png, false, 16, 16);
 
 		item.evasionMultiplier      = 1.1;
 		item.walkSpeedMultiplier    = 5.1;
@@ -58,7 +60,7 @@ class Item extends FlxSprite
 		item.name = 'Dagger';
 		item.type = ItemType.SWORD;
 		item.tier = 2;
-		item.loadGraphic(AssetPaths.dagger__png, true, 16, 16);
+		item.loadGraphic(AssetPaths.dagger__png, false, 16, 16);
 
 		item.evasionMultiplier      = 1.5;
 		item.walkSpeedMultiplier    = 1.1;
@@ -79,7 +81,7 @@ class Item extends FlxSprite
 		item.name = 'Claymore';
 		item.type = ItemType.SWORD;
 		item.tier = 2;
-		item.loadGraphic(AssetPaths.claymore__png, true, 16, 16);
+		item.loadGraphic(AssetPaths.claymore__png, false, 16, 16);
 
 		item.evasionMultiplier      = 0.9;
 		item.walkSpeedMultiplier    = 0.9;
@@ -100,7 +102,7 @@ class Item extends FlxSprite
 		item.name = 'Katana';
 		item.type = ItemType.SWORD;
 		item.tier = 3;
-		item.loadGraphic(AssetPaths.katana__png, true, 16, 16);
+		item.loadGraphic(AssetPaths.katana__png, false, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;
@@ -124,7 +126,7 @@ class Item extends FlxSprite
 		item.name = 'Robe';
 		item.type = ItemType.ARMOR;
 		item.tier = 1;
-		item.loadGraphic(AssetPaths.robe__png, true, 16, 16);
+		item.loadGraphic(AssetPaths.robe__png, false, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;
@@ -145,7 +147,7 @@ class Item extends FlxSprite
 		item.name = 'Leather Armor';
 		item.type = ItemType.ARMOR;
 		item.tier = 2;
-		item.loadGraphic(AssetPaths.leatherarmor__png, true, 16, 16);
+		item.loadGraphic(AssetPaths.leatherarmor__png, false, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;
@@ -166,7 +168,7 @@ class Item extends FlxSprite
 		item.name = 'Chain Mail';
 		item.type = ItemType.ARMOR;
 		item.tier = 2;
-		item.loadGraphic(AssetPaths.chainmail__png, true, 16, 16);
+		item.loadGraphic(AssetPaths.chainmail__png, false, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;
@@ -187,7 +189,7 @@ class Item extends FlxSprite
 		item.name = 'Plate Mail';
 		item.type = ItemType.ARMOR;
 		item.tier = 3;
-		item.loadGraphic(AssetPaths.platemail__png, true, 16, 16);
+		item.loadGraphic(AssetPaths.platemail__png, false, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;
@@ -211,7 +213,7 @@ class Item extends FlxSprite
 		item.name = 'Selfbow';
 		item.type = ItemType.BOW;
 		item.tier = 1;
-		item.loadGraphic(AssetPaths.selfbow__png, true, 16, 16);
+		item.loadGraphic(AssetPaths.selfbow__png, false, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;
@@ -232,7 +234,7 @@ class Item extends FlxSprite
 		item.name = 'Longbow';
 		item.type = ItemType.BOW;
 		item.tier = 2;
-		item.loadGraphic(AssetPaths.longbow__png, true, 16, 16);
+		item.loadGraphic(AssetPaths.longbow__png, false, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;
@@ -253,7 +255,7 @@ class Item extends FlxSprite
 		item.name = 'Recurve bow';
 		item.type = ItemType.BOW;
 		item.tier = 2;
-		item.loadGraphic(AssetPaths.recurvebow__png, true, 16, 16);
+		item.loadGraphic(AssetPaths.recurvebow__png, false, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;
@@ -274,7 +276,7 @@ class Item extends FlxSprite
 		item.name = 'Crossbow';
 		item.type = ItemType.BOW;
 		item.tier = 3;
-		item.loadGraphic(AssetPaths.crossbow__png, true, 16, 16);
+		item.loadGraphic(AssetPaths.crossbow__png, false, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
 		item.walkSpeedMultiplier    = 1.0;

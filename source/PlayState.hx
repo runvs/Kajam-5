@@ -128,7 +128,7 @@ class PlayState extends FlxState
 		}
 		
 		overlay.draw();
-		
+		player.drawHud();
 	}
 	
 	/**
