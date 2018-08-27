@@ -114,7 +114,7 @@ class PlayState extends FlxState
 		level.allEnemies.draw();
 		
 		level.allEnemyShots.draw();
-
+		level.allPlayerShots.draw();
 		level.topTiles.draw();
 		
 		
@@ -146,6 +146,7 @@ class PlayState extends FlxState
 			level.allEnemies.update(elapsed);
 			level.allNSCs.update(elapsed);
 			level.allEnemyShots.update(elapsed);
+			level.allPlayerShots.update(elapsed);
 			level.allShrines.update(elapsed);
 			
 			FlxG.collide(player, level.collisionMap);
@@ -165,6 +166,19 @@ class PlayState extends FlxState
 				if (FlxG.overlap(s, level.collisionMap))
 				{
 					s.alive = false;
+				}
+			}
+			for (s in level.allPlayerShots)
+			{
+				if (FlxG.overlap(s, level.collisionMap))
+				{
+					s.alive = false;
+				}
+				for (ei in level.allEnemies)
+				{
+					s.alive = false;
+					var e : Enemy = ei;
+					e.hit(s.damage, s.velocity.x, s.velocity.y);
 				}
 			}
 			

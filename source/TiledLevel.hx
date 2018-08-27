@@ -56,6 +56,7 @@ class TiledLevel extends TiledMap
 	public var allEnemies : AdministratedList<Enemy>;
 	public var deadEnemies : FlxSpriteGroup;
 	public var allEnemyShots : AdministratedList<EnemyShot>;
+	public var allPlayerShots : AdministratedList<PlayerShot>;
 	
 	public var allNSCs : AdministratedList<NPC>;
 	
@@ -88,8 +89,10 @@ class TiledLevel extends TiledMap
 		allEnemies = new AdministratedList<Enemy>();
 		allEnemies.DestroyCallBack.push( function (e : Enemy ) : Void  { addDeadEnemy(e); } );
 		
-		allEnemyShots = new  AdministratedList<EnemyShot>();
 		allNSCs = new AdministratedList<NPC>();
+		
+		allEnemyShots = new  AdministratedList<EnemyShot>();
+		allPlayerShots = new  AdministratedList<PlayerShot>();
 		
 		tileSet = tilesets["tileset.png"];
 		

@@ -55,6 +55,11 @@ class Player extends FlxSprite
 	var _slashSprite     :FlxSprite;
 	public var timeSinceDash : Float = 0; 
 	
+	var walkSpeedMultiplier  : Float = 1.0;
+	
+	private var _bowTimer : Float = 0;
+	
+	private var bowBar : HudBar;
 	
     //#################################################################
 
@@ -124,7 +129,7 @@ class Player extends FlxSprite
 		_dashCooldownBar._background.color = FlxColor.fromRGB(100, 100, 100, 100);
 
 		_playerInfo = new PlayerInfo(this);
-
+		bowBar = new HudBar(0, 0, 32, 10, false, FlxColor.BLUE);
 		
 		//_attackSound     = FlxG.sound.load(AssetPaths.attack1__ogg, 1);
 		//_dashSound       = FlxG.sound.load(AssetPaths.dash__ogg, 0.25);
@@ -145,57 +150,15 @@ class Player extends FlxSprite
         super.update(elapsed);
 		timeSinceDash += elapsed;
 		//dustparticles.update(elapsed);
+		
 		_slashSprite.update(elapsed);
-		_slashSprite.setPosition(_hitArea.x, _hitArea.y);
 		
 		_dashSprite1.update(elapsed);
 		_dashSprite2.update(elapsed);
 		_dashSprite3.update(elapsed);
 		_dashSprite4.update(elapsed);
-		switch _facing
-		{
-			case Facing.EAST:
-				_hitArea.setPosition(x + GameProperties.TileSize, y);
-				animation.play("walk_east", false);
-				_slashSprite.angle = 90;
-				
-			case Facing.WEST:
-				_hitArea.setPosition(x - GameProperties.TileSize, y);
-				animation.play("walk_west", false);
-				_slashSprite.angle = -90;
-				
-			case Facing.NORTH:
-				_hitArea.setPosition(x, y - GameProperties.TileSize);
-				animation.play("walk_north", false);
-				_slashSprite.angle = 0;
-				
-
-			case Facing.SOUTH:
-				_hitArea.setPosition(x, y + GameProperties.TileSize);
-				animation.play("walk_south", false);
-				_slashSprite.angle = 180;
-			
-			case Facing.NORTHEAST:
-				_hitArea.setPosition(x + GameProperties.TileSize / 2, y - GameProperties.TileSize / 2);
-				animation.play("walk_north", false);
-				_slashSprite.angle = 45;
-			case Facing.NORTHWEST:
-				_hitArea.setPosition(x - GameProperties.TileSize / 2, y - GameProperties.TileSize / 2);
-				animation.play("walk_north", false);
-				_slashSprite.angle = -45;
-				
-			case Facing.SOUTHEAST:
-				_hitArea.setPosition(x + GameProperties.TileSize / 2, y + GameProperties.TileSize / 2);
-				animation.play("walk_south", false);
-				_slashSprite.angle = 135;
-				
-			case Facing.SOUTHWEST:
-				_hitArea.setPosition(x - GameProperties.TileSize / 2, y + GameProperties.TileSize / 2);
-				animation.play("walk_south", false);
-				_slashSprite.angle = -135;
-				
-			
-		}
+		
+		handleSlashSpriteAndAnim();
 
         handleInput(elapsed);
 		var l : Float = velocity.distanceTo(new FlxPoint());
@@ -206,34 +169,9 @@ class Player extends FlxSprite
 		else
 		{
 			dustTime -= elapsed;
-			//if (dustTime <= 0)
-			//{
-				//dustTime += 0.25;
-				//dustparticles.Spawn( 3,
-				//function (s : FlxSprite) : Void
-				//{
-					//s.alive = true;
-					//var T : Float = 1.25;
-					//s.setPosition(x + FlxG.random.float(0, this.width) , y + height + FlxG.random.float( 0, 1) );
-					//s.alpha = FlxG.random.float(0.125, 0.35);
-					//FlxTween.tween(s, { alpha:0 }, T, { onComplete: function(t:FlxTween) : Void { s.alive = false; } } );
-					//var v : Float = FlxG.random.float(0.75, 1.0);
-					//s.scale.set(v, v);
-					//FlxTween.tween(s.scale, { x: 2.5, y:2.5 }, T);
-				//},
-				//function(s:FlxSprite) : Void 
-				//{
-					//s.makeGraphic(7, 7, FlxColor.TRANSPARENT);
-					//s.drawCircle(4, 4, 3, FlxColor.WHITE);
-				//});
-			//}
 		}
 		
-        //var healthFactor = health / healthMax;
-        //healthMax = GameProperties.PlayerHealthMaxDefault + healthBase + healthBonus;
-        //health    = healthMax * healthFactor;
-
-		_playerInfo.update(elapsed);
+        _playerInfo.update(elapsed);
 		
 		_healthBar.health = health / healthMax;
 		_healthBar.update(elapsed);
@@ -243,7 +181,96 @@ class Player extends FlxSprite
 
 		_dashCooldownBar.health = 1.0 - _dashCooldown / _dashSpeedMax;
 		_dashCooldownBar.update(elapsed);
+		
+		updateBow(elapsed);
+		
     }
+	
+	function updateBow(elapsed:Float) 
+	{
+		bowBar.update(elapsed);
+		if (MyInput.BowButtonJustPressed)
+		{
+			//trace("justpressed");
+			maxVelocity = getMaxVelocityWithItems().scale(GameProperties.PlayerBowSlowDownFactor);
+		}
+		else if (MyInput.BowButtonJustReleased)
+		{
+			//trace("justreleased");
+			maxVelocity = getMaxVelocityWithItems();
+			ShootBow();
+		}
+		
+		
+		bowBar.health = 0;
+		
+		if (MyInput.BowButtonPressed)
+		{
+			_bowTimer += elapsed;
+			var v : Float = _bowTimer / GameProperties.PlayerBowMaxTimer;
+			if (v <= 0) v = 0;
+			if (v >= 1) v = 1;
+			bowBar.health = v;
+			
+		}
+	}
+	
+	function ShootBow() 
+	{
+		if (_bowTimer >= 0.05)
+		{
+			var dx : Float = velocity.x;
+			var dy : Float = velocity.y;
+			var l : Float = Math.sqrt(dx * dx + dy * dy);
+			if (l == 0)
+			{
+				l = 1;
+				switch _facing
+				{
+					case Facing.EAST:
+						dx = 1;
+						dy = 0;
+						
+					case Facing.WEST:
+						dx = -1;
+						dy = 0;
+						
+					case Facing.NORTH:
+						dx = 0;
+						dy = -1;						
+			
+					case Facing.SOUTH:
+						dx = 0;
+						dy = 1;
+					
+					case Facing.NORTHEAST:
+						dx = Math.sqrt(2.0);
+						dy = -Math.sqrt(2.0);
+						
+					case Facing.NORTHWEST:
+						dx = -Math.sqrt(2.0);
+						dy = -Math.sqrt(2.0);
+						
+					case Facing.SOUTHEAST:
+						dx = Math.sqrt(2.0);
+						dy = Math.sqrt(2.0);
+						
+					case Facing.SOUTHWEST:
+						dx = -Math.sqrt(2.0);
+						dy = Math.sqrt(2.0);
+				}
+			}
+			
+			var v : Float = _bowTimer / GameProperties.PlayerBowMaxTimer;
+			if (v < 0) return;
+			if (v >= 1) v = 1;
+			var s : PlayerShot = new PlayerShot(x + width / 2, y + width / 2, dx/l, dy/l, v);
+			_playState.level.allPlayerShots.add(s);
+		}
+		
+		_bowTimer = 0;
+	}
+	
 
     //#################################################################
 
@@ -384,12 +411,12 @@ class Player extends FlxSprite
 		
 		if(swordItem == null || bowItem == null || armorItem == null) return;
 		
-		var walkSpeedMultiplier = (
+		walkSpeedMultiplier = (
 			swordItem.walkSpeedMultiplier
 			+ bowItem.walkSpeedMultiplier
 			+ armorItem.walkSpeedMultiplier
 		) / 3;
-		maxVelocity = GameProperties.PlayerMovementMaxVelocity.scale(walkSpeedMultiplier);
+		maxVelocity = getMaxVelocityWithItems();
 
 		_itemDashMultiplier = (
 			swordItem.dashDistanceMultiplier
@@ -400,6 +427,11 @@ class Player extends FlxSprite
 
     //#################################################################
 
+	private function getMaxVelocityWithItems()  : FlxPoint
+	{
+		return new FlxPoint(GameProperties.PlayerMovementMaxVelocity.x,GameProperties.PlayerMovementMaxVelocity.y).scale(walkSpeedMultiplier);
+	}
+	
 	function dash()
 	{
 		var stepSize = GameProperties.PlayerMovementMaxDashLength / GameProperties.TileSize / 2 * _itemDashMultiplier;
@@ -447,6 +479,55 @@ class Player extends FlxSprite
 		FlxTween.tween(_dashSprite3, { alpha: 0 }, 0.5);
 		FlxTween.tween(_dashSprite4, { alpha: 0 }, 0.55);
 	}
+	
+	function handleSlashSpriteAndAnim():Void 
+	{
+		
+		_slashSprite.setPosition(_hitArea.x, _hitArea.y);
+		
+		switch _facing
+		{
+			case Facing.EAST:
+				_hitArea.setPosition(x + GameProperties.TileSize, y);
+				animation.play("walk_east", false);
+				_slashSprite.angle = 90;
+				
+			case Facing.WEST:
+				_hitArea.setPosition(x - GameProperties.TileSize, y);
+				animation.play("walk_west", false);
+				_slashSprite.angle = -90;
+				
+			case Facing.NORTH:
+				_hitArea.setPosition(x, y - GameProperties.TileSize);
+				animation.play("walk_north", false);
+				_slashSprite.angle = 0;
+				
+	
+			case Facing.SOUTH:
+				_hitArea.setPosition(x, y + GameProperties.TileSize);
+				animation.play("walk_south", false);
+				_slashSprite.angle = 180;
+			
+			case Facing.NORTHEAST:
+				_hitArea.setPosition(x + GameProperties.TileSize / 2, y - GameProperties.TileSize / 2);
+				animation.play("walk_north", false);
+				_slashSprite.angle = 45;
+			case Facing.NORTHWEST:
+				_hitArea.setPosition(x - GameProperties.TileSize / 2, y - GameProperties.TileSize / 2);
+				animation.play("walk_north", false);
+				_slashSprite.angle = -45;
+				
+			case Facing.SOUTHEAST:
+				_hitArea.setPosition(x + GameProperties.TileSize / 2, y + GameProperties.TileSize / 2);
+				animation.play("walk_south", false);
+				_slashSprite.angle = 135;
+				
+			case Facing.SOUTHWEST:
+				_hitArea.setPosition(x - GameProperties.TileSize / 2, y + GameProperties.TileSize / 2);
+				animation.play("walk_south", false);
+				_slashSprite.angle = -135;
+		}
+	}
 
     //#################################################################
 	
@@ -471,6 +552,12 @@ class Player extends FlxSprite
 		//_healthBar.draw();
 		//_dashCooldownBar.draw();
 
+		if (_bowTimer > 0)
+		{
+			bowBar.setPosition(FlxG.camera.target.x - FlxG.camera.scroll.x, FlxG.camera.target.y - FlxG.camera.scroll.y - 32);
+			//trace(bowBar.x + " " + bowBar.y);
+			bowBar.draw();
+		}
 		if(_playerInfo.visible) {
 			_playerInfo.draw();
 		}

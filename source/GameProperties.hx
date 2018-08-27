@@ -30,7 +30,8 @@ class GameProperties
     public static var PlayerAttackCooldown        : Float    = 0.45;
 	public static var PlayerHealthMaxDefault      : Float    = 1.0;
 	
-
+	static public var PlayerBowSlowDownFactor (default, null) : Float = 0.3;
+	static public var PlayerBowMaxTimer (default, null) : Float = 0.7;
     // ################################################################
     // # Enemy ########################################################
     // ################################################################
@@ -44,6 +45,8 @@ class GameProperties
     // ################################################################
 	
 	public static var NPCSpeechFadeOutTime (default, null) : Float = 0.4;
+	
+
     
     // ################################################################
     // # Merchant #####################################################
