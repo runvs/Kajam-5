@@ -26,7 +26,7 @@ class BasicState extends FlxState
 		overlay.makeGraphic(FlxG.width, FlxG.height);
 		overlay.color = FlxColor.BLACK;
 		overlay.alpha = 1;
-		
+		overlay.scrollFactor.set();
 		
 		FlxG.camera.pixelPerfectRender = true;
 		FlxG.camera.zoom = 2;

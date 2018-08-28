@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.FlxSubState;
+import flixel.tweens.FlxTween;
 
 /**
  * ...
@@ -33,7 +34,7 @@ class CutSceneState extends FlxSubState
 	override public function create() 
 	{
 		super.create();
-		trace("cutscene.create");
+		//trace("cutscene.create");
 		
 		target = new FlxSprite(0, 0);
 		FlxG.camera.follow(target, flixel.FlxCameraFollowStyle.TOPDOWN);
@@ -41,18 +42,36 @@ class CutSceneState extends FlxSubState
 	
 	public function BackToPlayState()
 	{
-		trace("back to playstate");
+		//trace("back to playstate");
 		//FlxG.switchState(_state);
-		trace(_state.player);
-		FlxG.camera.follow(_state.player, flixel.FlxCameraFollowStyle.TOPDOWN);
-		trace(FlxG.camera.target);
-		this.close();
+		
+		FlxTween.tween(_state.overlay, { alpha: 1 }, 0.5, { 
+			type: FlxTweenType.ONESHOT, 
+		onComplete : function (t) 
+		{
+			FlxG.camera.follow(_state.player, flixel.FlxCameraFollowStyle.TOPDOWN);
+			_state.overlay.alpha = 0;
+			this.close();
+			
+		}
+		
+		} );
+		
+		
+		
 	}
 	
 	override public function update(elapsed:Float):Void 
 	{
 		super.update(elapsed);
 		_state.level.allNSCs.update(elapsed);
+		level.midTiles.update(elapsed);
+		
+		if (FlxG.keys.justPressed.ESCAPE)
+		{
+			BackToPlayState();
+			
+		}
 	}
 	
 }
