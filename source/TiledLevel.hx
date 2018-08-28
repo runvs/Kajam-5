@@ -71,8 +71,6 @@ class TiledLevel extends TiledMap
 	
 	private var _state : PlayState;
 	
-	
-	
 	public function new(tiledLevel:Dynamic, s : PlayState)
 	{
 		super(tiledLevel);
@@ -345,7 +343,7 @@ class TiledLevel extends TiledMap
 		var w = o.width;
 		var h = o.height;
 		
-		var a : Arena = new Arena(x, y, w, h, _state);
+		var a : Arena = new Arena(x, y, w, h, this);
 		allArenas.add(a);
 		{
 			var gateString : String = o.properties.get("gate");
@@ -382,7 +380,7 @@ class TiledLevel extends TiledMap
 		var w = o.width;
 		var h = o.height;
 		
-		var s : Trigger = new Trigger(x, y,w,h, _state);
+		var s : Trigger = new Trigger(x, y,w,h, this);
 		s.name = o.name;
 		
 		s.action = o.properties.get("action");

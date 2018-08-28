@@ -16,19 +16,16 @@ import flixel.util.FlxTimer;
 /**
  * A FlxState which can be used for the actual gameplay.
  */
-class PlayState extends FlxState
+class PlayState extends BasicState
 {
-	public var backgroundSprite : FlxSprite;
-	public var overlay : FlxSprite;
-	private var ending : Bool;
+	// for reviving player
 	var lastEntryID:Int;
-	var lastTarget:String;
-	
+	var lastTarget:String;	
 	
 	public var player : Player;
+	public static var world : World = null;
 	
-	public var world : World;
-	public var level : TiledLevel;
+	
 	
 	private var activeArena : Arena = null;
 	
@@ -39,39 +36,16 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		super.create();
-		backgroundSprite = new FlxSprite();
-		backgroundSprite.makeGraphic(FlxG.width, FlxG.height);
-		backgroundSprite.color = Palette.color1;
-		add(backgroundSprite);
 		
-		FlxG.camera.pixelPerfectRender = true;
-		FlxG.camera.zoom = 2;
+		
 		
 		world = new World(this);
 		
 		level = world.getLevelByName("wimborne.tmx");
-		//switchLevel("wimborne.tmx",1);
-		//add(level.baseTiles);
-		//add(level.midTiles);
 		
 		player = new Player(this);
-		//add(player);
+		
 		FlxG.camera.follow(player, flixel.FlxCameraFollowStyle.TOPDOWN);
-		
-		//add(level.allNSCs);
-		
-		//add(level.topTiles);
-		
-		
-		ending = false;
-		overlay = new FlxSprite();
-		overlay.makeGraphic(FlxG.width, FlxG.height);
-		overlay.color = Palette.color1;
-		overlay.alpha = 1;
-		//add(overlay);
-	
-		FlxTween.tween (overlay, { alpha : 0 }, 0.25);
-		
 		
 	}
 	

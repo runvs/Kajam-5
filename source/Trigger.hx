@@ -14,14 +14,14 @@ class Trigger extends FlxSprite
 	public var action : String = "";
 	public var target : Array<String>;
 
-	private var _state : PlayState = null;
+	private var _level : TiledLevel = null;
 	
 	public var playerOn : Bool = false;
 	
-	public function new(?X:Float=0, ?Y:Float=0,w : Int, h:Int, s: PlayState)
+	public function new(?X:Float=0, ?Y:Float=0,w : Int, h:Int, l: TiledLevel)
 	{
 		super(X, Y);
-		_state = s;
+		_level = l;
 		this.makeGraphic(w, h);
 		target = new Array<String>();
 	}
@@ -31,7 +31,7 @@ class Trigger extends FlxSprite
 		if (playerOn) return;
 		
 		if (type == null || target == null || action == null) return;
-		var l : TiledLevel = _state.level;
+		var l : TiledLevel = _level;
 		if (type == "trap")
 		{
 			var t : Array<Trap> = new Array<Trap>();

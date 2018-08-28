@@ -18,15 +18,15 @@ class Arena extends FlxSprite
 	public var state : Int = 0;	// 0 waiting for player
 								// 1 player is in, waiting for enemies
 								// 2 all enemies dead, leave arena
-	private var _playstate : PlayState;
+	private var _level : TiledLevel;
 	public var currentwave : Int = 0;
 	private var enemies : Array<String>;
 								
 	
-	public function new(?X:Float=0, ?Y:Float=0,w: Int, h: Int, s : PlayState) 
+	public function new(?X:Float=0, ?Y:Float=0,w: Int, h: Int, l : TiledLevel) 
 	{
 		super(X + GameProperties.TileSize / 2, Y + GameProperties.TileSize / 2);
-		_playstate = s;
+		_level = l;
 		this.makeGraphic(w - GameProperties.TileSize, h - GameProperties.TileSize);
 		enemies = new Array<String>();
 		for (i in 1 ... GameProperties.WorldMaxWaveNumber)
@@ -63,14 +63,14 @@ class Arena extends FlxSprite
 			var i : Int = Std.parseInt(spl2[1]);
 			var j : Int = Std.parseInt(spl2[2]);
 			
-			if (_playstate.level.allEnemies.length() == 0)
+			if (_level.allEnemies.length() == 0)
 			{
-				_playstate.level.spawnEnemy(type, i * GameProperties.TileSize, j * GameProperties.TileSize);
+				_level.spawnEnemy(type, i * GameProperties.TileSize, j * GameProperties.TileSize);
 			}
 			else
 			{
 				var t : FlxTimer = new FlxTimer();
-				t.start(FlxG.random.float(0.125, 0.5), function (t) { _playstate.level.spawnEnemy(type, i * GameProperties.TileSize, j * GameProperties.TileSize); } );
+				t.start(FlxG.random.float(0.125, 0.5), function (t) { _level.spawnEnemy(type, i * GameProperties.TileSize, j * GameProperties.TileSize); } );
 			}
 			
 		}
