@@ -54,6 +54,7 @@ class BasicState extends FlxState
 		overlay.draw();
 	}
 	
+	
 	function EndGame() 
 	{
 		if (!ending)

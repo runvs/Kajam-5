@@ -32,6 +32,7 @@
 	<classpath name="source/RunvsTools" />
 	<classpath name="source/Enemies" />
 	<classpath name="source/NPCs" />
+	<classpath name="source/Cutscenes" />
 	<classpath name="source/NPCs/Impl" />
 	<assets path="assets" />
 	

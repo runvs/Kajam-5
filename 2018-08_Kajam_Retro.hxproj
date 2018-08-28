@@ -23,6 +23,7 @@
     <class path="source\RunvsTools" />
     <class path="source\Enemies" />
     <class path="source\NPCs" />
+    <class path="source\Cutscenes" />
     <class path="source\NPCs\Impl" />
     <class path="C:\HaxeToolkit\haxe\lib\openfl\3,6,1\extern" />
     <class path="export\windows\cpp\haxe" />

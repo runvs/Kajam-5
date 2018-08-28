@@ -25,8 +25,6 @@ class PlayState extends BasicState
 	public var player : Player;
 	public static var world : World = null;
 	
-	
-	
 	private var activeArena : Arena = null;
 	
 	
@@ -37,18 +35,25 @@ class PlayState extends BasicState
 	{
 		super.create();
 		
+		trace("playstate create begin");
 		
-		
-		world = new World(this);
+		if(world == null)
+			world = new World(this);
 		
 		level = world.getLevelByName("wimborne.tmx");
 		
 		player = new Player(this);
 		
 		FlxG.camera.follow(player, flixel.FlxCameraFollowStyle.TOPDOWN);
-		
+		trace("playstate create end");
 	}
 	
+	
+	public function switchToCutScene(c : CutSceneState)
+	{
+		//FlxG.switchState(c);
+		this.openSubState(c);
+	}
 	
 	
 	/**
@@ -99,9 +104,6 @@ class PlayState extends BasicState
 		level.allEnemyShots.draw();
 		level.allPlayerShots.draw();
 		level.topTiles.draw();
-		
-		
-		
 	}
 	
 	override public function drawOverlay():Void 
@@ -192,6 +194,12 @@ class PlayState extends BasicState
 			
 			
 			CheckForLevelChange();
+		}
+		
+		if (FlxG.keys.justPressed.F5)
+		{
+			var c : Scene_Intro = new Scene_Intro(this);
+			switchToCutScene(c);
 		}
 	}	
 	
