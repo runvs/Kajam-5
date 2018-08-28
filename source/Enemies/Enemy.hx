@@ -108,7 +108,8 @@ class Enemy extends FlashSprite
 
 	public function onDeath()
 	{
-		
+		_flashOverlay.alpha = 0;
+		_flashTimer = -1;
 	}
 	
 }

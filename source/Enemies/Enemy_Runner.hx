@@ -59,7 +59,8 @@ class Enemy_Runner extends Enemy
 		this.loadGraphic(AssetPaths.slime__png, true, 16, 16);
 		animation.add("walk", [0, 1, 2, 3], 8);
 		animation.add("charge", [8], 8, true);
-		animation.add("push", [4,5], 8);
+		animation.add("push", [4, 5], 8);
+		this.animation.play("walk");
 		//this.loadGraphic(AssetPaths.enemy__png, true, 16, 16);
 		//this.animation.add("walk_south", [0, 8, 16,  24], 8);
 		//this.animation.add("walk_west",  [1, 9, 17,  25], 8);
@@ -82,7 +83,7 @@ class Enemy_Runner extends Enemy
 		
 		enemySpladderColor = FlxColor.fromRGB(18,33,21);
 		
-		underlay = new GlowOverlay(0, 0, FlxG.camera, 32, 1, 1.25);
+		underlay = new GlowOverlay(0, 0, FlxG.camera, 26, 1, 1.25);
 		underlay.alpha = 0;
 		underlay.scale.set(1, 1);
 		
@@ -135,6 +136,7 @@ class Enemy_Runner extends Enemy
 				{
 					_thinkTime = GameProperties.EnemyMovementRandomWalkThinkTime;
 					velocity.set();
+					this.animation.play("walk");
 					acceleration.set(
 						FlxG.random.float(-1.0, 1.0) * accel,
 						FlxG.random.float(-1.0, 1.0) * accel 
