@@ -65,7 +65,7 @@ class CutSceneState extends FlxSubState
 	{
 		super.update(elapsed);
 		_state.level.allNSCs.update(elapsed);
-		level.midTiles.update(elapsed);
+		_state.level.midTiles.update(elapsed);
 		
 		if (FlxG.keys.justPressed.ESCAPE)
 		{

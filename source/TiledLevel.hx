@@ -559,10 +559,10 @@ class TiledLevel extends TiledMap
 		}
 	}
 		
-	public function spladder (x: Float, y : Float)
+	public function spladder (x: Float, y : Float, c : FlxColor)
 	{
 		var s : FlxSprite = new FlxSprite();
-		s.makeGraphic(FlxG.random.int(1, 3), FlxG.random.int(1, 3), FlxColor.fromRGB(175,0,0));
+		s.makeGraphic(FlxG.random.int(1, 3), FlxG.random.int(1, 3), c);
 		
 		var N : Int = 5;
 		

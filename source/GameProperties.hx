@@ -45,6 +45,7 @@ class GameProperties
     // ################################################################
 	
 	public static var NPCSpeechFadeOutTime (default, null) : Float = 0.4;
+	static public var EnemyRunnerChargeTime (default, null) : Float = 0.65;
 	
 
     

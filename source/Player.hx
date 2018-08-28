@@ -358,7 +358,7 @@ class Player extends FlxSprite
 			{
 				enemy.hit(getMeleeDamage(), x, y);
 				enemyHit = true;
-				_playState.level.spladder(enemy.x + GameProperties.TileSize/2, enemy.y + GameProperties.TileSize/2);
+				_playState.level.spladder(enemy.x + GameProperties.TileSize/2, enemy.y + GameProperties.TileSize/2, enemy.enemySpladderColor);
 			}
 		}
 		//if(!enemyHit)

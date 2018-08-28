@@ -21,12 +21,15 @@ class Enemy extends FlashSprite
 	
 	private var _takeDamageWallTime : Float = 0;
 	
+	public var enemySpladderColor : FlxColor;
+	
 	public function new(s : PlayState) 
 	{
 		super();
 		_playState = s;
 		_idleTimer = 0;
 		health = 30;
+		enemySpladderColor = FlxColor.fromRGB(175, 0, 0);
 	}
 	
 	public function drawUnderlay()
