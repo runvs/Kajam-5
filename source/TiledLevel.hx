@@ -347,17 +347,29 @@ class TiledLevel extends TiledMap
 		
 		var a : Arena = new Arena(x, y, w, h, _state);
 		allArenas.add(a);
-		var gateString : String = o.properties.get("gate");
-		if (gateString != null)
 		{
-			var gateArray : Array<String> = gateString.split(";");
-			for (gp in gateArray)
+			var gateString : String = o.properties.get("gate");
+			if (gateString != null)
 			{
-				var spl : Array<String> = gp.split(",");
-				if (spl.length != 2) continue;
-				var x : Int = Std.parseInt(gp.split(",")[0]);
-				var y : Int = Std.parseInt(gp.split(",")[1]);
-				a.addGate(x, y);
+				var gateArray : Array<String> = gateString.split(";");
+				for (gp in gateArray)
+				{
+					var spl : Array<String> = gp.split(",");
+					if (spl.length != 2) continue;
+					var x : Int = Std.parseInt(gp.split(",")[0]);
+					var y : Int = Std.parseInt(gp.split(",")[1]);
+					a.addGate(x, y);
+				}
+			}
+		}
+		{
+			for (i in 1 ... GameProperties.WorldMaxWaveNumber)
+			{
+				var name :String = "wave" + Std.string(i);
+				var prop : String = o.properties.get(name);
+				if (prop == null) continue;
+				
+				a.addWave(i, prop);
 			}
 		}
 	}
@@ -421,27 +433,23 @@ class TiledLevel extends TiledMap
 	}
 	
 	
-	private function loadEnemy(o:TiledObject, g:TiledObjectLayer)
+	public function spawnEnemy(t : String, x, y)
 	{
-		//trace("load object of type " + o.type);
-		var x:Int = o.x;
-		var y:Int = o.y;
-		
-		if (o.type.toLowerCase() == "smashground")
+		if (t == "smashground")
 		{
 			//trace();
 			var e : Enemy_SmashGround = new Enemy_SmashGround(_state);
 			e.setPosition(x, y);
 			allEnemies.add(e);
 		}
-		else if (o.type.toLowerCase() == "runner")
+		else if (t == "runner")
 		{
 			//trace();
 			var e : Enemy_Runner = new Enemy_Runner(_state);
 			e.setPosition(x, y);
 			allEnemies.add(e);
 		}
-		else if (o.type.toLowerCase() == "shooter")
+		else if (t == "shooter")
 		{
 			//trace();
 			var e : Enemy_Shooter = new Enemy_Shooter(_state);
@@ -450,8 +458,19 @@ class TiledLevel extends TiledMap
 		}
 		else
 		{
-			trace("ERROR: unknown enemy Type");
+			trace("ERROR: unknown enemy Type: " + t);
 		}
+	}
+	
+	private function loadEnemy(o:TiledObject, g:TiledObjectLayer)
+	{
+		//trace("load object of type " + o.type);
+		var x:Int = o.x;
+		var y:Int = o.y;
+		var type : String = o.type.toLowerCase();
+		
+		spawnEnemy(type, x, y);
+		
 	}
 	
 	private function loadEntry(o:TiledObject, g:TiledObjectLayer)

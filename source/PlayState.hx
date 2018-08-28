@@ -30,6 +30,8 @@ class PlayState extends FlxState
 	public var world : World;
 	public var level : TiledLevel;
 	
+	private var activeArena : Arena = null;
+	
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -221,17 +223,38 @@ class PlayState extends FlxState
 	
 	function CheckArenas()
 	{
-		for (ai in level.allArenas)
+		if (activeArena == null)
 		{
-			var a : Arena = ai;
-			if (a.state == 0)
+			for (ai in level.allArenas)
 			{
-				if (FlxG.overlap(player, a))
+				var a : Arena = ai;
+				if (a.state == 0)
 				{
-					trace(level.allGates.length);
-					trace("activate!");
-					level.activateArena(a);
-					trace(level.allGates.length);
+					if (FlxG.overlap(player, a))
+					{
+						trace(level.allGates.length);
+						trace("activate!");
+						level.activateArena(a);
+						trace(level.allGates.length);
+						activeArena = a;
+						break;
+					}
+				}
+			}
+		}
+		else
+		{
+			if (level.allEnemies.length() == 0)
+			{
+				if (activeArena.currentwave >= GameProperties.WorldMaxWaveNumber)
+				{
+					level.deactivateArena(activeArena);
+					activeArena = null;
+					
+				}
+				else
+				{
+					activeArena.nextWave();	
 				}
 			}
 		}
