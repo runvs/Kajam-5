@@ -5,6 +5,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.math.FlxPoint;
+import flixel.math.FlxVector;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxButton;
@@ -90,6 +91,9 @@ class PlayState extends FlxState
 		
 		level.baseTiles.draw();
 		level.allTrigger.draw();
+		
+		
+		
 		//level.allTraps.draw();
 		for (ti in level.allTraps)
 		{
@@ -99,6 +103,9 @@ class PlayState extends FlxState
 		level.midTiles.draw();
 		level.allShrines.draw();
 		level.deadEnemies.draw();
+		
+		//trace(level.allGates.length);
+		level.allGates.draw();
 		
 		level.goreLayer.draw();
 		
@@ -150,6 +157,7 @@ class PlayState extends FlxState
 			level.allShrines.update(elapsed);
 			
 			FlxG.collide(player, level.collisionMap);
+			FlxG.collide(player, level.allGates);
 			
 			for (n in level.allNSCs.getList())
 			{
@@ -160,6 +168,7 @@ class PlayState extends FlxState
 			{
 				FlxG.collide(e, level.collisionMap);
 				FlxG.collide(e, level.allTraps);
+				FlxG.collide(e, level.allGates);
 			}
 			for (s in level.allEnemyShots)
 			{
@@ -197,7 +206,7 @@ class PlayState extends FlxState
 			}
 			
 			CheckTraps();
-			
+			CheckArenas();
 			
 			
 			CheckForLevelChange();
@@ -208,6 +217,24 @@ class PlayState extends FlxState
 	{
 		switchLevel(lastTarget, lastEntryID);
 		
+	}
+	
+	function CheckArenas()
+	{
+		for (ai in level.allArenas)
+		{
+			var a : Arena = ai;
+			if (a.state == 0)
+			{
+				if (FlxG.overlap(player, a))
+				{
+					trace(level.allGates.length);
+					trace("activate!");
+					level.activateArena(a);
+					trace(level.allGates.length);
+				}
+			}
+		}
 	}
 	
 	function CheckForLevelChange() 
@@ -301,5 +328,5 @@ class PlayState extends FlxState
 		}
 		
 	}
-	
+
 }

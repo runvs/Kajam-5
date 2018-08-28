@@ -13,6 +13,8 @@ import flixel.addons.editors.tiled.TiledTileLayer;
 import flixel.addons.editors.tiled.TiledTileSet;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
+import flixel.math.FlxPoint;
+import flixel.math.FlxVector;
 import flixel.system.FlxSound;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxEase;
@@ -64,6 +66,9 @@ class TiledLevel extends TiledMap
 	public var allTrigger : FlxTypedGroup<Trigger>;
 	public var goreLayer : FlxSprite;
 	
+	public var allGates : FlxSpriteGroup;
+	public var allArenas : FlxTypedGroup<Arena>;
+	
 	private var _state : PlayState;
 	
 	
@@ -107,6 +112,8 @@ class TiledLevel extends TiledMap
 		
 		allShrines = new FlxTypedGroup<Shrine>();
 			
+		allArenas = new FlxTypedGroup<Arena>();
+		allGates = new FlxSpriteGroup();
 		
 		//trace(this.width);
 		
@@ -318,6 +325,39 @@ class TiledLevel extends TiledMap
 					var o : TiledObject = oi;
 					loadEnemy(o, objectLayer);
 				}
+			}
+			else if (layer.name.toLowerCase() == "arena")
+			{
+				for (oi in objectLayer.objects)
+				{
+					var o : TiledObject = oi;
+					loadArena(o, objectLayer);
+				}
+			}
+		}
+	}
+	
+	function loadArena(o:TiledObject, g:TiledObjectLayer) 
+	{
+		var x:Int = o.x;
+		var y:Int = o.y;
+		
+		var w = o.width;
+		var h = o.height;
+		
+		var a : Arena = new Arena(x, y, w, h, _state);
+		allArenas.add(a);
+		var gateString : String = o.properties.get("gate");
+		if (gateString != null)
+		{
+			var gateArray : Array<String> = gateString.split(";");
+			for (gp in gateArray)
+			{
+				var spl : Array<String> = gp.split(",");
+				if (spl.length != 2) continue;
+				var x : Int = Std.parseInt(gp.split(",")[0]);
+				var y : Int = Std.parseInt(gp.split(",")[1]);
+				a.addGate(x, y);
 			}
 		}
 	}
@@ -534,5 +574,28 @@ class TiledLevel extends TiledMap
 				return e;
 		}
 		return null;
+	}
+	
+	public function activateArena (a : Arena)
+	{
+		if (a.state != 0) return;
+		
+		a.state = 1;
+		for (gi in a.gates)
+		{
+			var g : FlxPoint = gi;
+			var spr : FlxSprite = new FlxSprite(g.x * GameProperties.TileSize, g.y * GameProperties.TileSize);
+			spr.makeGraphic(GameProperties.TileSize, GameProperties.TileSize, FlxColor.PURPLE, true);
+			spr.immovable = true;
+			allGates.add(spr);
+		}
+	}
+	
+	public function deactivateArena ( a : Arena)
+	{
+		if (a.state != 1) return;
+		a.state = 2;
+		a.active = false;
+		allGates = new FlxSpriteGroup();
 	}
 }
