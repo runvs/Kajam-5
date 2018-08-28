@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
 
 /**
  * ...
@@ -53,10 +54,17 @@ class BasicState extends FlxState
 		overlay.draw();
 	}
 	
-	public function switchToState (newState : BasicState)
+	function EndGame() 
 	{
+		if (!ending)
+		{
+			ending = true;
+			FlxTween.tween(overlay, { alpha : 1.0 }, 0.9);
+			
+			var t: FlxTimer = new FlxTimer();
+			t.start(1,function(t:FlxTimer): Void {MenuState.setNewScore(0); FlxG.switchState(new MenuState()); } );
+		}
 		
-		FlxG.switchState(newState);
 	}
 	
 }

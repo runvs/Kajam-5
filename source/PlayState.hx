@@ -61,9 +61,9 @@ class PlayState extends BasicState
 	}
 
 	
-	override public function draw() : Void
+	override public function drawObjects():Void 
 	{
-		super.draw();
+		super.drawObjects();
 		
 		level.baseTiles.draw();
 		level.allTrigger.draw();
@@ -101,6 +101,11 @@ class PlayState extends BasicState
 		level.topTiles.draw();
 		
 		
+		
+	}
+	
+	override public function drawOverlay():Void 
+	{
 		for (s in level.allShrines)
 		{
 			s.drawOverlay();
@@ -110,8 +115,9 @@ class PlayState extends BasicState
 			n.drawOverlay();
 		}
 		
-		overlay.draw();
+		super.drawOverlay();
 		player.drawHud();
+		
 	}
 	
 	/**
@@ -292,21 +298,7 @@ class PlayState extends BasicState
 	}
 
 	
-	function EndGame() 
-	{
-		if (!ending)
-		{
-			ending = true;
-			
-			
-			
-			FlxTween.tween(overlay, {alpha : 1.0}, 0.9);
-			
-			var t: FlxTimer = new FlxTimer();
-			t.start(1,function(t:FlxTimer): Void {MenuState.setNewScore(0); FlxG.switchState(new MenuState()); } );
-		}
-		
-	}
+	
 	
 	function CheckTraps():Void 
 	{

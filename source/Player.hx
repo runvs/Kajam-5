@@ -107,9 +107,8 @@ class Player extends FlxSprite
 		drag         = GameProperties.PlayerMovementDrag;
 		maxVelocity  = GameProperties.PlayerMovementMaxVelocity;
 
-		trace("player max velo X: " + maxVelocity.x);
-		trace("player max velo Y: " + maxVelocity.y);
-		
+		//trace("player max velo X: " + maxVelocity.x);
+		//trace("player max velo Y: " + maxVelocity.y);
         _dashCooldown = 0;
         _dashDir = new FlxPoint();
 		
@@ -482,7 +481,6 @@ class Player extends FlxSprite
 	
 	function handleSlashSpriteAndAnim():Void 
 	{
-		
 		_slashSprite.setPosition(_hitArea.x, _hitArea.y);
 		
 		switch _facing
