@@ -361,21 +361,14 @@ class Player extends FlxSprite
 				_playState.level.spladder(enemy.x + GameProperties.TileSize/2, enemy.y + GameProperties.TileSize/2, enemy.enemySpladderColor);
 			}
 		}
-		//if(!enemyHit)
-		//{
-			//for(npc in _playState.level.npcs)
-			//{
-				//if (npc.alive)
-				//{
-					//if(FlxG.overlap(_hitArea, npc))
-					//{
-						//npc.interact();
-						//_npcInteraction = true;
-						//_interactingNPC = npc;
-					//}
-				//}
-			//}
-		//}
+		for (ti in _playState.level.allTrigger)
+		{
+			var t : Trigger = ti;
+			if (FlxG.overlap(_hitArea, t))
+			{
+				t.perform();
+			}
+		}
 	}
 
     //#################################################################

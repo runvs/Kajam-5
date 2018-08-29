@@ -24,6 +24,7 @@ class Trigger extends FlxSprite
 		_level = l;
 		this.makeGraphic(w, h);
 		target = new Array<String>();
+		immovable = true;
 	}
 	
 	public function perform ()

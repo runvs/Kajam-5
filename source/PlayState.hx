@@ -198,13 +198,14 @@ class PlayState extends BasicState
 				var t : Trigger = ti;
 				if (FlxG.overlap(player, t))
 				{
-					t.perform();
+					//t.perform();
 					t.playerOn = true;
 				}
 				else
 				{
 					t.playerOn = false;
 				}
+				FlxG.collide(player, t);
 			}
 			
 			CheckTraps();
