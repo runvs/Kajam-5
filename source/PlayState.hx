@@ -142,6 +142,8 @@ class PlayState extends BasicState
 			level.allPlayerShots.update(elapsed);
 			level.allShrines.update(elapsed);
 			
+			level.allGates.update(elapsed);
+			
 			FlxG.collide(player, level.collisionMap);
 			FlxG.collide(player, level.allGates);
 			

@@ -22,6 +22,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
 import haxe.io.Path;
 
 /**
@@ -608,11 +609,19 @@ class TiledLevel extends TiledMap
 		if (a.state != 0) return;
 		
 		a.state = 1;
+		
+		FlxG.camera.shake(0.005, 0.625);
+		FlxG.camera.flash(FlxColor.fromRGB(255, 255, 255, 150), 0.25);
+		
 		for (gi in a.gates)
 		{
 			var g : FlxPoint = gi;
 			var spr : FlxSprite = new FlxSprite(g.x * GameProperties.TileSize, g.y * GameProperties.TileSize);
-			spr.makeGraphic(GameProperties.TileSize, GameProperties.TileSize, FlxColor.PURPLE, true);
+			//spr.makeGraphic(GameProperties.TileSize, GameProperties.TileSize, FlxColor.PURPLE, true);
+			spr.loadGraphic(AssetPaths.wallpopup__png, true, 16, 16);
+			spr.animation.add("idle", [0, 1, 2, 3, 4, 5, 6], 14, false);
+			var t : FlxTimer = new FlxTimer();
+			t.start(FlxG.random.float(0, 0.125), function (t) { spr.animation.play("idle");} );
 			spr.immovable = true;
 			allGates.add(spr);
 		}
