@@ -130,7 +130,7 @@ class PlayState extends BasicState
 		super.update(elapsed);
 		MyInput.update();
 		
-		trace(camera.target);
+		//trace(camera.target);
 		
 		if (!ending)
 		{

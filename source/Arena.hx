@@ -60,6 +60,7 @@ class Arena extends FlxSprite
 			if (spl2.length != 3) continue;
 			
 			var type : String = spl2[0];
+			if (type== "smash") type = "smashground";
 			var i : Int = Std.parseInt(spl2[1]);
 			var j : Int = Std.parseInt(spl2[2]);
 			

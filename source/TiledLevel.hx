@@ -357,9 +357,11 @@ class TiledLevel extends TiledMap
 		var a : Arena = new Arena(x, y, w, h, this);
 		allArenas.add(a);
 		{
+			//trace("load arena");
 			var gateString : String = o.properties.get("gate");
 			if (gateString != null)
 			{
+				//StringTools.replace(gateString, "\n", "");
 				var gateArray : Array<String> = gateString.split(";");
 				for (gp in gateArray)
 				{
