@@ -102,7 +102,7 @@ class Enemy extends FlashSprite
         {
             alive = false;
 			onDeath();
-			trace('I am dead');
+			//trace('I am dead');
         }
     }
 
