@@ -14,6 +14,9 @@ class PlayerShot extends GenericShot
 	
 	public function new(?X:Float=0, ?Y:Float=0, vx: Float, vy: Float, BowTimeFactor : Float) 
 	{
+		
+		//if (vy == 0) vy = -0.1;
+		
 		super(X, Y,vx,vy);
 		
 		var vsc : Float = 200;
@@ -55,7 +58,15 @@ class PlayerShot extends GenericShot
 	override public function createImage() 
 	{
 		super.createImage();
-		this.makeGraphic(8, 3, FlxColor.BLUE);
+		//this.makeGraphic(8, 3, FlxColor.BLUE);
+		this.loadGraphic(AssetPaths.Arrow__png, false);
 		this.angle = MathExtender.Rad2Deg(Math.atan2(velocity.y, velocity.x));
+	}
+	
+	override public function update(elapsed:Float):Void 
+	{
+		super.update(elapsed);
+		if (velocity.x * velocity.x + velocity.y * velocity.y <= 2)
+			alive = false;
 	}
 }

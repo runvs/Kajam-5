@@ -263,7 +263,7 @@ class Player extends FlxSprite
 			var v : Float = _bowTimer / GameProperties.PlayerBowMaxTimer;
 			if (v < 0) return;
 			if (v >= 1) v = 1;
-			var s : PlayerShot = new PlayerShot(x + width / 2, y + width / 2, dx/l, dy/l, v);
+			var s : PlayerShot = new PlayerShot(x , y , dx/l, dy/l, v);
 			_playState.level.allPlayerShots.add(s);
 		}
 		

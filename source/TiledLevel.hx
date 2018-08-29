@@ -1,5 +1,6 @@
 package;
 
+import flash.display.StageDisplayState;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -96,7 +97,16 @@ class TiledLevel extends TiledMap
 		
 		allEnemyShots = new  AdministratedList<EnemyShot>();
 		allPlayerShots = new  AdministratedList<PlayerShot>();
-		
+		allPlayerShots.DestroyCallBack.push(
+		function (a : PlayerShot) 
+		{
+			a.color = FlxColor.GRAY; 
+			a.velocity.set(); 
+			a.acceleration.set(); 
+			a.angle = FlxG.random.float(0, 360); 
+			deadEnemies.add(a);  
+			
+		} );
 		tileSet = tilesets["tileset.png"];
 		
 		

@@ -19,6 +19,7 @@ class BasicState extends FlxState
 	
 	public var level : TiledLevel;
 	
+	private var vignette : Vignette;
 
 	override public function create() 
 	{
@@ -34,6 +35,8 @@ class BasicState extends FlxState
 		
 		
 		FlxTween.tween (overlay, { alpha : 0 }, 0.25);
+		vignette = new Vignette(FlxG.camera,0.5,0.5*0.95,1 );
+		
 	}
 	
 	override public function draw():Void 
@@ -52,6 +55,7 @@ class BasicState extends FlxState
 	public function drawOverlay() : Void
 	{
 		overlay.draw();
+		vignette.draw();
 	}
 	
 	

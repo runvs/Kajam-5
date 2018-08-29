@@ -165,15 +165,29 @@ class PlayState extends BasicState
 			}
 			for (s in level.allPlayerShots)
 			{
+				if (s.alive == false) continue;
 				if (FlxG.overlap(s, level.collisionMap))
 				{
 					s.alive = false;
 				}
 				for (ei in level.allEnemies)
 				{
-					s.alive = false;
 					var e : Enemy = ei;
-					e.hit(s.damage, s.velocity.x, s.velocity.y);
+					if (FlxG.overlap(s, e))
+					{
+						s.alive = false;	
+						e.hit(s.damage, s.velocity.x, s.velocity.y);
+						level.spladder(e.x + GameProperties.TileSize/2, e.y + GameProperties.TileSize/2, e.enemySpladderColor);
+					}
+				}
+				for (ti in level.allTrigger)
+				{
+					var t : Trigger = ti;
+					if (FlxG.overlap(s, ti))
+					{
+						s.alive = false;
+						t.perform();
+					}
 				}
 			}
 			
