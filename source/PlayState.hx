@@ -279,7 +279,7 @@ class PlayState extends BasicState
 			//trace(exit.x + " " + exit.y);
 			if (exit.overlapsPoint(p))
 			{
-				switchLevel(exit.target, exit.entryid);
+				switchLevel(exit.target, exit.entryid, true);
 			}
 			
 		}
@@ -294,6 +294,8 @@ class PlayState extends BasicState
 		for (s in level.allEnemyShots)
 			s.alive = false;
 		
+		
+		FlxTween.tween(FlxG.sound.music, { volume: 0 }, 0.7);	
 		FlxTween.tween(overlay, { alpha: 1 }, 0.75, { onComplete : 
 		function (t) : Void 
 		{ 
@@ -304,13 +306,18 @@ class PlayState extends BasicState
 				return;
 			}
 		
+			//trace("restart 1");
 			if (restartMusic)
 			{
+				//trace("restart 1");
 				if (level._music != newLevel._music)
 				{
+					//trace("restart 2");
 					if (newLevel._music != "")
 					{
-						StartMusic(newLevel._music);
+						//trace("restart 3");
+						var t:FlxTimer = new FlxTimer();
+						t.start(0.25, function(t) { StartMusic(newLevel._music); } );
 					}
 				}
 			}
@@ -322,7 +329,7 @@ class PlayState extends BasicState
 			else
 			{
 				player.setPosition(0, 0);
-				trace("warning: no entry found!");
+				trace("WARNING: no entry found!");
 			}
 		
 			lastTarget = target;
@@ -339,6 +346,7 @@ class PlayState extends BasicState
 	
 	function StartMusic(track : String) 
 	{
+		//trace("restart 4");
 		if (track == "exploration")
 		{
 			FlxG.sound.playMusic(AssetPaths.exploration_theme__ogg, 0.6);
