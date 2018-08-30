@@ -284,7 +284,7 @@ class PlayState extends BasicState
 			
 		}
 	}
-	public function switchLevel ( target : String, entryid : Int)
+	public function switchLevel ( target : String, entryid : Int, restartMusic : Bool = false)
 	{
 		ending = true;
 		
@@ -303,6 +303,18 @@ class PlayState extends BasicState
 				trace ("warning: Level: " + target + " not found!!");
 				return;
 			}
+		
+			if (restartMusic)
+			{
+				if (level._music != newLevel._music)
+				{
+					if (newLevel._music != "")
+					{
+						StartMusic(newLevel._music);
+					}
+				}
+			}
+			
 			level =  newLevel;
 			var entry : Entry = level.getEntry(entryid);
 			if (entry != null)
@@ -320,8 +332,25 @@ class PlayState extends BasicState
 			
 			FlxG.worldBounds.set(0, 0, level.fullWidth, level.fullHeight);
 			FlxG.camera.setScrollBounds(0, level.fullWidth, 0, level.fullHeight);
+		
 		}
 		} );
+	}
+	
+	function StartMusic(track : String) 
+	{
+		if (track == "exploration")
+		{
+			FlxG.sound.playMusic(AssetPaths.exploration_theme__ogg, 0.6);
+		}
+		else if (track == "city")
+		{
+			FlxG.sound.playMusic(AssetPaths.town_music__ogg, 0.6);
+		}
+		else
+		{
+			trace ("ERROR: music not found: " + track);
+		}
 	}
 
 	

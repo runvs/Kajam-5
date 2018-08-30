@@ -73,6 +73,8 @@ class TiledLevel extends TiledMap
 	
 	private var _state : PlayState;
 	
+	public var _music : String = "";
+	
 	public function new(tiledLevel:Dynamic, s : PlayState)
 	{
 		super(tiledLevel);
@@ -311,6 +313,10 @@ class TiledLevel extends TiledMap
 					else if (o.type.toLowerCase() == "trigger")
 					{
 						loadTrigger(o, objectLayer);
+					}
+					else if (o.type.toLowerCase() == "music")
+					{
+						_music = o.name;
 					}
 					else
 					{

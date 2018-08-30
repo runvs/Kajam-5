@@ -1,5 +1,6 @@
 package;
 import flixel.FlxG;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxTimer;
 
 /**
@@ -9,6 +10,10 @@ import flixel.util.FlxTimer;
 class Scene_Intro extends CutSceneState
 {
 
+	var a : NPC_Annesa;
+	
+	var townsfolk : FlxTypedGroup<NPC_townpeople>;
+	
 	public function new(s:PlayState) 
 	{
 		super(s);
@@ -20,12 +25,38 @@ class Scene_Intro extends CutSceneState
 		super.create();
 		//trace("scene_intro.creat");
 		
-		target.setPosition(700, 700);
+		target.setPosition(200, 600);
 		
-		var a : NPC_Annesa = new NPC_Annesa(_state);
+		target.velocity.set(50, 0);
+		a = new NPC_Annesa(_state);
+		
+		townsfolk = new FlxTypedGroup<NPC_townpeople>();
+		
+		for (i in 0 ... 80)
+		{
+			var t : NPC_townpeople = new NPC_townpeople(_state);
+			t.setPosition(FlxG.random.float(0, _state.level.fullWidth), FlxG.random.float(0, _state.level.fullHeight));
+			if (FlxG.overlap(t, _state.level.collisionMap)) continue;
+			
+			var r : Int = FlxG.random.int(0, 3);
+			if (r == 0)
+				t.animation.play("north");
+			else if (r == 1)
+				t.animation.play("south");
+			else if (r == 2)
+				t.animation.play("east");	
+			else 
+				t.animation.play("west");	
+			townsfolk.add(t);
+			_state.level.allNSCs.add(t);
+		}
+		
+		
+		
 		
 		_state.level.allNSCs.add(a);
 		a.setPosition(672, 830);
+		
 		
 		
 		var t1: FlxTimer = new FlxTimer();
@@ -47,7 +78,8 @@ class Scene_Intro extends CutSceneState
 		var t3 : FlxTimer = new FlxTimer();
 		t3.start(7.75, function (t)
 		{
-			a.setPosition( -500, -500);
+			//a.setPosition( -500, -500);
+			
 			BackToPlayState();
 		});
 		
@@ -57,13 +89,29 @@ class Scene_Intro extends CutSceneState
 		
 	}
 	
+	
+	override public function draw():Void 
+	{
+		super.draw();
+		target.draw();
+	}
+	
 	override public function update(elapsed:Float):Void 
 	{
 		super.update(elapsed);
-		
+		target.update(elapsed);
 		//trace("intro.update");
-		
+		_state.player.setPosition(target.x, target.y);
 	}
 	
+	override function LeaveCallback() 
+	{
+		super.LeaveCallback();
+		a.alive = false;
+		for (t in townsfolk)
+		{
+			t.alive = false;
+		}
+	}
 	
 }

@@ -37,7 +37,7 @@ class CutSceneState extends FlxSubState
 		//trace("cutscene.create");
 		
 		target = new FlxSprite(0, 0);
-		FlxG.camera.follow(target, flixel.FlxCameraFollowStyle.TOPDOWN);
+		FlxG.camera.follow(target, flixel.FlxCameraFollowStyle.TOPDOWN_TIGHT);
 	}
 	
 	public function BackToPlayState()
@@ -51,6 +51,7 @@ class CutSceneState extends FlxSubState
 		{
 			FlxG.camera.follow(_state.player, flixel.FlxCameraFollowStyle.TOPDOWN);
 			_state.overlay.alpha = 0;
+			LeaveCallback();
 			this.close();
 			
 		}
@@ -58,6 +59,11 @@ class CutSceneState extends FlxSubState
 		} );
 		
 		
+		
+	}
+	
+	function LeaveCallback() 
+	{
 		
 	}
 	

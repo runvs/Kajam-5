@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="45" height="20" tilewidth="16" tileheight="16" nextobjectid="205">
+<map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="45" height="20" tilewidth="16" tileheight="16" nextobjectid="206">
  <tileset firstgid="1" name="tileset.png" tilewidth="16" tileheight="16" tilecount="112" columns="28">
   <image source="../images/tileset.png" width="448" height="64"/>
  </tileset>
@@ -50,6 +50,7 @@
     <property name="entryid" value="1"/>
    </properties>
   </object>
+  <object id="205" name="exploration" type="music" x="0" y="0" width="16" height="16"/>
  </objectgroup>
  <objectgroup color="#ff0000" name="traps">
   <object id="186" type="trap" x="16" y="264" width="104" height="40"/>
