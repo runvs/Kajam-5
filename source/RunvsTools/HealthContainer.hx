@@ -92,6 +92,7 @@ class HealthContainer extends FlxSprite
 	
 	public function SetHealth(h : Float, hm : Float )
 	{
+		if (h <= 0 ) h = 0;
 		health = h;
 		maxHealth = hm;
 		

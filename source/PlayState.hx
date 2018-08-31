@@ -4,6 +4,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import flixel.text.FlxText;
@@ -176,6 +177,7 @@ class PlayState extends BasicState
 				if (FlxG.overlap(s, player))
 				{
 					player.takeDamage(0.5);
+					s.alive = false;
 				}
 			}
 			for (s in level.allPlayerShots)
@@ -223,6 +225,7 @@ class PlayState extends BasicState
 			
 			CheckTraps();
 			CheckArenas();
+			CheckPlayerDead();
 			
 			
 			CheckForLevelChange();
@@ -234,6 +237,26 @@ class PlayState extends BasicState
 			switchToCutScene(c);
 		}
 	}	
+	
+	function CheckPlayerDead() 
+	{
+		if (player.alive  == false)
+		{
+			player.heal(player.healthMax);
+			player.alive = true;
+			if (activeArena == null)
+			{
+				RestartLevel();
+			}
+			else
+			{
+				activeArena.resetArena();
+				
+				level.allGates = new FlxSpriteGroup();
+				RestartLevel();
+			}
+		}
+	}
 	
 	function RestartLevel() 
 	{
@@ -309,7 +332,7 @@ class PlayState extends BasicState
 		
 		
 		FlxTween.tween(FlxG.sound.music, { volume: 0 }, 0.7);	
-		FlxTween.tween(overlay, { alpha: 1 }, 0.75, { onComplete : 
+		FlxTween.tween(overlay, { alpha: 1 }, 0.85, { onComplete : 
 		function (t) : Void 
 		{ 
 			var newLevel : TiledLevel = world.getLevelByName(target);

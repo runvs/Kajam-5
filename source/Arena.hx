@@ -83,4 +83,11 @@ class Arena extends FlxSprite
 		spawn();
 		
 	}
+	
+	public function resetArena() 
+	{
+		currentwave = 0;
+		state = 0;
+		active = true;
+	}
 }
