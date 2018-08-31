@@ -47,6 +47,7 @@ class Enemy_Shooter extends Enemy
 		_preferredDistance = _aggroRangeInTiles - 1.5 + FlxG.random.float( -1, 1);
 		_rightGuy = FlxG.random.bool();
 		_rightGuyCounter = FlxG.random.int(2, 4);
+		health = 10;
 	}
 	
 	

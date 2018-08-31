@@ -44,6 +44,9 @@ class PlayState extends BasicState
 		
 		level = world.getLevelByName("wimborne.tmx");
 		
+		FlxG.worldBounds.set(0, 0, level.fullWidth, level.fullHeight);
+		FlxG.camera.setScrollBounds(0, level.fullWidth, 0, level.fullHeight);
+		
 		player = new Player(this);
 		
 		FlxG.camera.follow(player, flixel.FlxCameraFollowStyle.TOPDOWN);
