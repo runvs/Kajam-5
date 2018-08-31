@@ -33,7 +33,7 @@ class Player extends FlashSprite
 	var _dashSprite3    : FlxSprite;
 	var _dashSprite4    : FlxSprite;
 
-	var _playState      : PlayState;
+	var _state      : PlayState;
 
 	var _hitArea        : FlxSprite;
 	
@@ -118,7 +118,7 @@ class Player extends FlashSprite
         _dashDir = new FlxPoint();
 		
 
-		_playState = playState;
+		_state = playState;
 
 		setPosition(12 * GameProperties.TileSize, 9 * GameProperties.TileSize);
 		
@@ -281,7 +281,7 @@ class Player extends FlashSprite
 			if (v < 0) return;
 			if (v >= 1) v = 1;
 			var s : PlayerShot = new PlayerShot(x , y , dx/l, dy/l, v);
-			_playState.level.allPlayerShots.add(s);
+			_state.level.allPlayerShots.add(s);
 		}
 		
 		_bowTimer = 0;
@@ -369,16 +369,16 @@ class Player extends FlashSprite
 		
 		var enemyHit = false;
 		// TODO check if enemy is hit
-		for(enemy in _playState.level.allEnemies)
+		for(enemy in _state.level.allEnemies)
 		{
 			if(FlxG.overlap(_hitArea, enemy))
 			{
 				enemy.hit(getMeleeDamage(), x, y);
 				enemyHit = true;
-				_playState.level.spladder(enemy.x + GameProperties.TileSize/2, enemy.y + GameProperties.TileSize/2, enemy.enemySpladderColor);
+				_state.level.spladder(enemy.x + GameProperties.TileSize/2, enemy.y + GameProperties.TileSize/2, enemy.enemySpladderColor);
 			}
 		}
-		for (ti in _playState.level.allTrigger)
+		for (ti in _state.level.allTrigger)
 		{
 			var t : Trigger = ti;
 			if (FlxG.overlap(_hitArea, t))
@@ -464,7 +464,7 @@ class Player extends FlashSprite
 			setPosition(x + _dashDir.x * stepSize, y + _dashDir.y * stepSize);
 
 			 
-			if(FlxG.overlap(this, _playState.level.collisionMap))
+			if(FlxG.overlap(this, _state.level.collisionMap))
 			{
 				setPosition(lastPosition.x, lastPosition.y);
 				break;
@@ -612,7 +612,7 @@ class Player extends FlashSprite
 		}
 		
 		this.Flash(0.2, FlxColor.RED);
-		
+		_state.level.spladder(x, y, FlxColor.RED);
 		
 	}
 
