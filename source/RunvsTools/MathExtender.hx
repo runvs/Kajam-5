@@ -22,5 +22,12 @@ class MathExtender
 		if (dec < 0) dec *= -1;
 		return '${Std.string(Std.int(input))}.${Std.string(dec)}';
     }
-	
+
+	/// this function takes an arbitrary float and returns a value that is quantized in 0.5 steps
+	public static function castToHalfSteps (x:Float) : Float
+	{
+		var xi : Int = Std.int( Math.round( x  * 2));	
+		var ret : Float = xi / 2.0;	// 0, 0.5, 1.0, 1.5, 2.0, 2.5, ...
+		return ret;
+	}
 }

@@ -118,7 +118,7 @@ class Enemy_Runner extends Enemy
 		underlay.alpha = 0;
 		_chargeTime -= FlxG.elapsed;
 		//trace(_chargeTime);
-        var playerVector = new FlxVector(_playState.player.x + _playState.player.width/2.0, _playState.player.y + _playState.player.height/2.0);
+        var playerVector = new FlxVector(_state.player.x + _state.player.width/2.0, _state.player.y + _state.player.height/2.0);
         var enemyVector = new FlxVector(x + width/2.0, y + height/2);
 		
 		_distanceToPlayer = playerVector.dist(enemyVector);

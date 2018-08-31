@@ -12,7 +12,7 @@ import flixel.util.FlxColor;
 class Enemy extends FlashSprite
 {
 
-	private var _playState    : PlayState;
+	private var _state    : PlayState;
 	private var _facing       : Facing;
 	
 	public var MaxHealth      : Float;
@@ -26,7 +26,7 @@ class Enemy extends FlashSprite
 	public function new(s : PlayState) 
 	{
 		super();
-		_playState = s;
+		_state = s;
 		_idleTimer = 0;
 		health = 30;
 		enemySpladderColor = FlxColor.fromRGB(175, 0, 0);

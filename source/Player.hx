@@ -40,7 +40,7 @@ class Player extends FlxSprite
 	var _facing         : Facing;
 	var _attackCooldown : Float;
 	
-	var _healthBar 		: HudBar;
+	
 	var _dashCooldownBar: HudBar;
 	var _playerInfo     : PlayerInfo;
 
@@ -60,6 +60,8 @@ class Player extends FlxSprite
 	private var _bowTimer : Float = 0;
 	
 	private var bowBar : HudBar;
+	
+	private var healthCont : HealthContainer;
 	
     //#################################################################
 
@@ -118,10 +120,8 @@ class Player extends FlxSprite
 		setPosition(12 * GameProperties.TileSize, 9 * GameProperties.TileSize);
 		
 		health = healthMax = GameProperties.PlayerHealthMaxDefault;
-		
-		_healthBar = new HudBar(10, 10, 96, 16, false, FlxColor.WHITE);
-		//_healthBar.color = GameProperties.ColorHealthBar;
-		_healthBar._background.color = FlxColor.fromRGB(100, 100, 100, 100);
+		healthCont = new HealthContainer(AssetPaths.heart_empty__png, AssetPaths.heart_half__png, AssetPaths.heart_full__png);
+		healthCont.SetHealth(health, healthMax);
 		
 		_dashCooldownBar = new HudBar(10, 32, 48, 8, false, FlxColor.BLUE);
 		//_dashCooldownBar.color = GameProperties.ColorStaminaBar;
@@ -140,6 +140,8 @@ class Player extends FlxSprite
 		_slashSprite.animation.add("idle", [3]);
 		_slashSprite.animation.play("idle");
 		_slashSprite.origin.set(8, 8);
+		
+		
     }
 
     //#################################################################
@@ -172,9 +174,7 @@ class Player extends FlxSprite
 		
         _playerInfo.update(elapsed);
 		
-		_healthBar.health = health / healthMax;
-		_healthBar.update(elapsed);
-
+		
         _dashSpeedMax = GameProperties.PlayerMovementDashCooldown;
         _dashSpeedMax = _dashSpeedMax < 0.5 ? 0.5 : _dashSpeedMax;
 
@@ -182,6 +182,16 @@ class Player extends FlxSprite
 		_dashCooldownBar.update(elapsed);
 		
 		updateBow(elapsed);
+		
+		if (FlxG.keys.justPressed.F9)
+		{
+			health -= 0.5;
+			
+		}
+		if (FlxG.keys.justPressed.F10)
+		{
+			health += 0.5;
+		}
 		
     }
 	
@@ -212,6 +222,9 @@ class Player extends FlxSprite
 			bowBar.health = v;
 			
 		}
+		
+		healthCont.SetHealth(health, healthMax);
+		trace(health + " " + healthMax);
 	}
 	
 	function ShootBow() 
@@ -540,7 +553,7 @@ class Player extends FlxSprite
 
 	public function drawHud()
 	{
-		//_healthBar.draw();
+
 		//_dashCooldownBar.draw();
 
 		if (_bowTimer > 0)
@@ -553,7 +566,15 @@ class Player extends FlxSprite
 			_playerInfo.draw();
 		}
 		
+		
+		drawHealthContainer();
+		
 		// TODO draw inventory
+	}
+	
+	function drawHealthContainer() 
+	{
+		healthCont.draw();
 	}
 
     //#################################################################

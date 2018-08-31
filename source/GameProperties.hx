@@ -28,7 +28,7 @@ class GameProperties
 	public static var PlayerMovementMaxDashLength : Float    = 40.0;
     public static var PlayerAttackBaseDamage      : Float    = 10.0;
     public static var PlayerAttackCooldown        : Float    = 0.45;
-	public static var PlayerHealthMaxDefault      : Float    = 1.0;
+	public static var PlayerHealthMaxDefault      : Float    = 3.0;
 	
 	static public var PlayerBowSlowDownFactor (default, null) : Float = 0.3;
 	static public var PlayerBowMaxTimer (default, null) : Float = 0.7;

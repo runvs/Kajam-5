@@ -56,7 +56,7 @@ class Enemy_Shooter extends Enemy
 		
 		
 		
-		var playerVector = new FlxVector(_playState.player.x + _playState.player.width/2.0, _playState.player.y + _playState.player.height/2.0);
+		var playerVector = new FlxVector(_state.player.x + _state.player.width/2.0, _state.player.y + _state.player.height/2.0);
 		var enemyVector = new FlxVector(x + width/2.0, y + height/2);
 		_distanceToPlayer = playerVector.dist(enemyVector);
 		var direction :FlxVector = playerVector.subtractNew(enemyVector).normalize();
@@ -148,7 +148,7 @@ class Enemy_Shooter extends Enemy
 		
 		_shootTimer = 0.9;
 		var s : EnemyShot = new EnemyShot(x + this.width / 2.0, y + this.height / 2.0, dir.x , dir.y );
-		_playState.level.allEnemyShots.add(s);
+		_state.level.allEnemyShots.add(s);
 		
 		_rightGuyCounter--;
 		//trace();
