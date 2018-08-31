@@ -150,7 +150,7 @@ class Enemy_SmashGround extends Enemy
 					
 					if (FlxG.overlap(_state.player, _attackingUnderlay))
 					{
-						_state.player.takeDamage(1);
+						_state.player.takeDamage(1.5);
 					}
 					
 					this.animation.play("attackDOWN");

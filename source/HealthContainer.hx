@@ -64,7 +64,7 @@ class HealthContainer extends FlxSprite
 		//////////////////////////////////////////////////
 		var hi2  : Int = Math.ceil(h);
 		//if (idx == 0) idx--;
-		trace(hi + " " + hi2 + " " + idx);
+		//trace(hi + " " + hi2 + " " + idx);
 		if (hi2 > hi)
 		{
 			if (hi != 0) idx++;

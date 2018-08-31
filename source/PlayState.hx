@@ -157,12 +157,25 @@ class PlayState extends BasicState
 				FlxG.collide(e, level.collisionMap);
 				FlxG.collide(e, level.allTraps);
 				FlxG.collide(e, level.allGates);
+				
+				if (e.isHurtingPlayer())
+				{
+					if (FlxG.overlap(player, e))
+					{
+						player.takeDamage(1);
+					}
+				}
+				
 			}
 			for (s in level.allEnemyShots)
 			{
 				if (FlxG.overlap(s, level.collisionMap))
 				{
 					s.alive = false;
+				}
+				if (FlxG.overlap(s, player))
+				{
+					player.takeDamage(0.5);
 				}
 			}
 			for (s in level.allPlayerShots)
@@ -369,6 +382,7 @@ class PlayState extends BasicState
 		if (player.timeSinceDash <= 0.2)
 			return;
 		
+		var overlapping : Bool = false;
 		for (ti in level.allTraps)
 		{
 			var t : Trap = ti;
@@ -376,9 +390,14 @@ class PlayState extends BasicState
 			
 			if (FlxG.overlap(player, t))
 			{
-				RestartLevel();
+				overlapping = true;
+				player.timeInTrap += FlxG.elapsed;
+				if (player.timeInTrap > 0.15)
+					RestartLevel();
 			}	
 		}
+		if (!overlapping)
+			player.timeInTrap = 0;
 		
 	}
 

@@ -12,7 +12,7 @@ import flixel.util.FlxColor;
 
 using flixel.util.FlxSpriteUtil;
 
-class Player extends FlxSprite
+class Player extends FlashSprite
 {
     //#################################################################
 
@@ -49,11 +49,14 @@ class Player extends FlxSprite
 	//var _dashSound       : FlxSound;
 	//var _takeDamageSound : FlxSound;
 	
+	var _damageWallTime : Float = 0;
+	
 	var dustparticles : MyParticleSystem;
 	var dustTime : Float = 0;
 	
 	var _slashSprite     :FlxSprite;
 	public var timeSinceDash : Float = 0; 
+	public var timeInTrap : Float = 0;
 	
 	var walkSpeedMultiplier  : Float = 1.0;
 	
@@ -150,6 +153,7 @@ class Player extends FlxSprite
     {
         super.update(elapsed);
 		timeSinceDash += elapsed;
+		_damageWallTime -= elapsed;
 		//dustparticles.update(elapsed);
 		
 		_slashSprite.update(elapsed);
@@ -224,7 +228,7 @@ class Player extends FlxSprite
 		}
 		
 		healthCont.SetHealth(health, healthMax);
-		trace(health + " " + healthMax);
+		//trace(health + " " + healthMax);
 	}
 	
 	function ShootBow() 
@@ -444,6 +448,7 @@ class Player extends FlxSprite
 		var lastPosition    = new FlxVector(x, y);
 		var initialPosition = new FlxVector(x, y);
 
+		_damageWallTime = 0.2;
 		timeSinceDash = - 0.2;
 		
 		//if(GameProperties.SoundTimeout <= 0.0)
@@ -592,25 +597,23 @@ class Player extends FlxSprite
 
     //#################################################################
 	
-	public function takeDamage(d:Float)
+	public function takeDamage(d:Float) : Void
 	{
+		if (_damageWallTime > 0) return;
+		
+		_damageWallTime = 0.25;
+		
+		trace(health + " - " + d  + " = " + (health - d) );
+		
 		health -= d;
-		//if(GameProperties.SoundTimeout <= 0.0)
-		//{
-			//_takeDamageSound.pitch = GameProperties.rng.float(0.8, 1.2);
-			//_takeDamageSound.play();
-//
-			//GameProperties.SoundTimeout = GameProperties.SoundTimeoutMax;
-		//}
-
-		FlxTween.color(this, 0.18, FlxColor.RED, FlxColor.WHITE, { type : FlxTweenType.PERSIST} );
-		//_takeDamageSound.pitch = GameProperties.rng.float(0.8, 1.2);
-		//_takeDamageSound.play();
-
 		if (health <= 0)
 		{
 			alive = false;
 		}
+		
+		this.Flash(0.2, FlxColor.RED);
+		
+		
 	}
 
 

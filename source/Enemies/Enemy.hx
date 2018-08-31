@@ -23,6 +23,8 @@ class Enemy extends FlashSprite
 	
 	public var enemySpladderColor : FlxColor;
 	
+	
+	
 	public function new(s : PlayState) 
 	{
 		super();
@@ -87,7 +89,7 @@ class Enemy extends FlashSprite
 		
 		_takeDamageWallTime = 0.1;
         health -= damage;
-        trace(health);
+        //trace(health);
 		
 		// calculate pushback
 		var dir : FlxVector = new FlxVector (x -px, y - py);
@@ -110,6 +112,11 @@ class Enemy extends FlashSprite
 	{
 		_flashOverlay.alpha = 0;
 		_flashTimer = -1;
+	}
+	
+	public function isHurtingPlayer () : Bool
+	{
+		return false;
 	}
 	
 }

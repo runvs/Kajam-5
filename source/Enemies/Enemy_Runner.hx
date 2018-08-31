@@ -41,6 +41,7 @@ class Enemy_Runner extends Enemy
 	
 	
 	var dashRangeInTiles : Float  = 4.0;
+	var isHurting : Bool = false;
 	
 	
 	
@@ -209,6 +210,7 @@ class Enemy_Runner extends Enemy
 				// trigger: back to randomWalk
 				if (_chargeTime - FlxG.elapsed < _timeInChargeMax)
 				{
+					isHurting = false;
 					_playerLocked = false;
 					color = FlxColor.BROWN;
 					this.animation.play("walk");
@@ -237,7 +239,7 @@ class Enemy_Runner extends Enemy
 					maxVelocity.set(_chargeSpeed, _chargeSpeed);
 					this.drag.set(_chargeDrag, _chargeDrag);
 					this.velocity.set(direction.x * _chargeSpeed, direction.y * _chargeSpeed);
-					
+					isHurting = true;
 				}
 				
 			}
@@ -264,4 +266,9 @@ class Enemy_Runner extends Enemy
 
 
     //#################################################################
+	
+	override public function isHurtingPlayer():Bool 
+	{
+		return isHurting;
+	}
 }
