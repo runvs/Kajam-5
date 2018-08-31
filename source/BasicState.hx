@@ -13,7 +13,7 @@ import flixel.util.FlxTimer;
  */
 class BasicState extends FlxState
 {
-	
+	public var background : FlxSprite;
 	public var overlay : FlxSprite;
 	private var ending : Bool = false;
 	
@@ -29,6 +29,10 @@ class BasicState extends FlxState
 		overlay.alpha = 1;
 		overlay.scrollFactor.set();
 		
+		background = new FlxSprite(0, 0);
+		background.makeGraphic(FlxG.width, FlxG.height, FlxColor.fromRGB(30, 30, 30));
+		background.scrollFactor.set();
+		
 		FlxG.camera.pixelPerfectRender = true;
 		FlxG.camera.zoom = 2;
 		
@@ -42,6 +46,7 @@ class BasicState extends FlxState
 	override public function draw():Void 
 	{
 		super.draw();
+		background.draw();
 		drawObjects();
 		
 		drawOverlay();

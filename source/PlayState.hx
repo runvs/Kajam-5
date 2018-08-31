@@ -165,8 +165,7 @@ class PlayState extends BasicState
 					{
 						player.takeDamage(1);
 					}
-				}
-				
+				}	
 			}
 			for (s in level.allEnemyShots)
 			{
@@ -253,6 +252,7 @@ class PlayState extends BasicState
 				activeArena.resetArena();
 				
 				level.allGates = new FlxSpriteGroup();
+				activeArena = null;
 				RestartLevel();
 			}
 		}
@@ -275,10 +275,10 @@ class PlayState extends BasicState
 				{
 					if (FlxG.overlap(player, a))
 					{
-						trace(level.allGates.length);
-						trace("activate!");
+						//trace(level.allGates.length);
+						//trace("activate!");
 						level.activateArena(a);
-						trace(level.allGates.length);
+						//trace(level.allGates.length);
 						activeArena = a;
 						break;
 					}
