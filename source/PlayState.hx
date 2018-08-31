@@ -72,17 +72,18 @@ class PlayState extends BasicState
 		super.drawObjects();
 		
 		level.baseTiles.draw();
-		level.allTrigger.draw();
 		
 		
 		
-		//level.allTraps.draw();
-		//for (ti in level.allTraps)
-		//{
-			//var t : Trap = ti;
-			//if (t.activated) t.draw();
-		//}
 		level.midTiles.draw();
+		
+		level.allTrigger.draw();
+		for (ti in level.allTraps)
+		{
+			var t : Trap = ti;
+			if (t.name != "" && ! t.activated) t.draw();
+		}
+		
 		level.allShrines.draw();
 		level.deadEnemies.draw();
 		

@@ -430,7 +430,7 @@ class TiledLevel extends TiledMap
 		
 		var s : Trap = new Trap(x, y);
 		s.name = o.name;
-		s.makeGraphic(w, h, FlxColor.BLACK);
+		s.makeGraphic(w, h, FlxColor.fromRGB(132,132,152));
 		
 		var act : String = o.properties.get("activated");
 		if (act != null && act == "false")
