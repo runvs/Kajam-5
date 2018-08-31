@@ -165,6 +165,14 @@ class TiledLevel extends TiledMap
 						s.loadGraphic(AssetPaths.tileset__png, true, 16, 16);
 						s.animation.add("idle", [tileType-1]);
 						s.animation.play("idle");
+						
+						var rowIndex :Int = Std.int((tileType-1) / tileSet.numRows);
+						if (rowIndex == 1 || rowIndex == 2)	// collision tiles on mid? -> darker
+						{
+							s.color = FlxColor.fromRGB(200, 200, 200);
+							
+						}
+						
 						midTiles.add(s);
 					}
 					else

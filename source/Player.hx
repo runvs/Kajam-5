@@ -601,7 +601,7 @@ class Player extends FlashSprite
 	{
 		if (_damageWallTime > 0) return;
 		
-		_damageWallTime = 0.25;
+		_damageWallTime = GameProperties.PlayerDamageWallTime;
 		
 		trace(health + " - " + d  + " = " + (health - d) );
 		

@@ -30,7 +30,7 @@ class BasicState extends FlxState
 		overlay.scrollFactor.set();
 		
 		background = new FlxSprite(0, 0);
-		background.makeGraphic(FlxG.width, FlxG.height, FlxColor.fromRGB(30, 30, 30));
+		background.makeGraphic(FlxG.width, FlxG.height, FlxColor.fromRGB(50, 50, 50));
 		background.scrollFactor.set();
 		
 		FlxG.camera.pixelPerfectRender = true;

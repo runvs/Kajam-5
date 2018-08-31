@@ -77,11 +77,11 @@ class PlayState extends BasicState
 		
 		
 		//level.allTraps.draw();
-		for (ti in level.allTraps)
-		{
-			var t : Trap = ti;
-			if (t.activated) t.draw();
-		}
+		//for (ti in level.allTraps)
+		//{
+			//var t : Trap = ti;
+			//if (t.activated) t.draw();
+		//}
 		level.midTiles.draw();
 		level.allShrines.draw();
 		level.deadEnemies.draw();
@@ -158,7 +158,10 @@ class PlayState extends BasicState
 				FlxG.collide(e, level.collisionMap);
 				FlxG.collide(e, level.allTraps);
 				FlxG.collide(e, level.allGates);
-				
+				if (!FlxG.worldBounds.containsPoint(new FlxPoint(e.x, e.y)))
+				{
+					e.alive = false;
+				}
 				if (e.isHurtingPlayer())
 				{
 					if (FlxG.overlap(player, e))
