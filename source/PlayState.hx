@@ -91,6 +91,8 @@ class PlayState extends BasicState
 		//trace(level.allGates.length);
 		level.allGates.draw();
 		
+		level.allTP.draw();
+		
 		level.goreLayer.draw();
 		
 		player.draw();
@@ -145,6 +147,8 @@ class PlayState extends BasicState
 			level.allPlayerShots.update(elapsed);
 			level.allShrines.update(elapsed);
 			
+			
+			
 			level.allGates.update(elapsed);
 			
 			FlxG.collide(player, level.collisionMap);
@@ -153,6 +157,32 @@ class PlayState extends BasicState
 			for (n in level.allNSCs.getList())
 			{
 				FlxG.collide(player, n);
+			}
+			
+			for (ti in level.allTP)
+			{
+				var t : TownPortal = ti;
+				t.update(elapsed);
+				if (t.wasOverlapping) continue;
+				
+				if (FlxG.overlap(player, t))
+				{
+					if (t.thisPortalLevel == "wimborne.tmx")
+					{
+						if (TownPortal.lastTPLevel == "") continue;
+						switchLevel(TownPortal.lastTPLevel, TownPortal.lastTPEntryID, true);
+					}
+					else
+					{
+						TownPortal.lastTPLevel = t.thisPortalLevel;
+						TownPortal.lastTPEntryID = t.thisPortalEntryID;
+						
+						switchLevel("wimborne.tmx", 2, true);
+					}
+					
+					
+				}
+				
 			}
 			
 			for (e  in level.allEnemies.getList())

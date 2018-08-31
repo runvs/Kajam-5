@@ -75,6 +75,8 @@ class TiledLevel extends TiledMap
 	
 	public var _music : String = "";
 	
+	public var allTP : FlxTypedGroup<TownPortal>;
+	
 	public function new(tiledLevel:Dynamic, s : PlayState)
 	{
 		super(tiledLevel);
@@ -131,9 +133,7 @@ class TiledLevel extends TiledMap
 		var wit : Int = this.width; 
 		var hit : Int = this.height; 
 		
-		
-		
-		
+		allTP = new FlxTypedGroup<TownPortal>();
 		
 		// Load Tile Maps
 		for (layer in layers)
@@ -326,6 +326,10 @@ class TiledLevel extends TiledMap
 					{
 						_music = o.name;
 					}
+					else if (o.type.toLowerCase() == "tp")
+					{
+						loadTownPortal(o, objectLayer);
+					}
 					else
 					{
 						trace("Warning: unknown object: " + o.type + " with name: " + o.name);
@@ -358,6 +362,19 @@ class TiledLevel extends TiledMap
 				}
 			}
 		}
+	}
+	
+	function loadTownPortal(o:TiledObject, objectLayer:TiledObjectLayer) 
+	{
+		var tp : TownPortal = new TownPortal(o.x, o.y, o.width, o.height, _state);
+		
+		var level : String = o.properties.get("level");
+		var entryid : String = o.properties.get("entryid");
+		if (level == null || entryid == null) return;
+		tp.thisPortalLevel = level;
+		tp.thisPortalEntryID = Std.parseInt(entryid);
+		
+		allTP.add(tp);
 	}
 	
 	function loadArena(o:TiledObject, g:TiledObjectLayer) 
