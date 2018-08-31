@@ -7,6 +7,7 @@ import flixel.FlxState;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
+import flixel.system.debug.watch.Tracker;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxButton;
@@ -394,6 +395,10 @@ class PlayState extends BasicState
 		else if (track == "city")
 		{
 			FlxG.sound.playMusic(AssetPaths.town_music__ogg, 0.6);
+		}
+		else if (track == "puzzle" ||track == "puzzel")
+		{
+			FlxG.sound.playMusic(AssetPaths.puzzle_music__ogg, 0.6);
 		}
 		else
 		{
