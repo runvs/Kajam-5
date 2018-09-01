@@ -29,7 +29,7 @@ class ShopState extends FlxSubState
 	private var selector : FlxSprite;
 	private var selectorPosition : Int = 0;
 	private var selectorPositionMax : Int = 4;
-	public static var selectorYOffset : Int = 24;
+	public static var selectorYOffset : Int = 28;
 	
 	public static var oX : Float = 200;
 	public static var oY: Float = 150;
@@ -51,14 +51,16 @@ class ShopState extends FlxSubState
 	{
 		super.create();
 		
-		bg = new FlxSprite(oX + 50, oY + 50);
-		bg.makeGraphic(300,200);
-		bg.color = FlxColor.fromRGB(102, 57, 49);
+		bg = new FlxSprite(oX + 20 + 8  , oY + 2 );
+		//bg.makeGraphic(300,200);
+		bg.loadGraphic(AssetPaths.ShopBg__png, false);
+		//bg.color = FlxColor.fromRGB(102, 57, 49);
 		bg.scrollFactor.set();
 		add(bg);
 		
 		selector = new FlxSprite (oX + 60, oY + 60);
-		selector.makeGraphic(16, 16);
+		//selector.makeGraphic(16, 16);
+		selector.loadGraphic(AssetPaths.Arrow__png);
 		selector.scrollFactor.set();
 		add(selector);
 		
