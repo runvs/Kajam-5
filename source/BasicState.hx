@@ -72,7 +72,7 @@ class BasicState extends FlxState
 			FlxTween.tween(overlay, { alpha : 1.0 }, 0.9);
 			
 			var t: FlxTimer = new FlxTimer();
-			t.start(1,function(t:FlxTimer): Void {MenuState.setNewScore(0); FlxG.switchState(new MenuState()); } );
+			t.start(1,function(t:FlxTimer): Void {FlxG.switchState(new CreditsScene()); } );
 		}
 		
 	}

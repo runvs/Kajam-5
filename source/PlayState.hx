@@ -418,6 +418,12 @@ class PlayState extends BasicState
 		} );
 	}
 	
+	public function StartEndingScene() 
+	{
+		
+			EndGame();
+	}
+	
 	function StartMusic(track : String) 
 	{
 		//trace("restart 4");

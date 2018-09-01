@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="16" height="15" tilewidth="16" tileheight="16" nextobjectid="208">
+<map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="16" height="15" tilewidth="16" tileheight="16" nextobjectid="209">
  <tileset firstgid="1" name="tileset.png" tilewidth="16" tileheight="16" tilecount="128" columns="32">
   <image source="../images/tileset.png" width="512" height="64"/>
  </tileset>
@@ -55,7 +55,7 @@
   </object>
   <object id="207" name="combat" type="music" x="0" y="0" width="16" height="16"/>
  </objectgroup>
- <objectgroup color="#ffff7f" name="arena">
+ <objectgroup color="#ffff7f" name="arena" visible="0">
   <object id="205" x="16" y="32" width="224" height="144">
    <properties>
     <property name="gate" value="1,1;2,1;14,11;12,11;13,11"/>

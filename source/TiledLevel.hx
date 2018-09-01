@@ -294,11 +294,11 @@ class TiledLevel extends TiledMap
 			//objects layer
 			if (layer.name == "objects" )
 			{
-				trace("load object layer");
+				//trace("load object layer");
 				for (oi in objectLayer.objects)
 				{
 					var o : TiledObject = oi;
-					trace("load object: " + o.name);
+					//trace("load object: " + o.name);
 					if (o.type.toLowerCase() == "npc")
 					{
 						loadNSC( o, objectLayer);
@@ -343,7 +343,7 @@ class TiledLevel extends TiledMap
 			}
 			else if (layer.name == "enemies")
 			{
-				trace("load enemy layer");
+				//trace("load enemy layer");
 				for (oi in objectLayer.objects)
 				{
 					var o : TiledObject = oi;
@@ -495,6 +495,13 @@ class TiledLevel extends TiledMap
 			e.setPosition(x, y);
 			allEnemies.add(e);
 		}
+		else if (t == "boss")
+		{
+			trace("spawn boss");
+			var e : Enemy_Boss = new Enemy_Boss(_state);
+			e.setPosition(x, y);
+			allEnemies.add(e);
+		}
 		else
 		{
 			trace("ERROR: unknown enemy Type: " + t);
@@ -580,7 +587,7 @@ class TiledLevel extends TiledMap
 		var blubb : Array<Array<Int> > = new Array<Array<Int> >();
 		blubb = CollisionMerger.Merge(collisionArray, wit, hit);
 		
-		trace(collisionArray.length + " " + wit * hit + " " + blubb.length);
+		//trace(collisionArray.length + " " + wit * hit + " " + blubb.length);
 		
 		for (i in 0 ... blubb.length)
 		{

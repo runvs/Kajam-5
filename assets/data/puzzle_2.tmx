@@ -64,7 +64,7 @@
   <object id="139" name="exit_left" type="exit" x="0" y="32" width="16" height="48">
    <properties>
     <property name="entryid" value="1"/>
-    <property name="target" value="wimborne.tmx"/>
+    <property name="target" value="arena_boss.tmx"/>
    </properties>
   </object>
   <object id="141" name="exit_top" type="exit" x="160" y="496" width="48" height="16">

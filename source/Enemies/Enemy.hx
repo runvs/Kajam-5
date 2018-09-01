@@ -17,6 +17,8 @@ class Enemy extends FlashSprite
 	
 	public var MaxHealth      : Float;
 	
+	public var takeNoDamage : Bool = false;
+	
 	private var _idleTimer : Float;
 	
 	private var _takeDamageWallTime : Float = 0;
@@ -84,6 +86,7 @@ class Enemy extends FlashSprite
 	
 	public function hit(damage: Float, px:Float, py:Float)
     {
+		if (takeNoDamage) return;
 		if (_takeDamageWallTime >= 0) return;
 		
 		
@@ -107,6 +110,8 @@ class Enemy extends FlashSprite
 			//trace('I am dead');
         }
     }
+	
+	
 
 	public function onDeath()
 	{
