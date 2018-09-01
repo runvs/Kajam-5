@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" nextobjectid="99">
+<map version="2017.05.26" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" nextobjectid="102">
  <tileset firstgid="1" name="tileset.png" tilewidth="16" tileheight="16" tilecount="112" columns="28">
   <image source="../images/tileset.png" width="448" height="64"/>
  </tileset>
@@ -74,6 +74,16 @@
    <properties>
     <property name="entryid" value="2"/>
     <property name="level" value="wimborne.tmx"/>
+   </properties>
+  </object>
+  <object id="99" name="Armorer" type="NPC" x="208" y="496" width="16" height="16">
+   <properties>
+    <property name="npctype" value="armorer"/>
+   </properties>
+  </object>
+  <object id="100" name="Carpenter" type="NPC" x="320" y="496" width="16" height="16">
+   <properties>
+    <property name="npctype" value="carpenter"/>
    </properties>
   </object>
  </objectgroup>

@@ -27,7 +27,7 @@ class ShopState extends FlxSubState
 	
 	private var selector : FlxSprite;
 	private var selectorPosition : Int = 0;
-	private var selectorPositionMax : Int = 3;
+	private var selectorPositionMax : Int = 4;
 	public static var selectorYOffset : Int = 24;
 	
 	public static var oX : Float = 200;
@@ -52,7 +52,7 @@ class ShopState extends FlxSubState
 		
 		bg = new FlxSprite(oX + 50, oY + 50);
 		bg.makeGraphic(300,200);
-		bg.color = FlxColor.fromRGB(100, 100, 20);
+		bg.color = FlxColor.fromRGB(102, 57, 49);
 		bg.scrollFactor.set();
 		add(bg);
 		
@@ -95,17 +95,148 @@ class ShopState extends FlxSubState
 	
 	function setShopTypeArmor() 
 	{
+		allEntries.getList().clear();
+		{
+			var cost : Int = 5;
+			if (_state.player.inventory.hasBoughtRobe) cost = 0;
+			var i : ShopItem = new ShopItem(AssetPaths.robe__png, "robe", cost, 
+			function(s:PlayState)
+			{
+				s.player.inventory.hasBoughtRobe = true;
+				s.player.pickupItem(Item.GetRobe());
+			});
+			//trace(allEntries.length);
+			i.ItemPos = allEntries.getList().length;
+			
+			
+			allEntries.add(i);
+		}
+		{
+			var cost : Int = 10;
+			if (_state.player.inventory.hasBoughtLeatherArmor) cost = 0;
+			var i : ShopItem = new ShopItem(AssetPaths.leatherarmor__png, "leather armor", cost, 
+			function(s:PlayState)
+			{
+				s.player.inventory.hasBoughtLeatherArmor = true;
+				s.player.pickupItem(Item.GetLeatherArmor());
+			});
+			i.ItemPos = allEntries.getList().length;
+			allEntries.add(i);
+		}
+		{
+			var cost : Int = 15;
+			if (_state.player.inventory.hasBoughtChainMail) cost = 0;
+			var i : ShopItem = new ShopItem(AssetPaths.chainmail__png, "chain mail", cost, 
+			function(s:PlayState)
+			{
+				s.player.inventory.hasBoughtChainMail = true;
+				s.player.pickupItem(Item.GetChainMail());
+			});
+			i.ItemPos = allEntries.getList().length;
+			
+			allEntries.add(i);
+		}
+		{
+			var cost : Int = 25;
+			if (_state.player.inventory.hasBoughtPlateMail) cost = 0;
+			var i : ShopItem = new ShopItem(AssetPaths.platemail__png, "plate mail", cost, 
+			function(s:PlayState)
+			{
+				s.player.inventory.hasBoughtPlateMail = true;
+				s.player.pickupItem(Item.GetPlateMail());
+			});
+			i.ItemPos = allEntries.getList().length;
+			
+			
+			allEntries.add(i);
+		}
+		for (i in allEntries)
+		{
+			//trace(i.ItemCost + " " + _state.player.gold);
+			
+			if (_state.player.gold < i.ItemCost)
+			{
+				//trace("not available ");
+				i.available = false;
+			}
+		}
 		
+		selectorPositionMax = allEntries.getList().length;
 	}
 	
 	function setShopTypeBow() 
 	{
-		
+		allEntries.getList().clear();
+		{
+			var cost : Int = 5;
+			if (_state.player.inventory.hasBoughtSelfBow) cost = 0;
+			var i : ShopItem = new ShopItem(AssetPaths.selfbow__png, "self bow", cost, 
+			function(s:PlayState)
+			{
+				s.player.inventory.hasBoughtSelfBow = true;
+				s.player.pickupItem(Item.GetSelfbow());
+			});
+			//trace(allEntries.length);
+			i.ItemPos = allEntries.getList().length;
+			
+			
+			allEntries.add(i);
+		}
+		{
+			var cost : Int = 10;
+			if (_state.player.inventory.hasBoughtLongBow) cost = 0;
+			var i : ShopItem = new ShopItem(AssetPaths.longbow__png, "long bow", cost, 
+			function(s:PlayState)
+			{
+				s.player.inventory.hasBoughtLongBow = true;
+				s.player.pickupItem(Item.GetLongbow());
+			});
+			i.ItemPos = allEntries.getList().length;
+			allEntries.add(i);
+		}
+		{
+			var cost : Int = 15;
+			if (_state.player.inventory.hasBoughtCrossbow) cost = 0;
+			var i : ShopItem = new ShopItem(AssetPaths.crossbow__png, "crossbow", cost, 
+			function(s:PlayState)
+			{
+				s.player.inventory.hasBoughtCrossbow = true;
+				s.player.pickupItem(Item.GetCrossbow());
+			});
+			i.ItemPos = allEntries.getList().length;
+			
+			allEntries.add(i);
+		}
+		{
+			var cost : Int = 25;
+			if (_state.player.inventory.hasBoughtRecurveBow) cost = 0;
+			var i : ShopItem = new ShopItem(AssetPaths.recurvebow__png, "recurve bow", cost, 
+			function(s:PlayState)
+			{
+				s.player.inventory.hasBoughtRecurveBow = true;
+				s.player.pickupItem(Item.GetRecurveBow());
+			});
+			i.ItemPos = allEntries.getList().length;
+			
+			allEntries.add(i);
+		}
+		//trace(allEntries.length);
+		for (i in allEntries)
+		{
+			//trace(i.ItemCost + " " + _state.player.gold);
+			
+			if (_state.player.gold < i.ItemCost)
+			{
+				//trace("not available ");
+				i.available = false;
+			}
+		}
+		selectorPositionMax = allEntries.getList().length;
 	}
 	
 	function setShopTypeWeapon()
 	{
-		//allEntries = new AdministratedList<ShopItem>();
+		
 		allEntries.getList().clear();
 		{
 			var cost : Int = 5;

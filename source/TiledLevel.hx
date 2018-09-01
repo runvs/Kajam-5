@@ -40,9 +40,6 @@ class TiledLevel extends TiledMap
 	public var levelPath : String = "";
 	
 	
-	
-	
-	
 	public var baseTiles:FlxGroup;
 	public var midTiles:FlxGroup;
 	public var topTiles:FlxGroup;
@@ -559,21 +556,19 @@ class TiledLevel extends TiledMap
 		{
 			var n : NPC;
 			if (nsctype.toLowerCase() == "guard")
-			{
-				//trace(x);
 				n = new NPC_Guard(_state);
-				n.setPosition(x , y );
-				n.objectName = o.name;
-				allNSCs.add(n);
-				trace("add nsc guard '" +  n.objectName + "'");
-			}
-			else //if (nsctype.toLowerCase() == "smith")
-			{
+			else if (nsctype.toLowerCase() == "smith")
 				n = new NPC_Smith(_state);
-				n.setPosition(x, y);
-				n.objectName = o.name;
-				allNSCs.add(n);
-			}
+			else if (nsctype.toLowerCase() == "carpenter")
+				n = new NPC_Carpenter(_state);
+			else //if (nsctype.toLowerCase() == "smith")
+				n = new NPC_Armorer(_state);
+
+				
+			n.setPosition(x , y );
+			n.objectName = o.name;
+			allNSCs.add(n);
+	
 			var msg : String = o.properties.get("message");
 			if (msg != null) n.overrideMessage = msg;
 		}
