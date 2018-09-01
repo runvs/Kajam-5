@@ -19,6 +19,10 @@ class MyInput
 	public static var InteractButtonJustPressed  : Bool;
 	public static var SpecialButtonPressed       : Bool;
 	public static var InventoryButtonJustPressed : Bool;
+	
+	public static var BowButtonPressed			 : Bool;
+	public static var BowButtonJustPressed		 : Bool;
+	public static var BowButtonJustReleased		 : Bool;
 
 	public static var UpButtonJustPressed        : Bool;
 	public static var DownButtonJustPressed      : Bool;
@@ -28,6 +32,7 @@ class MyInput
 	
 	public static var GamePadConnected 			 : Bool;
 
+	
 	public static function reset()
 	{
 		xVal = 0;
@@ -43,6 +48,9 @@ class MyInput
 		DownButtonJustPressed      = false;
 		EnterButtonJustPressed     = false;
 		SpaceButtonJustPressed     = false;
+		BowButtonJustPressed 	   = false;
+		BowButtonPressed		   = false;
+		BowButtonJustReleased	   = false;
 	}
 	
 	public static function update ()
@@ -64,6 +72,10 @@ class MyInput
 			EnterButtonJustPressed = gp.justPressed.START;
 			SpaceButtonJustPressed = gp.justPressed.START;
 
+			BowButtonPressed = gp.pressed.LEFT_TRIGGER_BUTTON;
+			BowButtonJustPressed = gp.justPressed.LEFT_TRIGGER_BUTTON;
+			BowButtonJustReleased = gp.justReleased.LEFT_TRIGGER_BUTTON;
+			
 			var l : Float = Math.sqrt(xVal * xVal + yVal * yVal);
 			if(l >= 25)
 			{
@@ -116,6 +128,18 @@ class MyInput
 		if(FlxG.keys.justPressed.F)
 		{
 			InventoryButtonJustPressed = true;
+		}
+		if (FlxG.keys.justPressed.Q)
+		{
+			BowButtonJustPressed = true;
+		}
+		if (FlxG.keys.pressed.Q)
+		{
+			BowButtonPressed = true;
+		}
+		if (FlxG.keys.justReleased.Q)
+		{
+			BowButtonJustReleased = true;
 		}
 		if(FlxG.keys.justPressed.ENTER)
 		{

@@ -44,7 +44,7 @@ class Enemy_SmashGround extends Enemy
         AttackStrength = 1;
 		AttackTimer	   = 0.1;
         MaxHealth      = health;
-        aggroRangeInTiles   = 4.5;
+        aggroRangeInTiles   = 3.5;
 		accel = 550;
 		_attacking 	   = false;
 		
@@ -148,6 +148,10 @@ class Enemy_SmashGround extends Enemy
 					//attackSound.pitch = FlxG.random.float(0.2, 0.4);
 					//attackSound.play();
 					
+					if (FlxG.overlap(_state.player, _attackingUnderlay))
+					{
+						_state.player.takeDamage(1.5);
+					}
 					
 					this.animation.play("attackDOWN");
 					_attacking = false; 
@@ -173,7 +177,7 @@ class Enemy_SmashGround extends Enemy
     function doMovement()
     {
 		
-        var playerVector = new FlxVector(_playState.player.x, _playState.player.y);
+        var playerVector = new FlxVector(_state.player.x, _state.player.y);
         var enemyVector = new FlxVector(x, y);
 		
 		_distanceToPlayer = playerVector.dist(enemyVector);

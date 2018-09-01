@@ -4,7 +4,7 @@ package;
  * ...
  * @author 
  */
-class NPC_Smith extends NPCShop
+class NPC_Armorer extends NPCShop
 {
 
 	public function new(s:PlayState) 
@@ -20,7 +20,7 @@ class NPC_Smith extends NPCShop
 	{
 		super.openShop();
 		var ss : ShopState = new ShopState(_state);
-		ss.setShopType(0);
+		ss.setShopType(2);
 		_state.openSubState(ss);
 	}
 	
@@ -28,7 +28,5 @@ class NPC_Smith extends NPCShop
 	{
 		super.onCloseRange();
 	}
-	
-	
 	
 }

@@ -12,7 +12,7 @@ import flixel.util.FlxColor;
 
 using flixel.util.FlxSpriteUtil;
 
-class Player extends FlxSprite
+class Player extends FlashSprite
 {
     //#################################################################
 
@@ -20,7 +20,9 @@ class Player extends FlxSprite
 	public var armorItem  : Item;
 	public var bowItem    : Item;
 	
-
+	public var inventory : Inventory;
+	public var gold : Int = 70;
+	
 	public var healthMax     : Float;
 	
 	var _itemDashMultiplier : Float = 1.0;
@@ -33,14 +35,14 @@ class Player extends FlxSprite
 	var _dashSprite3    : FlxSprite;
 	var _dashSprite4    : FlxSprite;
 
-	var _playState      : PlayState;
+	var _state      : PlayState;
 
 	var _hitArea        : FlxSprite;
 	
 	var _facing         : Facing;
 	var _attackCooldown : Float;
 	
-	var _healthBar 		: HudBar;
+	
 	var _dashCooldownBar: HudBar;
 	var _playerInfo     : PlayerInfo;
 
@@ -49,12 +51,22 @@ class Player extends FlxSprite
 	//var _dashSound       : FlxSound;
 	//var _takeDamageSound : FlxSound;
 	
+	var _damageWallTime : Float = 0;
+	
 	var dustparticles : MyParticleSystem;
 	var dustTime : Float = 0;
 	
 	var _slashSprite     :FlxSprite;
 	public var timeSinceDash : Float = 0; 
+	public var timeInTrap : Float = 0;
 	
+	var walkSpeedMultiplier  : Float = 1.0;
+	
+	private var _bowTimer : Float = 0;
+	
+	private var bowBar : HudBar;
+	
+	private var healthCont : HealthContainer;
 	
     //#################################################################
 
@@ -68,15 +80,17 @@ class Player extends FlxSprite
 		pickupItem(Item.GetSelfbow());
 		pickupItem(Item.GetRobe());
 		trace('Items picked up.');
+		
+		inventory = new Inventory();
 
-		//loadGraphic(AssetPaths.Hero__png, true, 16, 16);
-		//animation.add("walk_south", [0, 4, 8,  12], 8);
-		//animation.add("walk_west",  [1, 5, 9,  13], 8);
-		//animation.add("walk_north", [2, 6, 10, 14], 8);
-		//animation.add("walk_east",  [3, 7, 11, 15], 8);
-		//animation.add("idle", [0]);
-		//animation.play("idle");
-		makeGraphic(16,16);
+		loadGraphic(AssetPaths.Thyl__png, true, 16, 16);
+		animation.add("walk_south", [0, 1, 2, 3], 8);
+		animation.add("walk_west",  [12, 13, 14,  15], 8);
+		animation.add("walk_north", [4, 5, 6, 7], 8);
+		animation.add("walk_east",  [8, 9, 10, 11], 8);
+		animation.add("idle", [0]);
+		animation.play("idle");
+		//makeGraphic(16,16);
 		_dashSprite1 = new FlxSprite();
 		_dashSprite1.makeGraphic(16, 16);
 		
@@ -102,29 +116,26 @@ class Player extends FlxSprite
 		drag         = GameProperties.PlayerMovementDrag;
 		maxVelocity  = GameProperties.PlayerMovementMaxVelocity;
 
-		trace("player max velo X: " + maxVelocity.x);
-		trace("player max velo Y: " + maxVelocity.y);
-		
+		//trace("player max velo X: " + maxVelocity.x);
+		//trace("player max velo Y: " + maxVelocity.y);
         _dashCooldown = 0;
         _dashDir = new FlxPoint();
 		
 
-		_playState = playState;
+		_state = playState;
 
-		setPosition(12 * GameProperties.TileSize, 9 * GameProperties.TileSize);
+		setPosition(12 * GameProperties.TileSize, 15 * GameProperties.TileSize);
 		
 		health = healthMax = GameProperties.PlayerHealthMaxDefault;
-		
-		_healthBar = new HudBar(10, 10, 96, 16, false, FlxColor.WHITE);
-		//_healthBar.color = GameProperties.ColorHealthBar;
-		_healthBar._background.color = FlxColor.fromRGB(100, 100, 100, 100);
+		healthCont = new HealthContainer(AssetPaths.heart_empty__png, AssetPaths.heart_half__png, AssetPaths.heart_full__png);
+		healthCont.SetHealth(health, healthMax);
 		
 		_dashCooldownBar = new HudBar(10, 32, 48, 8, false, FlxColor.BLUE);
 		//_dashCooldownBar.color = GameProperties.ColorStaminaBar;
 		_dashCooldownBar._background.color = FlxColor.fromRGB(100, 100, 100, 100);
 
 		_playerInfo = new PlayerInfo(this);
-
+		bowBar = new HudBar(0, 0, 32, 10, false, FlxColor.BLUE);
 		
 		//_attackSound     = FlxG.sound.load(AssetPaths.attack1__ogg, 1);
 		//_dashSound       = FlxG.sound.load(AssetPaths.dash__ogg, 0.25);
@@ -136,6 +147,8 @@ class Player extends FlxSprite
 		_slashSprite.animation.add("idle", [3]);
 		_slashSprite.animation.play("idle");
 		_slashSprite.origin.set(8, 8);
+		
+		
     }
 
     //#################################################################
@@ -144,106 +157,140 @@ class Player extends FlxSprite
     {
         super.update(elapsed);
 		timeSinceDash += elapsed;
+		_damageWallTime -= elapsed;
 		//dustparticles.update(elapsed);
+		
 		_slashSprite.update(elapsed);
-		_slashSprite.setPosition(_hitArea.x, _hitArea.y);
 		
 		_dashSprite1.update(elapsed);
 		_dashSprite2.update(elapsed);
 		_dashSprite3.update(elapsed);
 		_dashSprite4.update(elapsed);
-		switch _facing
-		{
-			case Facing.EAST:
-				_hitArea.setPosition(x + GameProperties.TileSize, y);
-				animation.play("walk_east", false);
-				_slashSprite.angle = 90;
-				
-			case Facing.WEST:
-				_hitArea.setPosition(x - GameProperties.TileSize, y);
-				animation.play("walk_west", false);
-				_slashSprite.angle = -90;
-				
-			case Facing.NORTH:
-				_hitArea.setPosition(x, y - GameProperties.TileSize);
-				animation.play("walk_north", false);
-				_slashSprite.angle = 0;
-				
-
-			case Facing.SOUTH:
-				_hitArea.setPosition(x, y + GameProperties.TileSize);
-				animation.play("walk_south", false);
-				_slashSprite.angle = 180;
-			
-			case Facing.NORTHEAST:
-				_hitArea.setPosition(x + GameProperties.TileSize / 2, y - GameProperties.TileSize / 2);
-				animation.play("walk_north", false);
-				_slashSprite.angle = 45;
-			case Facing.NORTHWEST:
-				_hitArea.setPosition(x - GameProperties.TileSize / 2, y - GameProperties.TileSize / 2);
-				animation.play("walk_north", false);
-				_slashSprite.angle = -45;
-				
-			case Facing.SOUTHEAST:
-				_hitArea.setPosition(x + GameProperties.TileSize / 2, y + GameProperties.TileSize / 2);
-				animation.play("walk_south", false);
-				_slashSprite.angle = 135;
-				
-			case Facing.SOUTHWEST:
-				_hitArea.setPosition(x - GameProperties.TileSize / 2, y + GameProperties.TileSize / 2);
-				animation.play("walk_south", false);
-				_slashSprite.angle = -135;
-				
-			
-		}
+		
+		handleSlashSpriteAndAnim();
 
         handleInput(elapsed);
 		var l : Float = velocity.distanceTo(new FlxPoint());
 		if (l <= GameProperties.PlayerMovementMaxVelocity.x / 8 )
 		{
-			//animation.play("idle", true);
+			animation.play("idle", true);
 		}
 		else
 		{
 			dustTime -= elapsed;
-			//if (dustTime <= 0)
-			//{
-				//dustTime += 0.25;
-				//dustparticles.Spawn( 3,
-				//function (s : FlxSprite) : Void
-				//{
-					//s.alive = true;
-					//var T : Float = 1.25;
-					//s.setPosition(x + FlxG.random.float(0, this.width) , y + height + FlxG.random.float( 0, 1) );
-					//s.alpha = FlxG.random.float(0.125, 0.35);
-					//FlxTween.tween(s, { alpha:0 }, T, { onComplete: function(t:FlxTween) : Void { s.alive = false; } } );
-					//var v : Float = FlxG.random.float(0.75, 1.0);
-					//s.scale.set(v, v);
-					//FlxTween.tween(s.scale, { x: 2.5, y:2.5 }, T);
-				//},
-				//function(s:FlxSprite) : Void 
-				//{
-					//s.makeGraphic(7, 7, FlxColor.TRANSPARENT);
-					//s.drawCircle(4, 4, 3, FlxColor.WHITE);
-				//});
-			//}
 		}
 		
-        //var healthFactor = health / healthMax;
-        //healthMax = GameProperties.PlayerHealthMaxDefault + healthBase + healthBonus;
-        //health    = healthMax * healthFactor;
-
-		_playerInfo.update(elapsed);
+        _playerInfo.update(elapsed);
 		
-		_healthBar.health = health / healthMax;
-		_healthBar.update(elapsed);
-
+		
         _dashSpeedMax = GameProperties.PlayerMovementDashCooldown;
         _dashSpeedMax = _dashSpeedMax < 0.5 ? 0.5 : _dashSpeedMax;
 
 		_dashCooldownBar.health = 1.0 - _dashCooldown / _dashSpeedMax;
 		_dashCooldownBar.update(elapsed);
+		
+		updateBow(elapsed);
+		
+		if (FlxG.keys.justPressed.F9)
+		{
+			health -= 0.5;
+			
+		}
+		if (FlxG.keys.justPressed.F10)
+		{
+			health += 0.5;
+		}
+		
     }
+	
+	function updateBow(elapsed:Float) 
+	{
+		bowBar.update(elapsed);
+		if (MyInput.BowButtonJustPressed)
+		{
+			//trace("justpressed");
+			maxVelocity = getMaxVelocityWithItems().scale(GameProperties.PlayerBowSlowDownFactor);
+		}
+		else if (MyInput.BowButtonJustReleased)
+		{
+			//trace("justreleased");
+			maxVelocity = getMaxVelocityWithItems();
+			ShootBow();
+		}
+		
+		
+		bowBar.health = 0;
+		
+		if (MyInput.BowButtonPressed)
+		{
+			_bowTimer += elapsed;
+			var v : Float = _bowTimer / GameProperties.PlayerBowMaxTimer;
+			if (v <= 0) v = 0;
+			if (v >= 1) v = 1;
+			bowBar.health = v;
+			
+		}
+		
+		healthCont.SetHealth(health, healthMax);
+		//trace(health + " " + healthMax);
+	}
+	
+	function ShootBow() 
+	{
+		if (_bowTimer >= 0.05)
+		{
+			var dx : Float = velocity.x;
+			var dy : Float = velocity.y;
+			var l : Float = Math.sqrt(dx * dx + dy * dy);
+			if (l == 0)
+			{
+				l = 1;
+				switch _facing
+				{
+					case Facing.EAST:
+						dx = 1;
+						dy = 0;
+						
+					case Facing.WEST:
+						dx = -1;
+						dy = 0;
+						
+					case Facing.NORTH:
+						dx = 0;
+						dy = -1;						
+			
+					case Facing.SOUTH:
+						dx = 0;
+						dy = 1;
+					
+					case Facing.NORTHEAST:
+						dx = Math.sqrt(2.0);
+						dy = -Math.sqrt(2.0);
+						
+					case Facing.NORTHWEST:
+						dx = -Math.sqrt(2.0);
+						dy = -Math.sqrt(2.0);
+						
+					case Facing.SOUTHEAST:
+						dx = Math.sqrt(2.0);
+						dy = Math.sqrt(2.0);
+						
+					case Facing.SOUTHWEST:
+						dx = -Math.sqrt(2.0);
+						dy = Math.sqrt(2.0);
+				}
+			}
+			
+			var v : Float = _bowTimer / GameProperties.PlayerBowMaxTimer;
+			if (v < 0) return;
+			if (v >= 1) v = 1;
+			var s : PlayerShot = new PlayerShot(x , y , dx/l, dy/l, v);
+			_state.level.allPlayerShots.add(s);
+		}
+		
+		_bowTimer = 0;
+	}
+	
 
     //#################################################################
 
@@ -304,7 +351,7 @@ class Player extends FlxSprite
 		_attackCooldown -= elapsed;
 		if(_attackCooldown <= 0.0)
 		{
-			if(MyInput.InteractButtonPressed) attack();
+			if(MyInput.InteractButtonJustPressed) attack();
 		}
     }
 
@@ -326,30 +373,38 @@ class Player extends FlxSprite
 		
 		var enemyHit = false;
 		// TODO check if enemy is hit
-		for(enemy in _playState.level.allEnemies)
+		for(enemy in _state.level.allEnemies)
 		{
 			if(FlxG.overlap(_hitArea, enemy))
 			{
 				enemy.hit(getMeleeDamage(), x, y);
 				enemyHit = true;
-				_playState.level.spladder(enemy.x + GameProperties.TileSize/2, enemy.y + GameProperties.TileSize/2);
+				_state.level.spladder(enemy.x + GameProperties.TileSize/2, enemy.y + GameProperties.TileSize/2, enemy.enemySpladderColor);
 			}
 		}
-		//if(!enemyHit)
-		//{
-			//for(npc in _playState.level.npcs)
-			//{
-				//if (npc.alive)
-				//{
-					//if(FlxG.overlap(_hitArea, npc))
-					//{
-						//npc.interact();
-						//_npcInteraction = true;
-						//_interactingNPC = npc;
-					//}
-				//}
-			//}
-		//}
+		
+		for (ti in _state.level.allTrigger)
+		{
+			var t : Trigger = ti;
+			//trace(_hitArea);
+			//trace(t);
+			
+			if (FlxG.overlap(_hitArea, t))
+			{
+				t.perform();
+			}
+		}
+		
+		
+		for (ni in _state.level.allNSCs)
+		{
+			var n: NPC = ni;
+		//trace(n.objectName + " " + FlxG.overlap(n, _hitArea));	
+			if (FlxG.overlap(n, _hitArea))
+			{
+				n.interact();
+			}
+		}
 	}
 
     //#################################################################
@@ -370,7 +425,7 @@ class Player extends FlxSprite
 
 	//#################################################################
 
-	function pickupItem(item : Item) : Void
+	public function pickupItem(item : Item) : Void
 	{
 		trace('Picking up a ' + item.name);
 		trace(item);
@@ -384,12 +439,12 @@ class Player extends FlxSprite
 		
 		if(swordItem == null || bowItem == null || armorItem == null) return;
 		
-		var walkSpeedMultiplier = (
+		walkSpeedMultiplier = (
 			swordItem.walkSpeedMultiplier
 			+ bowItem.walkSpeedMultiplier
 			+ armorItem.walkSpeedMultiplier
 		) / 3;
-		maxVelocity = GameProperties.PlayerMovementMaxVelocity.scale(walkSpeedMultiplier);
+		maxVelocity = getMaxVelocityWithItems();
 
 		_itemDashMultiplier = (
 			swordItem.dashDistanceMultiplier
@@ -400,6 +455,11 @@ class Player extends FlxSprite
 
     //#################################################################
 
+	private function getMaxVelocityWithItems()  : FlxPoint
+	{
+		return new FlxPoint(GameProperties.PlayerMovementMaxVelocity.x,GameProperties.PlayerMovementMaxVelocity.y).scale(walkSpeedMultiplier);
+	}
+	
 	function dash()
 	{
 		var stepSize = GameProperties.PlayerMovementMaxDashLength / GameProperties.TileSize / 2 * _itemDashMultiplier;
@@ -407,6 +467,7 @@ class Player extends FlxSprite
 		var lastPosition    = new FlxVector(x, y);
 		var initialPosition = new FlxVector(x, y);
 
+		_damageWallTime = 0.2;
 		timeSinceDash = - 0.2;
 		
 		//if(GameProperties.SoundTimeout <= 0.0)
@@ -422,7 +483,7 @@ class Player extends FlxSprite
 			setPosition(x + _dashDir.x * stepSize, y + _dashDir.y * stepSize);
 
 			 
-			if(FlxG.overlap(this, _playState.level.collisionMap))
+			if(FlxG.overlap(this, _state.level.collisionMap))
 			{
 				setPosition(lastPosition.x, lastPosition.y);
 				break;
@@ -447,6 +508,54 @@ class Player extends FlxSprite
 		FlxTween.tween(_dashSprite3, { alpha: 0 }, 0.5);
 		FlxTween.tween(_dashSprite4, { alpha: 0 }, 0.55);
 	}
+	
+	function handleSlashSpriteAndAnim():Void 
+	{
+		_slashSprite.setPosition(_hitArea.x, _hitArea.y);
+		
+		switch _facing
+		{
+			case Facing.EAST:
+				_hitArea.setPosition(x + GameProperties.TileSize, y);
+				animation.play("walk_east", false);
+				_slashSprite.angle = 90;
+				
+			case Facing.WEST:
+				_hitArea.setPosition(x - GameProperties.TileSize, y);
+				animation.play("walk_west", false);
+				_slashSprite.angle = -90;
+				
+			case Facing.NORTH:
+				_hitArea.setPosition(x, y - GameProperties.TileSize);
+				animation.play("walk_north", false);
+				_slashSprite.angle = 0;
+				
+	
+			case Facing.SOUTH:
+				_hitArea.setPosition(x, y + GameProperties.TileSize);
+				animation.play("walk_south", false);
+				_slashSprite.angle = 180;
+			
+			case Facing.NORTHEAST:
+				_hitArea.setPosition(x + GameProperties.TileSize / 2, y - GameProperties.TileSize / 2);
+				animation.play("walk_north", false);
+				_slashSprite.angle = 45;
+			case Facing.NORTHWEST:
+				_hitArea.setPosition(x - GameProperties.TileSize / 2, y - GameProperties.TileSize / 2);
+				animation.play("walk_north", false);
+				_slashSprite.angle = -45;
+				
+			case Facing.SOUTHEAST:
+				_hitArea.setPosition(x + GameProperties.TileSize / 2, y + GameProperties.TileSize / 2);
+				animation.play("walk_south", false);
+				_slashSprite.angle = 135;
+				
+			case Facing.SOUTHWEST:
+				_hitArea.setPosition(x - GameProperties.TileSize / 2, y + GameProperties.TileSize / 2);
+				animation.play("walk_south", false);
+				_slashSprite.angle = -135;
+		}
+	}
 
     //#################################################################
 	
@@ -468,14 +577,28 @@ class Player extends FlxSprite
 
 	public function drawHud()
 	{
-		//_healthBar.draw();
+
 		//_dashCooldownBar.draw();
 
+		if (_bowTimer > 0)
+		{
+			bowBar.setPosition(FlxG.camera.target.x - FlxG.camera.scroll.x, FlxG.camera.target.y - FlxG.camera.scroll.y - 32);
+			//trace(bowBar.x + " " + bowBar.y);
+			bowBar.draw();
+		}
 		if(_playerInfo.visible) {
 			_playerInfo.draw();
 		}
 		
+		
+		drawHealthContainer();
+		
 		// TODO draw inventory
+	}
+	
+	function drawHealthContainer() 
+	{
+		healthCont.draw();
 	}
 
     //#################################################################
@@ -493,25 +616,23 @@ class Player extends FlxSprite
 
     //#################################################################
 	
-	public function takeDamage(d:Float)
+	public function takeDamage(d:Float) : Void
 	{
+		if (_damageWallTime > 0) return;
+		
+		_damageWallTime = GameProperties.PlayerDamageWallTime;
+		
+		trace(health + " - " + d  + " = " + (health - d) );
+		
 		health -= d;
-		//if(GameProperties.SoundTimeout <= 0.0)
-		//{
-			//_takeDamageSound.pitch = GameProperties.rng.float(0.8, 1.2);
-			//_takeDamageSound.play();
-//
-			//GameProperties.SoundTimeout = GameProperties.SoundTimeoutMax;
-		//}
-
-		FlxTween.color(this, 0.18, FlxColor.RED, FlxColor.WHITE, { type : FlxTweenType.PERSIST} );
-		//_takeDamageSound.pitch = GameProperties.rng.float(0.8, 1.2);
-		//_takeDamageSound.play();
-
 		if (health <= 0)
 		{
 			alive = false;
 		}
+		
+		this.Flash(0.2, FlxColor.RED);
+		_state.level.spladder(x, y, FlxColor.RED);
+		
 	}
 
 

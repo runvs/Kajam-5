@@ -26,20 +26,28 @@ class Enemy_Shooter extends Enemy
 	private var _rightGuyCounter : Int = 0;
 	
 	private var _shootTimer : Float = 0;
-	
+	private var _animationTimer : Float = 0;
 	
 	
 	public function new(s:PlayState) 
 	{
 		super(s);
 		
-		this.makeGraphic(24, 12);
+		//this.makeGraphic(24, 12);
+		this.loadGraphic(AssetPaths.mage__png, true, 16, 20);
+		this.animation.add("walk_south", [0, 1, 2, 3], 8);
+		this.animation.add("walk_north", [11, 12, 13, 14], 8);
+		this.animation.add("walk_east", [15, 16, 17, 18], 8);
+		this.animation.add("walk_west", [19, 20, 21, 22], 8);
+		this.animation.add("attack", [9,8,9,8,9,10], 8,false);
+		
 		
 		maxVelocity.set(_normalRandomWalkSpeed, _normalRandomWalkSpeed);
 		drag.set(_normalDrag, _normalDrag);
 		_preferredDistance = _aggroRangeInTiles - 1.5 + FlxG.random.float( -1, 1);
 		_rightGuy = FlxG.random.bool();
 		_rightGuyCounter = FlxG.random.int(2, 4);
+		health = 10;
 	}
 	
 	
@@ -47,7 +55,9 @@ class Enemy_Shooter extends Enemy
 	{
 		super.update(elapsed);
 		
-		var playerVector = new FlxVector(_playState.player.x + _playState.player.width/2.0, _playState.player.y + _playState.player.height/2.0);
+		
+		
+		var playerVector = new FlxVector(_state.player.x + _state.player.width/2.0, _state.player.y + _state.player.height/2.0);
 		var enemyVector = new FlxVector(x + width/2.0, y + height/2);
 		_distanceToPlayer = playerVector.dist(enemyVector);
 		var direction :FlxVector = playerVector.subtractNew(enemyVector).normalize();
@@ -71,12 +81,23 @@ class Enemy_Shooter extends Enemy
 				_playerLocked = true;
 				this.velocity.set();
 				this.acceleration.set();
+				this.animation.play("attack", false);
+			}
+			else
+			{
+				_animationTimer += elapsed;
+				if (_animationTimer >= 0.7)
+				{
+					_animationTimer = 0;
+					doAnimations();
+				}
 			}
 			
 			
 		}
 		else
 		{
+			
 			// trigger: switch back to Random Walk
 			if (_distanceToPlayer >= (_aggroRangeInTiles + 2) * GameProperties.TileSize)
 			{
@@ -87,6 +108,7 @@ class Enemy_Shooter extends Enemy
 			if (_shootTimer <= 0)
 			{
 				shoot(direction);
+				this.animation.play("attack", true);
 			}
 			
 			
@@ -106,7 +128,7 @@ class Enemy_Shooter extends Enemy
 				-direction.y * _normalRandomWalkSpeed * 0.75);
 			}
 			else
-			{
+			{	
 				this.acceleration.set();
 				if (_rightGuy)
 					this.velocity.set( -direction.x * _normalRandomWalkSpeed, 1.0 / (direction.y * _normalRandomWalkSpeed));
@@ -125,15 +147,15 @@ class Enemy_Shooter extends Enemy
 	function shoot(dir : FlxVector) 
 	{
 		
-		_shootTimer = 0.8;
+		_shootTimer = 0.9;
 		var s : EnemyShot = new EnemyShot(x + this.width / 2.0, y + this.height / 2.0, dir.x , dir.y );
-		_playState.level.allEnemyShots.add(s);
+		_state.level.allEnemyShots.add(s);
 		
 		_rightGuyCounter--;
 		//trace();
 		if (_rightGuyCounter <= 0)
 		{
-			trace("switch direction");
+			//trace("switch direction");
 			_rightGuy = ! _rightGuy;
 			_rightGuyCounter = FlxG.random.int(3, 6);
 		}

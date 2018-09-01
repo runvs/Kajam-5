@@ -1,5 +1,6 @@
 package;
 
+import flash.display.StageDisplayState;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -13,12 +14,15 @@ import flixel.addons.editors.tiled.TiledTileLayer;
 import flixel.addons.editors.tiled.TiledTileSet;
 import flixel.group.FlxGroup;
 import flixel.group.FlxSpriteGroup;
+import flixel.math.FlxPoint;
+import flixel.math.FlxVector;
 import flixel.system.FlxSound;
 import flixel.tile.FlxTilemap;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
 import haxe.io.Path;
 
 /**
@@ -34,9 +38,6 @@ class TiledLevel extends TiledMap
 	
 	
 	public var levelPath : String = "";
-	
-	
-	
 	
 	
 	public var baseTiles:FlxGroup;
@@ -56,6 +57,7 @@ class TiledLevel extends TiledMap
 	public var allEnemies : AdministratedList<Enemy>;
 	public var deadEnemies : FlxSpriteGroup;
 	public var allEnemyShots : AdministratedList<EnemyShot>;
+	public var allPlayerShots : AdministratedList<PlayerShot>;
 	
 	public var allNSCs : AdministratedList<NPC>;
 	
@@ -63,9 +65,14 @@ class TiledLevel extends TiledMap
 	public var allTrigger : FlxTypedGroup<Trigger>;
 	public var goreLayer : FlxSprite;
 	
+	public var allGates : FlxSpriteGroup;
+	public var allArenas : FlxTypedGroup<Arena>;
+	
 	private var _state : PlayState;
 	
+	public var _music : String = "";
 	
+	public var allTP : FlxTypedGroup<TownPortal>;
 	
 	public function new(tiledLevel:Dynamic, s : PlayState)
 	{
@@ -88,9 +95,20 @@ class TiledLevel extends TiledMap
 		allEnemies = new AdministratedList<Enemy>();
 		allEnemies.DestroyCallBack.push( function (e : Enemy ) : Void  { addDeadEnemy(e); } );
 		
-		allEnemyShots = new  AdministratedList<EnemyShot>();
 		allNSCs = new AdministratedList<NPC>();
 		
+		allEnemyShots = new  AdministratedList<EnemyShot>();
+		allPlayerShots = new  AdministratedList<PlayerShot>();
+		allPlayerShots.DestroyCallBack.push(
+		function (a : PlayerShot) 
+		{
+			a.color = FlxColor.GRAY; 
+			a.velocity.set(); 
+			a.acceleration.set(); 
+			a.angle = FlxG.random.float(0, 360); 
+			deadEnemies.add(a);  
+			
+		} );
 		tileSet = tilesets["tileset.png"];
 		
 		
@@ -104,15 +122,15 @@ class TiledLevel extends TiledMap
 		
 		allShrines = new FlxTypedGroup<Shrine>();
 			
+		allArenas = new FlxTypedGroup<Arena>();
+		allGates = new FlxSpriteGroup();
 		
 		//trace(this.width);
 		
 		var wit : Int = this.width; 
 		var hit : Int = this.height; 
 		
-		
-		
-		
+		allTP = new FlxTypedGroup<TownPortal>();
 		
 		// Load Tile Maps
 		for (layer in layers)
@@ -144,6 +162,14 @@ class TiledLevel extends TiledMap
 						s.loadGraphic(AssetPaths.tileset__png, true, 16, 16);
 						s.animation.add("idle", [tileType-1]);
 						s.animation.play("idle");
+						
+						var rowIndex :Int = Std.int((tileType-1) / tileSet.numRows);
+						if (rowIndex == 1 || rowIndex == 2)	// collision tiles on mid? -> darker
+						{
+							s.color = FlxColor.fromRGB(200, 200, 200);
+							
+						}
+						
 						midTiles.add(s);
 					}
 					else
@@ -293,6 +319,14 @@ class TiledLevel extends TiledMap
 					{
 						loadTrigger(o, objectLayer);
 					}
+					else if (o.type.toLowerCase() == "music")
+					{
+						_music = o.name;
+					}
+					else if (o.type.toLowerCase() == "tp")
+					{
+						loadTownPortal(o, objectLayer);
+					}
 					else
 					{
 						trace("Warning: unknown object: " + o.type + " with name: " + o.name);
@@ -316,6 +350,66 @@ class TiledLevel extends TiledMap
 					loadEnemy(o, objectLayer);
 				}
 			}
+			else if (layer.name.toLowerCase() == "arena")
+			{
+				for (oi in objectLayer.objects)
+				{
+					var o : TiledObject = oi;
+					loadArena(o, objectLayer);
+				}
+			}
+		}
+	}
+	
+	function loadTownPortal(o:TiledObject, objectLayer:TiledObjectLayer) 
+	{
+		var tp : TownPortal = new TownPortal(o.x, o.y, o.width, o.height, _state);
+		
+		var level : String = o.properties.get("level");
+		var entryid : String = o.properties.get("entryid");
+		if (level == null || entryid == null) return;
+		tp.thisPortalLevel = level;
+		tp.thisPortalEntryID = Std.parseInt(entryid);
+		
+		allTP.add(tp);
+	}
+	
+	function loadArena(o:TiledObject, g:TiledObjectLayer) 
+	{
+		var x:Int = o.x;
+		var y:Int = o.y;
+		
+		var w = o.width;
+		var h = o.height;
+		
+		var a : Arena = new Arena(x, y, w, h, this);
+		allArenas.add(a);
+		{
+			//trace("load arena");
+			var gateString : String = o.properties.get("gate");
+			if (gateString != null)
+			{
+				//StringTools.replace(gateString, "\n", "");
+				var gateArray : Array<String> = gateString.split(";");
+				for (gp in gateArray)
+				{
+					var spl : Array<String> = gp.split(",");
+					if (spl.length != 2) continue;
+					var x : Int = Std.parseInt(gp.split(",")[0]);
+					var y : Int = Std.parseInt(gp.split(",")[1]);
+					a.addGate(x, y);
+				}
+			}
+		}
+		{
+			for (i in 1 ... GameProperties.WorldMaxWaveNumber)
+			{
+				var name :String = "wave" + Std.string(i);
+				var prop : String = o.properties.get(name);
+				if (prop == null) continue;
+				
+				a.addWave(i, prop);
+			}
 		}
 	}
 	
@@ -327,7 +421,7 @@ class TiledLevel extends TiledMap
 		var w = o.width;
 		var h = o.height;
 		
-		var s : Trigger = new Trigger(x, y,w,h, _state);
+		var s : Trigger = new Trigger(x, y,w,h, this);
 		s.name = o.name;
 		
 		s.action = o.properties.get("action");
@@ -350,7 +444,7 @@ class TiledLevel extends TiledMap
 		
 		var s : Trap = new Trap(x, y);
 		s.name = o.name;
-		s.makeGraphic(w, h, FlxColor.BLACK);
+		s.makeGraphic(w, h, FlxColor.fromRGB(132,132,152));
 		
 		var act : String = o.properties.get("activated");
 		if (act != null && act == "false")
@@ -378,27 +472,23 @@ class TiledLevel extends TiledMap
 	}
 	
 	
-	private function loadEnemy(o:TiledObject, g:TiledObjectLayer)
+	public function spawnEnemy(t : String, x, y)
 	{
-		//trace("load object of type " + o.type);
-		var x:Int = o.x;
-		var y:Int = o.y;
-		
-		if (o.type.toLowerCase() == "smashground")
+		if (t == "smashground")
 		{
 			//trace();
 			var e : Enemy_SmashGround = new Enemy_SmashGround(_state);
 			e.setPosition(x, y);
 			allEnemies.add(e);
 		}
-		else if (o.type.toLowerCase() == "runner")
+		else if (t == "runner")
 		{
 			//trace();
 			var e : Enemy_Runner = new Enemy_Runner(_state);
 			e.setPosition(x, y);
 			allEnemies.add(e);
 		}
-		else if (o.type.toLowerCase() == "shooter")
+		else if (t == "shooter")
 		{
 			//trace();
 			var e : Enemy_Shooter = new Enemy_Shooter(_state);
@@ -407,8 +497,19 @@ class TiledLevel extends TiledMap
 		}
 		else
 		{
-			trace("ERROR: unknown enemy Type");
+			trace("ERROR: unknown enemy Type: " + t);
 		}
+	}
+	
+	private function loadEnemy(o:TiledObject, g:TiledObjectLayer)
+	{
+		//trace("load object of type " + o.type);
+		var x:Int = o.x;
+		var y:Int = o.y;
+		var type : String = o.type.toLowerCase();
+		
+		spawnEnemy(type, x, y);
+		
 	}
 	
 	private function loadEntry(o:TiledObject, g:TiledObjectLayer)
@@ -455,21 +556,19 @@ class TiledLevel extends TiledMap
 		{
 			var n : NPC;
 			if (nsctype.toLowerCase() == "guard")
-			{
-				//trace(x);
 				n = new NPC_Guard(_state);
-				n.setPosition(x , y );
-				n.objectName = o.name;
-				allNSCs.add(n);
-				trace("add nsc guard '" +  n.objectName + "'");
-			}
-			else //if (nsctype.toLowerCase() == "smith")
-			{
+			else if (nsctype.toLowerCase() == "smith")
 				n = new NPC_Smith(_state);
-				n.setPosition(x, y);
-				n.objectName = o.name;
-				allNSCs.add(n);
-			}
+			else if (nsctype.toLowerCase() == "carpenter")
+				n = new NPC_Carpenter(_state);
+			else //if (nsctype.toLowerCase() == "smith")
+				n = new NPC_Armorer(_state);
+
+				
+			n.setPosition(x , y );
+			n.objectName = o.name;
+			allNSCs.add(n);
+	
 			var msg : String = o.properties.get("message");
 			if (msg != null) n.overrideMessage = msg;
 		}
@@ -499,10 +598,10 @@ class TiledLevel extends TiledMap
 		}
 	}
 		
-	public function spladder (x: Float, y : Float)
+	public function spladder (x: Float, y : Float, c : FlxColor)
 	{
 		var s : FlxSprite = new FlxSprite();
-		s.makeGraphic(FlxG.random.int(1, 3), FlxG.random.int(1, 3), FlxColor.fromRGB(175,0,0));
+		s.makeGraphic(FlxG.random.int(1, 3), FlxG.random.int(1, 3), c);
 		
 		var N : Int = 5;
 		
@@ -531,5 +630,36 @@ class TiledLevel extends TiledMap
 				return e;
 		}
 		return null;
+	}
+	
+	public function activateArena (a : Arena)
+	{
+		if (a.state != 0) return;
+		
+		a.state = 1;
+		
+		FlxG.camera.shake(0.005, 0.625);
+		FlxG.camera.flash(FlxColor.fromRGB(255, 255, 255, 150), 0.25);
+		
+		for (gi in a.gates)
+		{
+			var g : FlxPoint = gi;
+			var spr : FlxSprite = new FlxSprite(g.x * GameProperties.TileSize, g.y * GameProperties.TileSize);
+			//spr.makeGraphic(GameProperties.TileSize, GameProperties.TileSize, FlxColor.PURPLE, true);
+			spr.loadGraphic(AssetPaths.wallpopup__png, true, 16, 16);
+			spr.animation.add("idle", [0, 1, 2, 3, 4, 5, 6], 14, false);
+			var t : FlxTimer = new FlxTimer();
+			t.start(FlxG.random.float(0, 0.125), function (t) { spr.animation.play("idle");} );
+			spr.immovable = true;
+			allGates.add(spr);
+		}
+	}
+	
+	public function deactivateArena ( a : Arena)
+	{
+		if (a.state != 1) return;
+		a.state = 2;
+		a.active = false;
+		allGates = new FlxSpriteGroup();
 	}
 }

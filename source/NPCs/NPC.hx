@@ -32,7 +32,7 @@ class NPC extends FlxSprite
 		_state = s;
 		this.immovable = true;
 		
-		_speechText = new FlxText(0, 0, 256, "");
+		_speechText = new FlxText(0, 0, 128, "");
 		_speechText.setBorderStyle(FlxTextBorderStyle.OUTLINE,FlxColor.BLACK,1,1);
 		
 		age += FlxG.random.float(0, 1.5);

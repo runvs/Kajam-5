@@ -12,24 +12,37 @@ import flixel.util.FlxColor;
 class Enemy extends FlashSprite
 {
 
-	private var _playState    : PlayState;
+	private var _state    : PlayState;
 	private var _facing       : Facing;
 	
 	public var MaxHealth      : Float;
 	
 	private var _idleTimer : Float;
 	
+	private var _takeDamageWallTime : Float = 0;
+	
+	public var enemySpladderColor : FlxColor;
+	
+	
+	
 	public function new(s : PlayState) 
 	{
 		super();
-		_playState = s;
+		_state = s;
 		_idleTimer = 0;
-		
+		health = 30;
+		enemySpladderColor = FlxColor.fromRGB(175, 0, 0);
 	}
 	
 	public function drawUnderlay()
 	{
 		
+	}
+	
+	override public function update(elapsed:Float):Void 
+	{
+		super.update(elapsed);
+		_takeDamageWallTime -= elapsed;
 	}
 	
 	private function doAnimations():Void 
@@ -71,8 +84,12 @@ class Enemy extends FlashSprite
 	
 	public function hit(damage: Float, px:Float, py:Float)
     {
+		if (_takeDamageWallTime >= 0) return;
+		
+		
+		_takeDamageWallTime = 0.1;
         health -= damage;
-        //trace(CurrentHealth);
+        //trace(health);
 		
 		// calculate pushback
 		var dir : FlxVector = new FlxVector (x -px, y - py);
@@ -87,13 +104,19 @@ class Enemy extends FlashSprite
         {
             alive = false;
 			onDeath();
-			trace('I am dead');
+			//trace('I am dead');
         }
     }
 
 	public function onDeath()
 	{
-		
+		_flashOverlay.alpha = 0;
+		_flashTimer = -1;
+	}
+	
+	public function isHurtingPlayer () : Bool
+	{
+		return false;
 	}
 	
 }

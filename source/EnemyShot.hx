@@ -8,26 +8,23 @@ import flixel.util.FlxColor;
  * ...
  * @author 
  */
-class EnemyShot extends FlxSprite
+class EnemyShot extends GenericShot
 {
-	private var age : Float = 0;
-
+	
+	
+	
 	public function new(?X:Float=0, ?Y:Float=0, vx: Float, vy: Float) 
 	{
-		super(X, Y);
+		super(X, Y,vx,vy);
 		
-		this.makeGraphic(6, 6, FlxColor.RED);
-		this.velocity.set(vx * GameProperties.EnemyShotSpeed, vy * GameProperties.EnemyShotSpeed);
-		this.angularVelocity = 100;
+		this.velocity.scale(GameProperties.EnemyShotSpeed);
 	}
 	
-	override public function update(elapsed:Float):Void 
+	override public function createImage() 
 	{
-		super.update(elapsed);
-		age += elapsed;
+		this.makeGraphic(6, 6, FlxColor.RED);
+		this.angularVelocity = 100;
 		
-		if (age >= GameProperties.WorldShotLifeTimeMax)
-			alive = false;
 	}
 	
 }

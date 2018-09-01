@@ -124,6 +124,15 @@ class MenuState extends FlxState
     });
 #end		
 
+
+
+	//var vals : Array<Float> = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 0.9, 1.1, 1.5, 9.5, 9.7];
+	//
+	//for (v in vals)
+	//{
+		//trace(v + " " + MathExtender.castToHalfSteps(v));
+	//}
+
 		
 	}
 	

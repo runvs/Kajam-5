@@ -30,14 +30,18 @@ class Enemy_Runner extends Enemy
 	private static var _normalDrag : Float  = 250;
 	
 	private static var _chargeDrag : Float = 10;
-	private static var _chargeSpeed : Float = 180;
+	private static var _chargeSpeed : Float = 160;
 	
 	
 	private static var _timeInChargeMax : Float = -0.6;
 	private static var _recoverTime : Float = _timeInChargeMax -  1.25;
 	
 	
-	var dashRangeInTiles : Float  = 3.0;
+	private var underlay : GlowOverlay;
+	
+	
+	var dashRangeInTiles : Float  = 4.0;
+	var isHurting : Bool = false;
 	
 	
 	
@@ -52,7 +56,12 @@ class Enemy_Runner extends Enemy
 
         MaxHealth      = health;
 
-        makeGraphic(16, 12);
+        //makeGraphic(16, 12);
+		this.loadGraphic(AssetPaths.slime__png, true, 16, 16);
+		animation.add("walk", [0, 1, 2, 3], 8);
+		animation.add("charge", [8], 8, true);
+		animation.add("push", [4, 5], 8);
+		this.animation.play("walk");
 		//this.loadGraphic(AssetPaths.enemy__png, true, 16, 16);
 		//this.animation.add("walk_south", [0, 8, 16,  24], 8);
 		//this.animation.add("walk_west",  [1, 9, 17,  25], 8);
@@ -73,7 +82,11 @@ class Enemy_Runner extends Enemy
 		_distanceToPlayer = 0;
 		
 		
+		enemySpladderColor = FlxColor.fromRGB(18,33,21);
 		
+		underlay = new GlowOverlay(0, 0, FlxG.camera, 26, 1, 1.25);
+		underlay.alpha = 0;
+		underlay.scale.set(1, 1);
 		
 		
 		//attackSound = FlxG.sound.load(AssetPaths.takeHit__ogg, 0.125);
@@ -103,9 +116,10 @@ class Enemy_Runner extends Enemy
     function doMovement()
     {
 		
+		underlay.alpha = 0;
 		_chargeTime -= FlxG.elapsed;
 		//trace(_chargeTime);
-        var playerVector = new FlxVector(_playState.player.x + _playState.player.width/2.0, _playState.player.y + _playState.player.height/2.0);
+        var playerVector = new FlxVector(_state.player.x + _state.player.width/2.0, _state.player.y + _state.player.height/2.0);
         var enemyVector = new FlxVector(x + width/2.0, y + height/2);
 		
 		_distanceToPlayer = playerVector.dist(enemyVector);
@@ -116,12 +130,14 @@ class Enemy_Runner extends Enemy
 			if ( _chargeTime <= _recoverTime)
 			{
 				color = FlxColor.WHITE;
+				
 				maxVelocity.set(_normalRandomWalkSpeed, _normalRandomWalkSpeed);
 				_thinkTime -= FlxG.elapsed;
 				if (_thinkTime <= 0)
 				{
 					_thinkTime = GameProperties.EnemyMovementRandomWalkThinkTime;
 					velocity.set();
+					this.animation.play("walk");
 					acceleration.set(
 						FlxG.random.float(-1.0, 1.0) * accel,
 						FlxG.random.float(-1.0, 1.0) * accel 
@@ -138,7 +154,8 @@ class Enemy_Runner extends Enemy
 			}
 			else
 			{
-				color = FlxColor.BROWN;
+				
+				
 				velocity.set();
 				acceleration.set();
 			}
@@ -158,8 +175,10 @@ class Enemy_Runner extends Enemy
 				// Trigger: start charging process
 				if (_distanceToPlayer <= dashRangeInTiles * GameProperties.TileSize)
 				{
-					color = FlxColor.BLUE;
-					_chargeTime = 0.75; 
+				
+					
+					animation.play("charge", true);
+					_chargeTime = GameProperties.EnemyRunnerChargeTime; 
 					this.velocity.set();
 					this.acceleration.set();
 				
@@ -168,13 +187,15 @@ class Enemy_Runner extends Enemy
 				if (_distanceToPlayer >= aggroRangeInTiles * 1.2 * GameProperties.TileSize)
 				{
 					_playerLocked = false;
+					this.animation.play("walk");
 					maxVelocity.set(_normalRandomWalkSpeed, _normalRandomWalkSpeed);
 					this.velocity.set();
 					this.acceleration.set();
 				}
 				else
 				{
-					color = FlxColor.RED;
+					
+					this.animation.play("walk");
 					acceleration.set(
 						direction.x * accel,
 						direction.y * accel
@@ -183,14 +204,16 @@ class Enemy_Runner extends Enemy
 			}
 			else if (_chargeTime <= 0)
 			{
-				color = FlxColor.GREEN;
+				//color = FlxColor.GREEN;
 				
 				
 				// trigger: back to randomWalk
 				if (_chargeTime - FlxG.elapsed < _timeInChargeMax)
 				{
+					isHurting = false;
 					_playerLocked = false;
 					color = FlxColor.BROWN;
+					this.animation.play("walk");
 					maxVelocity.set(_normalRandomWalkSpeed, _normalRandomWalkSpeed);
 					drag.set(_normalDrag, _normalDrag);
 					velocity.set();
@@ -201,18 +224,22 @@ class Enemy_Runner extends Enemy
 			}
 			else 	// charge time > 0
 			{
-				
-				color = FlxColor.YELLOW;
 				// charging and dont move
 				velocity.set();
 				acceleration.set();
+				
+				
+				var v : Float = (1 - (_chargeTime / GameProperties.EnemyRunnerChargeTime));
+				underlay.alpha =  0.8 * v*v ;
+				
 				// trigger: Charge 
 				if (_chargeTime - FlxG.elapsed <= 0)
 				{
+					this.animation.play("push");
 					maxVelocity.set(_chargeSpeed, _chargeSpeed);
 					this.drag.set(_chargeDrag, _chargeDrag);
 					this.velocity.set(direction.x * _chargeSpeed, direction.y * _chargeSpeed);
-					
+					isHurting = true;
 				}
 				
 			}
@@ -228,7 +255,8 @@ class Enemy_Runner extends Enemy
 
 	public override function drawUnderlay()
 	{
-
+		underlay.setPosition(x + width/2, y + height/2);
+		underlay.draw();
 	}
 	
     public override function draw()
@@ -238,4 +266,9 @@ class Enemy_Runner extends Enemy
 
 
     //#################################################################
+	
+	override public function isHurtingPlayer():Bool 
+	{
+		return isHurting;
+	}
 }

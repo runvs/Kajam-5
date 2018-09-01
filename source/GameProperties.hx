@@ -17,21 +17,25 @@ class GameProperties
     // ################################################################
 
 	static public var WorldShotLifeTimeMax : Float = 7.5;
-	
+	static public var WorldMaxWaveNumber (default, null) : Int = 10;
     // ################################################################
     // # Player #######################################################
     // ################################################################
     public static var PlayerMovementAcceleration  : Float    = 500.0;
     public static var PlayerMovementDrag          : FlxPoint = new FlxPoint(2500, 2500);
-    public static var PlayerMovementMaxVelocity  (default, null) : FlxPoint = new FlxPoint(95, 95);
-    public static var PlayerMovementDashCooldown  : Float    = 1.0;
+    public static var PlayerMovementMaxVelocity  (default, null) : FlxPoint = new FlxPoint(80, 80);
+    public static var PlayerMovementDashCooldown  : Float    = 0.9;
 	public static var PlayerMovementMaxDashLength : Float    = 40.0;
     public static var PlayerAttackBaseDamage      : Float    = 10.0;
     public static var PlayerAttackCooldown        : Float    = 0.45;
-	public static var PlayerHealthMaxDefault      : Float    = 1.0;
+	public static var PlayerHealthMaxDefault      : Float    = 3.0;
 	
-
-    // ################################################################
+	static public var PlayerDamageWallTime (default, null) : Float = 0.35;
+	
+	static public var PlayerBowSlowDownFactor (default, null) : Float = 0.3;
+	static public var PlayerBowMaxTimer (default, null) : Float = 0.7;
+    
+	// ################################################################
     // # Enemy ########################################################
     // ################################################################
     
@@ -44,6 +48,10 @@ class GameProperties
     // ################################################################
 	
 	public static var NPCSpeechFadeOutTime (default, null) : Float = 0.4;
+	static public var EnemyRunnerChargeTime (default, null) : Float = 0.65;
+	
+	
+
     
     // ################################################################
     // # Merchant #####################################################
