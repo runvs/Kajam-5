@@ -1,6 +1,7 @@
 package;
 
 import ShopItem;
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -313,7 +314,7 @@ class ShopState extends FlxSubState
 		
 		goldtxt.text = "gold: " + _state.player.gold;
 		
-		if (MyInput.DashButtonJustPressed)
+		if (MyInput.DashButtonJustPressed || FlxG.keys.justPressed.ESCAPE)
 		{
 			this.close();
 		}
@@ -328,12 +329,12 @@ class ShopState extends FlxSubState
 			if (MyInput.yVal <= -0.1)
 			{
 				selectorPosition--;
-				inputWallTime = 0.1;
+				inputWallTime = GameProperties.WorldShopInputWallTime;
 			}
 			if (MyInput.yVal >= 0.1)
 			{
 				selectorPosition++;
-				inputWallTime = 0.1;
+				inputWallTime = GameProperties.WorldShopInputWallTime;
 			}
 			
 			

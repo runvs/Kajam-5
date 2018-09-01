@@ -51,16 +51,17 @@ class Enemy_SmashGround extends Enemy
         _thinkTime    = GameProperties.EnemyMovementRandomWalkThinkTime;
         _playerLocked = false;
 
-        makeGraphic(16, 16, flixel.util.FlxColor.fromRGB(255, 0, 255));
-		//this.loadGraphic(AssetPaths.enemy__png, true, 16, 16);
-		//this.animation.add("walk_south", [0, 8, 16,  24], 8);
-		//this.animation.add("walk_west",  [1, 9, 17,  25], 8);
-		//this.animation.add("walk_north", [2, 10, 18, 26], 8);
-		//this.animation.add("walk_east",  [3, 11, 19, 27], 8);
-		//this.animation.add("attackUP",   [4, 12], 3, false);
-		//this.animation.add("attackDOWN", [12, 20, 28,28,28], 4, false);
-		//this.animation.add("idle", [0]);
-		//this.animation.play("idle");
+        //makeGraphic(16, 16, flixel.util.FlxColor.fromRGB(255, 0, 255));
+		
+		this.loadGraphic(AssetPaths.ork__png, true, 16, 16);
+		this.animation.add("walk_south", [0, 1, 2, 3], 8);
+		this.animation.add("walk_west",  [4, 5, 6, 7], 8);
+		this.animation.add("walk_north", [8,9,10,11], 8);
+		this.animation.add("walk_east",  [12,13,14,15], 8);
+		this.animation.add("attackUP",   [16,17], 3, false);
+		this.animation.add("attackDOWN", [19,18,18,18,18], 4, false);
+		this.animation.add("idle", [0]);
+		this.animation.play("idle");
 		
 		_facing = Facing.SOUTH;
 		
