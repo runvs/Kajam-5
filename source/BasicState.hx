@@ -45,10 +45,10 @@ class BasicState extends FlxState
 	
 	override public function draw():Void 
 	{
-		super.draw();
+		
 		background.draw();
 		drawObjects();
-		
+		super.draw();
 		drawOverlay();
 	}
 	

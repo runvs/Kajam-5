@@ -51,7 +51,7 @@
   <object id="88" name="exit_top" type="exit" x="144" y="0" width="48" height="24">
    <properties>
     <property name="entryid" value="1"/>
-    <property name="target" value="arena_2.tmx"/>
+    <property name="target" value="arena.tmx"/>
    </properties>
   </object>
   <object id="90" name="entry_top" type="entry" x="160" y="48" width="16" height="16">

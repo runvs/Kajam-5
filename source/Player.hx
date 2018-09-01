@@ -379,9 +379,6 @@ class Player extends FlashSprite
 			}
 		}
 		
-		if(_state.level.allTrigger.length >= 1)
-			//trace(FlxG.overlap(_hitArea, _state.level.allTrigger.members[0]));
-		
 		for (ti in _state.level.allTrigger)
 		{
 			var t : Trigger = ti;
@@ -391,12 +388,17 @@ class Player extends FlashSprite
 			if (FlxG.overlap(_hitArea, t))
 			{
 				t.perform();
-				t.playerOn = true;
 			}
-			else
+		}
+		
+		
+		for (ni in _state.level.allNSCs)
+		{
+			var n: NPC = ni;
+		//trace(n.objectName + " " + FlxG.overlap(n, _hitArea));	
+			if (FlxG.overlap(n, _hitArea))
 			{
-				t.playerOn = false;
-				
+				n.interact();
 			}
 		}
 	}
