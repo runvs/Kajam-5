@@ -347,7 +347,7 @@ class Player extends FlashSprite
 		_attackCooldown -= elapsed;
 		if(_attackCooldown <= 0.0)
 		{
-			if(MyInput.InteractButtonPressed) attack();
+			if(MyInput.InteractButtonJustPressed) attack();
 		}
     }
 
@@ -378,12 +378,25 @@ class Player extends FlashSprite
 				_state.level.spladder(enemy.x + GameProperties.TileSize/2, enemy.y + GameProperties.TileSize/2, enemy.enemySpladderColor);
 			}
 		}
+		
+		if(_state.level.allTrigger.length >= 1)
+			//trace(FlxG.overlap(_hitArea, _state.level.allTrigger.members[0]));
+		
 		for (ti in _state.level.allTrigger)
 		{
 			var t : Trigger = ti;
+			//trace(_hitArea);
+			//trace(t);
+			
 			if (FlxG.overlap(_hitArea, t))
 			{
 				t.perform();
+				t.playerOn = true;
+			}
+			else
+			{
+				t.playerOn = false;
+				
 			}
 		}
 	}
