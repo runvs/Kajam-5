@@ -18,7 +18,6 @@ class ShopState extends FlxSubState
 	private var shopType : Int = 0; 	// 0 Weapons
 									// 1 Bow
 									// 2 Armor
-									// 3 Consumables
 									
 	private var bg : FlxSprite;
 	
@@ -81,19 +80,10 @@ class ShopState extends FlxSubState
 		{
 			setShopTypeBow();
 		}
-		else if (i == 2)
+		else
 		{
 			setShopTypeArmor();
 		}
-		else
-		{
-			setShopTypeConsumables();
-		}
-	}
-	
-	function setShopTypeConsumables() 
-	{
-		
 	}
 	
 	function setShopTypeArmor() 
