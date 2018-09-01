@@ -20,14 +20,15 @@ class TownPortal extends FlxSprite
 	
 	public var thisPortalLevel : String = "";
 	public var thisPortalEntryID : Int;
-	
 	public function new(?X:Float=0, ?Y:Float=0, w: Int, h : Int, state: PlayState) 
 	{
 		super(X, Y);
 		_state = state;
 		
-		this.makeGraphic(w,h);
-		this.angularVelocity = 100;
+		//this.makeGraphic(w,h);
+		this.loadGraphic(AssetPaths.teleporter__png, true, 32, 32);
+		this.animation.add("idle", [0, 1, 2, 3, 4, 5], 7);
+		this.animation.play("idle");
 	}
 	
 	
