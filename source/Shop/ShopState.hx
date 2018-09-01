@@ -4,6 +4,7 @@ import ShopItem;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.text.FlxText;
 import flixel.util.FlxColor;
 
 /**
@@ -35,6 +36,8 @@ class ShopState extends FlxSubState
 	public var allEntries : AdministratedList<ShopItem>;
 	
 	
+	private var goldtxt : FlxText;
+	
 	public function new(s : PlayState) 
 	{
 		super();
@@ -60,6 +63,8 @@ class ShopState extends FlxSubState
 		
 		add(allEntries);
 		
+		goldtxt = new FlxText(oX + 300 - 100, oY + 60, 100, "gold: " + _state.player.gold);
+		add(goldtxt);
 	}
 	
 	public function setShopType(i : Int)
@@ -174,6 +179,8 @@ class ShopState extends FlxSubState
 	{
 		super.update(elapsed);
 		MyInput.update();
+		
+		goldtxt.text = "gold: " + _state.player.gold;
 		
 		if (MyInput.DashButtonJustPressed)
 		{

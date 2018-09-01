@@ -21,7 +21,7 @@ class Player extends FlashSprite
 	public var bowItem    : Item;
 	
 	public var inventory : Inventory;
-	public var gold : Int = 7;
+	public var gold : Int = 70;
 	
 	public var healthMax     : Float;
 	
