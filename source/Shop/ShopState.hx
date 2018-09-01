@@ -32,15 +32,14 @@ class ShopState extends FlxSubState
 	public static var oX : Float = 200;
 	public static var oY: Float = 150;
 	
-	public var allEntries : FlxTypedGroup<ShopItem>;
+	public var allEntries : AdministratedList<ShopItem>;
 	
 	
 	public function new(s : PlayState) 
 	{
 		super();
 		_state = s;
-		allEntries = new FlxTypedGroup<ShopItem>();
-		//allEntries.scrollfact
+		allEntries = new AdministratedList<ShopItem>();
 		
 	}
 	
@@ -62,7 +61,6 @@ class ShopState extends FlxSubState
 		add(allEntries);
 		
 	}
-	
 	
 	public function setShopType(i : Int)
 	{
@@ -102,51 +100,74 @@ class ShopState extends FlxSubState
 	
 	function setShopTypeWeapon()
 	{
-		allEntries = new FlxTypedGroup<ShopItem>();
-		
+		//allEntries = new AdministratedList<ShopItem>();
+		allEntries.getList().clear();
 		{
-			var i : ShopItem = new ShopItem(AssetPaths.shortsword__png, "short sword", 5, 
+			var cost : Int = 5;
+			if (_state.player.inventory.hasBoughtShortSword) cost = 0;
+			var i : ShopItem = new ShopItem(AssetPaths.shortsword__png, "short sword", cost, 
 			function(s:PlayState)
 			{
-				s.player.swordItem = Item.GetShortSword();
+				s.player.inventory.hasBoughtShortSword = true;
+				s.player.pickupItem(Item.GetShortSword());
 			});
 			//trace(allEntries.length);
-			i.ItemPos = allEntries.length;
-			//add(i);
+			i.ItemPos = allEntries.getList().length;
+			
+			
 			allEntries.add(i);
 		}
 		{
-			var i : ShopItem = new ShopItem(AssetPaths.dagger__png, "dagger", 10, 
+			var cost : Int = 10;
+			if (_state.player.inventory.hasBoughtDagger) cost = 0;
+			var i : ShopItem = new ShopItem(AssetPaths.dagger__png, "dagger", cost, 
 			function(s:PlayState)
 			{
-				s.player.swordItem = Item.GetDagger();
+				s.player.inventory.hasBoughtDagger = true;
+				s.player.pickupItem(Item.GetDagger());
 			});
-			i.ItemPos = allEntries.length;
-			//add(i);
+			i.ItemPos = allEntries.getList().length;
 			allEntries.add(i);
 		}
 		{
-			var i : ShopItem = new ShopItem(AssetPaths.claymore__png, "claymore", 15, 
+			var cost : Int = 15;
+			if (_state.player.inventory.hasBoughtClaymore) cost = 0;
+			var i : ShopItem = new ShopItem(AssetPaths.claymore__png, "claymore", cost, 
 			function(s:PlayState)
 			{
-				s.player.swordItem = Item.GetClaymore();
+				s.player.inventory.hasBoughtClaymore = true;
+				s.player.pickupItem(Item.GetClaymore());
 			});
-			i.ItemPos = allEntries.length;
-			//add(i);
+			i.ItemPos = allEntries.getList().length;
+			
 			allEntries.add(i);
 		}
 		{
-			var i : ShopItem = new ShopItem(AssetPaths.katana__png, "katana", 20, 
+			var cost : Int = 25;
+			if (_state.player.inventory.hasBoughtKatana) cost = 0;
+			var i : ShopItem = new ShopItem(AssetPaths.katana__png, "katana", cost, 
 			function(s:PlayState)
 			{
-				s.player.swordItem = Item.GetKatana();
+				s.player.inventory.hasBoughtKatana = true;
+				s.player.pickupItem(Item.GetKatana());
 			});
-			i.ItemPos = allEntries.length;
-			//add(i);
+			i.ItemPos = allEntries.getList().length;
+			
+			
 			allEntries.add(i);
+		}
+		for (i in allEntries)
+		{
+			//trace(i.ItemCost + " " + _state.player.gold);
+			
+			if (_state.player.gold < i.ItemCost)
+			{
+				//trace("not available ");
+				i.available = false;
+			}
 		}
 		
-		selectorPositionMax = allEntries.length;
+		selectorPositionMax = allEntries.getList().length;
 	}
 	
 	override public function update(elapsed:Float):Void 
@@ -157,6 +178,10 @@ class ShopState extends FlxSubState
 		if (MyInput.DashButtonJustPressed)
 		{
 			this.close();
+		}
+		if (MyInput.InteractButtonJustPressed)
+		{
+			Buy();
 		}
 		
 		inputWallTime -= elapsed;
@@ -190,14 +215,20 @@ class ShopState extends FlxSubState
 		
 	}
 	
+	function Buy() 
+	{
+		var si : ShopItem = allEntries.getList().members[selectorPosition];
+		
+		if (si.available)
+		{
+			si.onBuy(_state);
+			this.close();
+		}
+	}
+	
 	override public function draw():Void 
 	{
 		super.draw();
-		trace(selector.x);
-		//var rng : Array<Int> = [-400,-300,-200,-100,0,100,200,300,400];
-	
-		//trace(this.length);
 		
-		//bg.draw();
 	}
 }

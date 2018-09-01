@@ -14,7 +14,7 @@ class ShopItem extends FlxSpriteGroup
 {
 	public var available : Bool = true;
 	public var ItemCost : Int = 1;
-	public var myCallback : PlayState -> Void;
+	private var myCallback : PlayState -> Void;
 	
 	private var spr : FlxSprite;
 	private var text : FlxText;
@@ -25,6 +25,8 @@ class ShopItem extends FlxSpriteGroup
 	{
 		super();
 		spr = new FlxSprite(0, 0);
+		ItemCost = cost;
+		myCallback = cb;
 		spr.loadGraphic(icon, false);
 		//spr.makeGraphic(20, 20);
 		spr.scrollFactor.set();
@@ -50,6 +52,7 @@ class ShopItem extends FlxSpriteGroup
 		}
 		else
 		{
+			//trace("not available");
 			spr.color = FlxColor.GRAY;
 			text.color = FlxColor.GRAY;
 		}
@@ -58,12 +61,14 @@ class ShopItem extends FlxSpriteGroup
 	
 	public function onBuy(s :PlayState)
 	{
-		myCallback(s);
+		s.player.gold -= ItemCost;
+		if (myCallback != null)
+			myCallback(s);
 	}
 	
 	override public function draw():Void 
 	{
 		super.draw();
-		trace(spr.x);
+		//trace(spr.x);
 	}
 }

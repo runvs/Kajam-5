@@ -20,7 +20,9 @@ class Player extends FlashSprite
 	public var armorItem  : Item;
 	public var bowItem    : Item;
 	
-
+	public var inventory : Inventory;
+	public var gold : Int = 7;
+	
 	public var healthMax     : Float;
 	
 	var _itemDashMultiplier : Float = 1.0;
@@ -78,6 +80,8 @@ class Player extends FlashSprite
 		pickupItem(Item.GetSelfbow());
 		pickupItem(Item.GetRobe());
 		trace('Items picked up.');
+		
+		inventory = new Inventory();
 
 		loadGraphic(AssetPaths.Thyl__png, true, 16, 16);
 		animation.add("walk_south", [0, 1, 2, 3], 8);
@@ -120,7 +124,7 @@ class Player extends FlashSprite
 
 		_state = playState;
 
-		setPosition(12 * GameProperties.TileSize, 9 * GameProperties.TileSize);
+		setPosition(12 * GameProperties.TileSize, 15 * GameProperties.TileSize);
 		
 		health = healthMax = GameProperties.PlayerHealthMaxDefault;
 		healthCont = new HealthContainer(AssetPaths.heart_empty__png, AssetPaths.heart_half__png, AssetPaths.heart_full__png);
@@ -421,7 +425,7 @@ class Player extends FlashSprite
 
 	//#################################################################
 
-	function pickupItem(item : Item) : Void
+	public function pickupItem(item : Item) : Void
 	{
 		trace('Picking up a ' + item.name);
 		trace(item);
