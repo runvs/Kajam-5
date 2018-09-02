@@ -81,15 +81,15 @@ class Item extends FlxSprite
 		item.type = ItemType.SWORD;
 		item.loadGraphic(AssetPaths.claymore__png, false, 16, 16);
 
-		item.evasionMultiplier      = 0.9;
-		item.walkSpeedMultiplier    = 0.9;
-		item.dashDistanceMultiplier = 0.9;
+		item.evasionMultiplier      = 1.0;
+		item.walkSpeedMultiplier    = 0.6;
+		item.dashDistanceMultiplier = 1.0;
 		item.dashCooldownMultiplier = 1.0;
 
-		item.damageMultiplier       = 3.0;
+		item.damageMultiplier       = 3.5;
 		item.attackSpeedMultiplier  = 0.7;
 		item.critChanceMultiplier   = 1.0;
-		item.critDamageMultiplier   = 0.5;
+		item.critDamageMultiplier   = 0.0;
 
 		return item;
 	}
@@ -165,9 +165,9 @@ class Item extends FlxSprite
 		item.loadGraphic(AssetPaths.chainmail__png, false, 16, 16);
 
 		item.evasionMultiplier      = 10;
-		item.walkSpeedMultiplier    = 0.9;
-		item.dashDistanceMultiplier = 0.9;
-		item.dashCooldownMultiplier = 0.8;
+		item.walkSpeedMultiplier    = 0.6;
+		item.dashDistanceMultiplier = 1.0;
+		item.dashCooldownMultiplier = 0.6;
 
 		item.damageMultiplier       = 1.0;
 		item.attackSpeedMultiplier  = 1.0;

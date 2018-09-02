@@ -185,8 +185,7 @@ class PlayState extends BasicState
 				}
 				
 			}
-			
-			
+		
 			level.allGates.update(elapsed);
 			
 			FlxG.collide(player, level.collisionMap);
@@ -476,6 +475,10 @@ class PlayState extends BasicState
 		else if (track == "puzzle" ||track == "puzzel")
 		{
 			FlxG.sound.playMusic(AssetPaths.puzzle_music__ogg, 0.6);
+		}
+		else if (track == "combat")
+		{
+			FlxG.sound.playMusic(AssetPaths.combat_theme__ogg, 0.6);
 		}
 		else
 		{

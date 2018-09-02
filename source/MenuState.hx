@@ -32,6 +32,8 @@ class MenuState extends FlxState
 	public static var HighScore : Int = 0;
 	public static var LastScore : Int = 0;
 	
+	private var vignette :Vignette;
+	
 	private var overlay : FlxSprite;
 	private var overlayTween : FlxTween;
 	
@@ -81,7 +83,7 @@ class MenuState extends FlxState
 		add(backgroundSprite);
 		
 		var title : FlxSprite = new FlxSprite();
-		title.loadGraphic(AssetPaths.thylstale__png, true, 151, 43);
+		title.loadGraphic(AssetPaths.thylstale__png, true, 166, 43);
 		title.animation.add("idle", [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 1, 2, 3, 4, 5, 6, 7, 8], 10);
 		title.animation.play("idle");
 		title.scale.set(3.5,3.5);
@@ -112,6 +114,9 @@ class MenuState extends FlxState
 		add(t2);
 		t2.offset.set(0, -100);
 		FlxTween.tween(t2.offset, { y:0 }, 0.5, { ease : FlxEase.bounceOut, startDelay: 1.0 } );
+		
+		vignette = new Vignette(FlxG.camera);
+		add(vignette);
 		
 		
 		overlay = new FlxSprite(0, 0);

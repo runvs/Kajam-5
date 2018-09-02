@@ -26,7 +26,7 @@ class CreditsScene extends FlxState
 		super.create();
 		var t : FlxText = new FlxText(0, 0, 800, "", 32);
 		t.text = "THE END\n\n\n";
-		t.text += "You found the ancient Foca artifact.";
+		t.text += "You found the ancient Foca artifact.\n";
 		t.text += "Playtime:\n" + MathExtender.roundForDisplay(playTime);
 		t.alignment = FlxTextAlign.CENTER;
 		t.screenCenter(FlxAxes.XY);
