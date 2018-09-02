@@ -19,21 +19,28 @@ class ShopItem extends FlxSpriteGroup
 	private var spr : FlxSprite;
 	private var text : FlxText;
 	
+	public var item : Item = null;
+	
 	public var ItemPos : Int = 0;
 	
-	public function new(icon: Dynamic, t : String, cost: Int, cb : PlayState -> Void) 
+	
+	public function new(icon: Dynamic, it : Item, cost: Int, cb : PlayState -> Void) 
 	{
 		super();
-		spr = new FlxSprite(0, 0);
+		
+		item = it;
 		ItemCost = cost;
 		myCallback = cb;
+		
+		spr = new FlxSprite(0, 0);
 		spr.loadGraphic(icon, false);
-		//spr.makeGraphic(20, 20);
 		spr.scrollFactor.set();
 		add(spr);
-		text = new FlxText(0, 0, 0, t + " : " + Std.string(cost) + " gp");
+		
+		text = new FlxText(0, 0, 0, it.name + " : " + Std.string(cost) + " gp");
 		text.scrollFactor.set();
 		add(text);
+		
 		this.scrollFactor.set();
 		
 	}

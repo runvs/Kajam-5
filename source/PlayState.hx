@@ -150,7 +150,7 @@ class PlayState extends BasicState
 		//trace(camera.target);
 		CreditsScene.playTime += elapsed;
 		
-		playTimeText.text = "Playtime: " + MathExtender.roundForDisplay(CreditsScene.playTime);
+		updatePlayTimeText();
 		
 		if (!ending)
 		{
@@ -509,6 +509,11 @@ class PlayState extends BasicState
 		if (!overlapping)
 			player.timeInTrap = 0;
 		
+	}
+	
+	public function updatePlayTimeText():Void 
+	{
+		playTimeText.text = "Playtime: " + MathExtender.roundForDisplay(CreditsScene.playTime);
 	}
 
 }

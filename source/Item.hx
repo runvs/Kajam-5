@@ -291,6 +291,8 @@ class Item extends FlxSprite
 		str += ((critChanceMultiplier != 1.0) ?   ("\t\tcrit chance   : " + Std.string(critChanceMultiplier) + "\n") : "");
 		str += ((critDamageMultiplier != 1.0) ?   ("\t\tcrit factor   : " + Std.string(critDamageMultiplier) + "\n") : "");
 		
+		if (str == "")
+			str = "\t\tno special properties";
 		return str;
 	}
 }

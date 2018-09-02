@@ -37,6 +37,8 @@ class ShopState extends FlxSubState
 	
 	private var goldtxt : FlxText;
 	
+	private var itemDescriptionText : FlxText;
+	
 	public function new(s : PlayState) 
 	{
 		super();
@@ -51,7 +53,7 @@ class ShopState extends FlxSubState
 		
 		bg = new FlxSprite(oX + 20 + 8  , oY + 2 );
 		//bg.makeGraphic(300,200);
-		bg.loadGraphic(AssetPaths.ShopBg__png, false);
+		bg.loadGraphic(AssetPaths.ShopBg__png, false, 360, 260);
 		//bg.color = FlxColor.fromRGB(102, 57, 49);
 		bg.scrollFactor.set();
 		add(bg);
@@ -64,8 +66,13 @@ class ShopState extends FlxSubState
 		
 		add(allEntries);
 		
-		goldtxt = new FlxText(oX + 300 - 100, oY + 60, 100, "gold: " + _state.player.gold);
+		goldtxt = new FlxText(oX + 200 - 100, oY + 10, 100, "gold: " + _state.player.gold);
+		goldtxt.scrollFactor.set();
 		add(goldtxt);
+		
+		itemDescriptionText = new FlxText(oX + 40, oY + 180, 150, "");
+		itemDescriptionText.scrollFactor.set();
+		add(itemDescriptionText);
 	}
 	
 	public function setShopType(i : Int)
@@ -91,7 +98,7 @@ class ShopState extends FlxSubState
 		{
 			var cost : Int = 5;
 			if (_state.player.inventory.hasBoughtRobe) cost = 0;
-			var i : ShopItem = new ShopItem(AssetPaths.robe__png, "robe", cost, 
+			var i : ShopItem = new ShopItem(AssetPaths.robe__png, Item.GetRobe(), cost, 
 			function(s:PlayState)
 			{
 				s.player.inventory.hasBoughtRobe = true;
@@ -106,7 +113,7 @@ class ShopState extends FlxSubState
 		{
 			var cost : Int = 10;
 			if (_state.player.inventory.hasBoughtLeatherArmor) cost = 0;
-			var i : ShopItem = new ShopItem(AssetPaths.leatherarmor__png, "leather armor", cost, 
+			var i : ShopItem = new ShopItem(AssetPaths.leatherarmor__png, Item.GetLeatherArmor(), cost, 
 			function(s:PlayState)
 			{
 				s.player.inventory.hasBoughtLeatherArmor = true;
@@ -118,7 +125,7 @@ class ShopState extends FlxSubState
 		{
 			var cost : Int = 15;
 			if (_state.player.inventory.hasBoughtChainMail) cost = 0;
-			var i : ShopItem = new ShopItem(AssetPaths.chainmail__png, "chain mail", cost, 
+			var i : ShopItem = new ShopItem(AssetPaths.chainmail__png, Item.GetChainMail(), cost, 
 			function(s:PlayState)
 			{
 				s.player.inventory.hasBoughtChainMail = true;
@@ -131,7 +138,7 @@ class ShopState extends FlxSubState
 		{
 			var cost : Int = 25;
 			if (_state.player.inventory.hasBoughtPlateMail) cost = 0;
-			var i : ShopItem = new ShopItem(AssetPaths.platemail__png, "plate mail", cost, 
+			var i : ShopItem = new ShopItem(AssetPaths.platemail__png, Item.GetPlateMail(), cost, 
 			function(s:PlayState)
 			{
 				s.player.inventory.hasBoughtPlateMail = true;
@@ -162,7 +169,7 @@ class ShopState extends FlxSubState
 		{
 			var cost : Int = 5;
 			if (_state.player.inventory.hasBoughtSelfBow) cost = 0;
-			var i : ShopItem = new ShopItem(AssetPaths.selfbow__png, "self bow", cost, 
+			var i : ShopItem = new ShopItem(AssetPaths.selfbow__png, Item.GetSelfbow(), cost, 
 			function(s:PlayState)
 			{
 				s.player.inventory.hasBoughtSelfBow = true;
@@ -177,7 +184,7 @@ class ShopState extends FlxSubState
 		{
 			var cost : Int = 10;
 			if (_state.player.inventory.hasBoughtLongBow) cost = 0;
-			var i : ShopItem = new ShopItem(AssetPaths.longbow__png, "long bow", cost, 
+			var i : ShopItem = new ShopItem(AssetPaths.longbow__png, Item.GetLongbow(), cost, 
 			function(s:PlayState)
 			{
 				s.player.inventory.hasBoughtLongBow = true;
@@ -189,7 +196,7 @@ class ShopState extends FlxSubState
 		{
 			var cost : Int = 15;
 			if (_state.player.inventory.hasBoughtCrossbow) cost = 0;
-			var i : ShopItem = new ShopItem(AssetPaths.crossbow__png, "crossbow", cost, 
+			var i : ShopItem = new ShopItem(AssetPaths.crossbow__png, Item.GetCrossbow(), cost, 
 			function(s:PlayState)
 			{
 				s.player.inventory.hasBoughtCrossbow = true;
@@ -202,7 +209,7 @@ class ShopState extends FlxSubState
 		{
 			var cost : Int = 25;
 			if (_state.player.inventory.hasBoughtRecurveBow) cost = 0;
-			var i : ShopItem = new ShopItem(AssetPaths.recurvebow__png, "recurve bow", cost, 
+			var i : ShopItem = new ShopItem(AssetPaths.recurvebow__png, Item.GetRecurveBow(), cost, 
 			function(s:PlayState)
 			{
 				s.player.inventory.hasBoughtRecurveBow = true;
@@ -233,7 +240,7 @@ class ShopState extends FlxSubState
 		{
 			var cost : Int = 5;
 			if (_state.player.inventory.hasBoughtShortSword) cost = 0;
-			var i : ShopItem = new ShopItem(AssetPaths.shortsword__png, "short sword", cost, 
+			var i : ShopItem = new ShopItem(AssetPaths.shortsword__png, Item.GetShortSword(), cost, 
 			function(s:PlayState)
 			{
 				s.player.inventory.hasBoughtShortSword = true;
@@ -248,7 +255,7 @@ class ShopState extends FlxSubState
 		{
 			var cost : Int = 10;
 			if (_state.player.inventory.hasBoughtDagger) cost = 0;
-			var i : ShopItem = new ShopItem(AssetPaths.dagger__png, "dagger", cost, 
+			var i : ShopItem = new ShopItem(AssetPaths.dagger__png, Item.GetDagger(), cost, 
 			function(s:PlayState)
 			{
 				s.player.inventory.hasBoughtDagger = true;
@@ -260,7 +267,7 @@ class ShopState extends FlxSubState
 		{
 			var cost : Int = 15;
 			if (_state.player.inventory.hasBoughtClaymore) cost = 0;
-			var i : ShopItem = new ShopItem(AssetPaths.claymore__png, "claymore", cost, 
+			var i : ShopItem = new ShopItem(AssetPaths.claymore__png, Item.GetClaymore(), cost, 
 			function(s:PlayState)
 			{
 				s.player.inventory.hasBoughtClaymore = true;
@@ -273,7 +280,7 @@ class ShopState extends FlxSubState
 		{
 			var cost : Int = 25;
 			if (_state.player.inventory.hasBoughtKatana) cost = 0;
-			var i : ShopItem = new ShopItem(AssetPaths.katana__png, "katana", cost, 
+			var i : ShopItem = new ShopItem(AssetPaths.katana__png, Item.GetKatana(), cost, 
 			function(s:PlayState)
 			{
 				s.player.inventory.hasBoughtKatana = true;
@@ -302,7 +309,10 @@ class ShopState extends FlxSubState
 	{
 		super.update(elapsed);
 		MyInput.update();
+		
 		CreditsScene.playTime += elapsed;
+		_state.updatePlayTimeText();
+		
 		goldtxt.text = "gold: " + _state.player.gold;
 		
 		if (MyInput.DashButtonJustPressed || FlxG.keys.justPressed.ESCAPE)
@@ -342,6 +352,7 @@ class ShopState extends FlxSubState
 		
 		selector.setPosition(oX + 60, oY + 60 + selectorPosition * selectorYOffset);
 		
+		itemDescriptionText.text = allEntries.getList().members[selectorPosition].item.getInfoString();
 		
 	}
 	
