@@ -44,7 +44,7 @@
     <property name="id" value="1"/>
    </properties>
   </object>
-  <object id="144" name="exploration" type="music" x="0" y="0" width="16" height="16"/>
+  <object id="144" name="puzzle" type="music" x="0" y="0" width="16" height="16"/>
  </objectgroup>
  <objectgroup color="#ff0000" name="traps"/>
  <objectgroup name="enemies"/>

@@ -195,7 +195,8 @@ class TiledLevel extends TiledMap
 		refineCollisions(wit, hit);
 		
 		loadObjects();
-		
+	
+		FlxG.worldBounds.set(0,0,fullWidth, fullHeight);
 		LoadRandomNPCs();
 		
 		goreLayer.makeGraphic(this.fullWidth, fullHeight, FlxColor.TRANSPARENT, true);

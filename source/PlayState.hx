@@ -407,7 +407,7 @@ class PlayState extends BasicState
 			s.alive = false;
 		
 		
-		FlxTween.tween(FlxG.sound.music, { volume: 0 }, 0.7);	
+		
 		FlxTween.tween(overlay, { alpha: 1 }, 0.85, { onComplete : 
 		function (t) : Void 
 		{ 
@@ -424,6 +424,7 @@ class PlayState extends BasicState
 				//trace("restart 1");
 				if (level._music != newLevel._music)
 				{
+					FlxTween.tween(FlxG.sound.music, { volume: 0 }, 0.7, { onComplete:function(t) { FlxG.sound.music.volume = 0.6; }} );	
 					//trace("restart 2");
 					if (newLevel._music != "")
 					{
@@ -458,13 +459,12 @@ class PlayState extends BasicState
 	
 	public function StartEndingScene() 
 	{
-		
 			EndGame();
 	}
 	
 	function StartMusic(track : String) 
 	{
-		//trace("restart 4");
+		trace("restart 4");
 		if (track == "exploration")
 		{
 			FlxG.sound.playMusic(AssetPaths.exploration_theme__ogg, 0.6);

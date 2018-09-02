@@ -168,6 +168,5 @@ class Scene_Intro extends CutSceneState
 		{
 			//t.alive = false;
 		}
-	}
-	
+	}	
 }
