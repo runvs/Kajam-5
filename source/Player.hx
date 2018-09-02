@@ -45,6 +45,8 @@ class Player extends FlashSprite
 	var _attackCooldown : Float;
 	
 	var _playerInfo     : PlayerInfo;
+	
+	
 
 	
 	//var _attackSound     : FlxSound;
@@ -71,6 +73,9 @@ class Player extends FlashSprite
 	private var dashCooldownTimerText : FlxText;
 	private var dashCooldownTextTween1 : FlxTween = null;
 	private var dashCooldownTextTween2 : FlxTween = null;
+	var _itemEvasionFactor : Float = 1.0;
+	
+	
 	
 	
     //#################################################################
@@ -470,7 +475,9 @@ class Player extends FlashSprite
 			swordItem.dashCooldownMultiplier 
 			+ bowItem.dashCooldownMultiplier
 			+ armorItem.dashCooldownMultiplier
-		)/3.0;
+		) / 3.0;
+		
+		_itemEvasionFactor = swordItem.evasionMultiplier + bowItem.evasionMultiplier + armorItem.evasionMultiplier;
 	}
 
     //#################################################################
@@ -675,6 +682,13 @@ class Player extends FlashSprite
 	{
 		if (_damageWallTime > 0) return;
 		
+		var rng : Float = FlxG.random.int(0, 1);
+		if (rng <= getEvasionChance() )
+		{
+			Flash(0.25, FlxColor.BLUE);
+			_damageWallTime = GameProperties.PlayerDamageWallTime;
+			return;
+		}
 		
 		_damageWallTime = GameProperties.PlayerDamageWallTime;
 		
@@ -700,4 +714,9 @@ class Player extends FlashSprite
 	}
 	
     //#################################################################
+	
+	public function getEvasionChance ()
+	{
+		return 0.02 + _itemEvasionFactor / 100;
+	}
 }

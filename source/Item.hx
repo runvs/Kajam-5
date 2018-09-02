@@ -122,7 +122,7 @@ class Item extends FlxSprite
 		item.type = ItemType.ARMOR;
 		item.loadGraphic(AssetPaths.robe__png, false, 16, 16);
 
-		item.evasionMultiplier      = 1.0;
+		item.evasionMultiplier      = 0.5;
 		item.walkSpeedMultiplier    = 1.2;
 		item.dashDistanceMultiplier = 1.2;
 		item.dashCooldownMultiplier = 1.0;
@@ -142,7 +142,7 @@ class Item extends FlxSprite
 		item.type = ItemType.ARMOR;
 		item.loadGraphic(AssetPaths.leatherarmor__png, false, 16, 16);
 
-		item.evasionMultiplier      = 1.2;
+		item.evasionMultiplier      = 5;
 		item.walkSpeedMultiplier    = 1.0;
 		item.dashDistanceMultiplier = 1.1;
 		item.dashCooldownMultiplier = 1.0;
@@ -162,7 +162,7 @@ class Item extends FlxSprite
 		item.type = ItemType.ARMOR;
 		item.loadGraphic(AssetPaths.chainmail__png, false, 16, 16);
 
-		item.evasionMultiplier      = 2.0;
+		item.evasionMultiplier      = 10;
 		item.walkSpeedMultiplier    = 0.9;
 		item.dashDistanceMultiplier = 0.9;
 		item.dashCooldownMultiplier = 0.8;
@@ -182,7 +182,7 @@ class Item extends FlxSprite
 		item.type = ItemType.ARMOR;
 		item.loadGraphic(AssetPaths.platemail__png, false, 16, 16);
 
-		item.evasionMultiplier      = 3.0;
+		item.evasionMultiplier      = 20;
 		item.walkSpeedMultiplier    = 0.8;
 		item.dashDistanceMultiplier = 0.7;
 		item.dashCooldownMultiplier = 0.7;

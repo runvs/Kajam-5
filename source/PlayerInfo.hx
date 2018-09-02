@@ -58,8 +58,9 @@ class PlayerInfo extends FlxSprite
 		infoTextPlayer.text += "Bow Damage   : " + MathExtender.roundForDisplay(_player.getRangedDamage()) + "\n\n";
 		
 		infoTextPlayer.text += "Dash distance: " + MathExtender.roundForDisplay(_player._itemDashMultiplier) + "\n";
-		infoTextPlayer.text += "Dash Cooldown: " + MathExtender.roundForDisplay(_player.getDashTime()) + "\n";
+		infoTextPlayer.text += "Dash Cooldown: " + MathExtender.roundForDisplay(_player.getDashTime()) + "\n\n";
 		infoTextPlayer.text += "Walk speed   : " + MathExtender.roundForDisplay(_player.getMaxVelocityWithItems().x) + "\n";
+		infoTextPlayer.text += "Evasion Percent: " + MathExtender.roundForDisplay(_player.getEvasionChance()*100) + "\n";
 		
 	}
 
