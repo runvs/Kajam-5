@@ -22,8 +22,9 @@ class Shrine extends FlxSprite
 	{
 		super(X, Y);
 		shrineID = id;
-		this.makeGraphic(32, 32);
-		this.color = FlxColor.CYAN;
+		//this.makeGraphic(32, 32);
+		//this.color = FlxColor.CYAN;
+		this.loadGraphic(AssetPaths.shrine__png, false, 16, 16);
 		this.immovable = true;
 		
 		particles = new FlxSpriteGroup();

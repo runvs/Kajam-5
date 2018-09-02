@@ -586,7 +586,7 @@ class TiledLevel extends TiledMap
 				
 				t.setPosition((i % wit ) * GameProperties.TileSize, Std.int(i / wit) * GameProperties.TileSize);
 				t.update(0.1);
-				t.color = Palette.color2;
+				//t.color = Palette.color2;
 				t.immovable = true;
 				collisionMap.add(t);
 			}

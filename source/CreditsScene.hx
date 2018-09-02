@@ -24,7 +24,10 @@ class CreditsScene extends FlxState
 	override public function create():Void 
 	{
 		super.create();
-		var t : FlxText = new FlxText(0, 0, 800, "THE END\n\n\nPlaytime:\n" + MathExtender.roundForDisplay(playTime), 32);
+		var t : FlxText = new FlxText(0, 0, 800, "", 32);
+		t.text = "THE END\n\n\n";
+		t.text += "You found the ancient Foca artifact.";
+		t.text += "Playtime:\n" + MathExtender.roundForDisplay(playTime);
 		t.alignment = FlxTextAlign.CENTER;
 		t.screenCenter(FlxAxes.XY);
 		

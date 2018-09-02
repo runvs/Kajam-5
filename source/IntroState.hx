@@ -27,17 +27,17 @@ class IntroState extends FlxState
 	public override function create()
 	{
 		super.create();
-		//FlxG.camera.bgColor = Palette.primary3();
-		//FlxG.mouse.visible = false;
+		
+		FlxG.camera.bgColor = FlxColor.fromRGB(132, 126, 135);
 		
 		bg = new FlxSprite();
-		bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.WHITE);
-		bg.color = Palette.color1;
+		bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.fromRGB(132,126,135));
+		//bg.color = Palette.color1;
 		add(bg);
 		
 		logo = new FlxSprite(0, 0);
 		logo.loadGraphic(AssetPaths.runvs_logo__png, false, 800, 600);
-		logo.color = Palette.color4;
+		logo.color = FlxColor.BLACK;
 		logo.origin.set();
 		
 		//logo.scale.set(0.5, 0.5);

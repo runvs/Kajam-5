@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import flixel.FlxState;
@@ -19,14 +20,13 @@ import kong.KongregateApi;
  */
 class MenuState extends FlxState
 {
-	public static var MyDate : String = "2018-01-13";
-	public static var MyJam : String = "...";
-	public static var MyName : String = "...";
-	public static var Authors: String = "@Laguna_999";
+	public static var MyDate : String = "2018-08";
+	public static var MyJam : String = "5th Kajam 'Retro'";
+	public static var MyName : String = "Thyl's Tale";
+	public static var Authors: String = "@Thunraz, @xXBloodyOrange, @KaramBharj and @Laguna_999";
 	
 
-	public static var Instructions : String = "...";
-	public static var Controls : String = "...";
+	public static var Controls : String = "WASD/Arrows to move\nX to attack/interact\nC to dash\nQ for bow\nF for stats";
 	
 	
 	public static var HighScore : Int = 0;
@@ -77,25 +77,26 @@ class MenuState extends FlxState
 		
 		var backgroundSprite : FlxSprite = new FlxSprite();
 		backgroundSprite.makeGraphic(FlxG.width, FlxG.height);
-		backgroundSprite.color = Palette.color2;
+		backgroundSprite.color = FlxColor.fromRGB(132,126,135);
 		add(backgroundSprite);
 		
-		var title : FlxText = new FlxText(100, 45, 0, MyName, 24);
-		title.screenCenter();
-		title.y = 45;
-		title.alignment = "CENTER";
-		title.color = Palette.color5;
-		add(title);
+		var title : FlxSprite = new FlxSprite();
+		title.loadGraphic(AssetPaths.thylstale__png, true, 151, 43);
+		title.animation.add("idle", [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 1, 2, 3, 4, 5, 6, 7, 8], 10);
+		title.animation.play("idle");
+		title.scale.set(3.5,3.5);
+		title.screenCenter(FlxAxes.X);
+		title.y = 75;
 		title.offset.set(0, 150);
+		add(title);
 		FlxTween.tween(title.offset, { y:0 }, 0.5, {ease : FlxEase.bounceOut, startDelay: 0.2});
 		
 		
 		
-		var t1 : FlxText = new FlxText (100, 150, 500, "" , 14);
-		t1.text = Instructions + "\n\n";
-		t1.text += Controls + "\nPress [SPACE] to start \n\n";
-		t1.text += "Last Score: " + Std.string(LastScore) + "    HighScore: " + Std.string(HighScore);
-		t1.color = Palette.color3;
+		var t1 : FlxText = new FlxText (100, 250, 500, "" , 14);
+		t1.text += Controls;
+		//t1.text += "Last Score: " + Std.string(LastScore) + "    HighScore: " + Std.string(HighScore);
+		t1.color = FlxColor.BLACK;
 		add(t1);
 		t1.offset.set(950,0);
 		FlxTween.tween(t1.offset, { x:0 }, 0.5, { ease : FlxEase.bounceOut, startDelay: 0.55 } );
@@ -107,7 +108,7 @@ class MenuState extends FlxState
 		t2.text += MyDate + "\n"; 
 		t2.text += "visit us at https://runvs.io";
 		t2.y = FlxG.height - t2.height - 20;
-		t2.color = Palette.color3;
+		t2.color = FlxColor.fromRGB(69,40,60);
 		add(t2);
 		t2.offset.set(0, -100);
 		FlxTween.tween(t2.offset, { y:0 }, 0.5, { ease : FlxEase.bounceOut, startDelay: 1.0 } );
@@ -115,7 +116,7 @@ class MenuState extends FlxState
 		
 		overlay = new FlxSprite(0, 0);
 		overlay.makeGraphic(FlxG.width, FlxG.height);
-		overlay.color = Palette.color1;
+		overlay.color = FlxColor.BLACK;
 		add(overlay);
 		
 		overlayTween = FlxTween.tween(overlay, { alpha :0 }, 0.3);

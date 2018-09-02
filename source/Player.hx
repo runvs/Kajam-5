@@ -39,7 +39,7 @@ class Player extends FlashSprite
 
 	var _state      : PlayState;
 
-	var _hitArea        : FlxSprite;
+	public var _hitArea        : FlxSprite;
 	
 	var _facing         : Facing;
 	var _attackCooldown : Float;
@@ -104,8 +104,11 @@ class Player extends FlashSprite
 		animation.add("walk_west",  [12, 13, 14,  15], 8);
 		animation.add("walk_north", [4, 5, 6, 7], 8);
 		animation.add("walk_east",  [8, 9, 10, 11], 8);
-		animation.add("idle", [0]);
-		animation.play("idle");
+		animation.add("idle_south", [0]);
+		animation.add("idle_north", [4]);
+		animation.add("idle_east", [8]);
+		animation.add("idle_west", [12]);
+		animation.play("idle_south");
 		//makeGraphic(16,16);
 		_dashSprite1 = new FlxSprite();
 		_dashSprite1.makeGraphic(16, 16);
@@ -206,7 +209,14 @@ class Player extends FlashSprite
 		var l : Float = velocity.distanceTo(new FlxPoint());
 		if (l <= GameProperties.PlayerMovementMaxVelocity.x / 8 )
 		{
-			animation.play("idle", true);
+			if (_facing == Facing.SOUTH || _facing == Facing.SOUTHEAST || _facing == Facing.SOUTHWEST)
+				animation.play("idle_south", true);
+			else if (_facing == Facing.NORTH|| _facing == Facing.NORTHEAST|| _facing == Facing.NORTHWEST )
+				animation.play("idle_north", true);
+			else if (_facing == Facing.EAST)
+				animation.play("idle_east", true);
+			else if (_facing == Facing.WEST)
+				animation.play("idle_west", true);
 		}
 		else
 		{
@@ -361,6 +371,8 @@ class Player extends FlashSprite
 		}
 		acceleration.set(vx, vy);
 		
+		
+		// drag if accelerating in other direction
 		if (acceleration.x > 0 && velocity.x < 0 || acceleration.x < 0 && velocity.x > 0)
 			velocity.x *= 0.3;
 		if (acceleration.y > 0 && velocity.y < 0 || acceleration.y < 0 && velocity.y > 0)

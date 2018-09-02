@@ -60,7 +60,7 @@ class Scene_Intro extends CutSceneState
 		}
 		
 		
-		townsfolk.members[0].speak("Look, a clairvoyant is visiting!", 5.5);
+		townsfolk.members[0].speak("Look, a clairvoyant is visiting.", 5.5);
 		
 		var ts1 : FlxTimer = new FlxTimer();
 		ts1.start(3.5, function(t)
@@ -70,13 +70,13 @@ class Scene_Intro extends CutSceneState
 		var ts2 : FlxTimer = new FlxTimer();
 		ts2.start(6.5, function(t)
 		{
-			townsfolk.members[2].speak("I hope she will tell some stories!", 3.5);
+			townsfolk.members[2].speak("I hope she will tell some stories.", 3.5);
 		});
 		var ts3 : FlxTimer = new FlxTimer();
 		ts3.start(9.5, function(t)
 		{
 			target.velocity.set(0, 20);
-			townsfolk.members[3].speak("There she comes! Ohhh, she is beautiful!", 3.5);
+			townsfolk.members[3].speak("There she comes. Ohhh, she is beautiful!", 3.5);
 		});
 		
 		a = new NPC_Annesa(_state);
@@ -124,15 +124,16 @@ class Scene_Intro extends CutSceneState
 			a.speak("which has been lost for centuries!", 2.5);
 		});
 		
+		
 		var ta6 : FlxTimer = new FlxTimer();
 		ta6.start(30, function (t)
 		{
-			_state.player.speak("That must be me!", 2.0);
+			_state.player.speak("I must take this quest!", 2.0);
 		});
 	var ta7 : FlxTimer = new FlxTimer();
 		ta7.start(32, function (t)
 		{
-			_state.player.speak("I must go north and find this artifact!", 2.0);
+			_state.player.speak("I shall go north and find this artifact!", 2.0);
 		});
 		
 		
