@@ -46,6 +46,7 @@ class Player extends FlashSprite
 	
 	var _playerInfo     : PlayerInfo;
 	
+	var age : Float = 0;
 	
 
 	
@@ -75,7 +76,9 @@ class Player extends FlashSprite
 	private var dashCooldownTextTween2 : FlxTween = null;
 	var _itemEvasionFactor : Float = 1.0;
 	
-	
+
+	private var _speechText : FlxText;
+	private var _speechDisplayTimer : Float = -1;
 	
 	
     //#################################################################
@@ -163,6 +166,8 @@ class Player extends FlashSprite
 		dashCooldownTimerText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1, 1);
 		dashCooldownTimerText.alpha = 0;
 		
+		_speechText = new FlxText(0, 0, 128, "");
+		
     }
 
     //#################################################################
@@ -172,7 +177,19 @@ class Player extends FlashSprite
         super.update(elapsed);
 		timeSinceDash += elapsed;
 		_damageWallTime -= elapsed;
-		//dustparticles.update(elapsed);
+		age += elapsed;
+		_speechDisplayTimer -= elapsed;
+		
+		_speechText.offset.set(0, Math.sin(age) * 4);
+		
+		_speechText.update(elapsed);
+		if (_speechDisplayTimer <= 0)
+			_speechText.alpha = 0;
+		else if (_speechDisplayTimer >= GameProperties.NPCSpeechFadeOutTime)
+			_speechText.alpha = 1;
+		else
+			_speechText.alpha = _speechDisplayTimer / GameProperties.NPCSpeechFadeOutTime;
+		
 		updateDashCooldownTimerText(elapsed);
 		_slashSprite.update(elapsed);
 		
@@ -627,6 +644,8 @@ class Player extends FlashSprite
 		
 		drawHealthContainer();
 		
+		_speechText.draw();
+		
 		// TODO draw inventory
 	}
 	
@@ -719,4 +738,12 @@ class Player extends FlashSprite
 	{
 		return 0.02 + _itemEvasionFactor / 100;
 	}
+	
+	public function speak (str: String, time : Float = 1.5) : Void
+	{
+		_speechText.setPosition(x + width +2, y - 12);
+		_speechText.text = str ;
+		_speechDisplayTimer = time;
+	}
+	
 }

@@ -124,10 +124,20 @@ class Scene_Intro extends CutSceneState
 			a.speak("which has been lost for centuries!", 2.5);
 		});
 		
+		var ta6 : FlxTimer = new FlxTimer();
+		ta6.start(30, function (t)
+		{
+			_state.player.speak("That must be me!", 2.0);
+		});
+	var ta7 : FlxTimer = new FlxTimer();
+		ta7.start(32, function (t)
+		{
+			_state.player.speak("I must go north and find this artifact!", 2.0);
+		});
 		
 		
 		var t3 : FlxTimer = new FlxTimer();
-		t3.start(30.0, function (t)
+		t3.start(36.0, function (t)
 		{
 			BackToPlayState();
 		});
@@ -147,7 +157,7 @@ class Scene_Intro extends CutSceneState
 		super.update(elapsed);
 		target.update(elapsed);
 		//trace("intro.update");
-		
+		_state.player.update(elapsed);
 	}
 	
 	override function LeaveCallback() 

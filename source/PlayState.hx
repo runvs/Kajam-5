@@ -32,6 +32,8 @@ class PlayState extends BasicState
 	private var playTime : Float = 0;
 	private var playTimeText : FlxText;
 	
+	//private var introFired : Bool = false;
+	
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -57,7 +59,10 @@ class PlayState extends BasicState
 		playTimeText = new FlxText(550, 160, 50, "playtime: 0.0", 8);
 		playTimeText.scrollFactor.set(0, 0);
 		playTimeText.color = FlxColor.GRAY;
-		playTimeText.setBorderStyle(FlxTextBorderStyle.OUTLINE,FlxColor.BLACK,1,1);	
+		playTimeText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1, 1);	
+		
+		var c : Scene_Intro = new Scene_Intro(this);
+		switchToCutScene(c);
 	}
 	
 	
@@ -298,11 +303,6 @@ class PlayState extends BasicState
 			CheckForLevelChange();
 		}
 		
-		if (FlxG.keys.justPressed.F5)
-		{
-			var c : Scene_Intro = new Scene_Intro(this);
-			switchToCutScene(c);
-		}
 		if (FlxG.keys.justPressed.F2)
 		{
 			switchLevel("arena_boss.tmx", 1);
