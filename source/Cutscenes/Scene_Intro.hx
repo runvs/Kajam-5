@@ -32,24 +32,7 @@ class Scene_Intro extends CutSceneState
 		
 		townsfolk = new FlxTypedGroup<NPC_townpeople>();
 		
-		for (i in 0 ... 80)
-		{
-			var t : NPC_townpeople = new NPC_townpeople(_state);
-			t.setPosition(FlxG.random.float(0, _state.level.fullWidth), FlxG.random.float(0, _state.level.fullHeight));
-			if (FlxG.overlap(t, _state.level.collisionMap)) continue;
-			
-			var r : Int = FlxG.random.int(0, 3);
-			if (r == 0)
-				t.animation.play("north");
-			else if (r == 1)
-				t.animation.play("south");
-			else if (r == 2)
-				t.animation.play("east");	
-			else 
-				t.animation.play("west");	
-			townsfolk.add(t);
-			_state.level.allNSCs.add(t);
-		}
+		
 		
 		
 		

@@ -188,13 +188,44 @@ class TiledLevel extends TiledMap
 					}
 				}
 			}
+			
+			
 		}
 		
 		refineCollisions(wit, hit);
 		
 		loadObjects();
 		
+		LoadRandomNPCs();
+		
 		goreLayer.makeGraphic(this.fullWidth, fullHeight, FlxColor.TRANSPARENT, true);
+	}
+	
+	function LoadRandomNPCs() 
+	{
+		trace(levelPath);
+		if (levelPath == "assets/data/Wimborne.tmx")
+		{
+			for (i in 0 ... 80)
+			{
+				var t : NPC_townpeople = new NPC_townpeople(_state);
+				t.setPosition(FlxG.random.float(0, fullWidth), FlxG.random.float(0, fullHeight));
+				if (FlxG.overlap(t, collisionMap) ||FlxG.overlap(t,allNSCs)) continue;
+				
+				var r : Int = FlxG.random.int(0, 3);
+				if (r == 0)
+					t.animation.play("north");
+				else if (r == 1)
+					t.animation.play("south");
+				else if (r == 2)
+					t.animation.play("east");	
+				else 
+					t.animation.play("west");	
+				//townsfolk.add(t);
+				allNSCs.add(t);
+			}
+		}
+		trace("end");
 	}
 	
 	function CheckForRandomOverlays(i: Int, j : Int , tileType:Int) 
@@ -236,50 +267,6 @@ class TiledLevel extends TiledMap
 			collisionArray.push(1);
 		}
 	}
-	
-	private function loadSpecialTile(x:Int, y:Int, type : Int)
-	{
-		if (type == 0) return;
-		
-		//if (type == 5 || type == 16 || type == 17|| type ==26)
-		//{
-			//var bt :BreakableTile = new BreakableTile(x * 32, y * 32, type);
-			
-		//}
-		//else if (type == 6 || type == 7)
-		//{
-			//var ds : FlxSprite = new FlxSprite(x * 32, y * 32);
-			//ds.loadGraphic(AssetPaths.tilesheet__png, true, 32, 32);
-			//ds.animation.add("idle", (type == 6? [5] : [6]));
-			//ds.animation.play("idle");
-			
-		//}
-		//else if ( type == 9|| type == 19 || type == 29)  // onOff Switch 1
-		//{
-			//var s : FlxSprite = new FlxSprite(x * 32, y * 32);
-			//s.loadGraphic(AssetPaths.tilesheet__png, true, 32, 32);
-			//s.origin.set(16, 32);
-			//s.animation.add("idle", [(type-1)]);
-			//s.animation.play("idle");
-			//s.immovable = true;
-			//s.ID = type +1;
-			
-			//CreateCollisionTile(x, y, 2);
-		//}
-		//else if ( type == 10 ||type == 20 ||type == 30) // onOff Block
-		//{
-			//var s : FlxSprite = new FlxSprite(x * 32, y * 32);
-			//s.loadGraphic(AssetPaths.tilesheet__png, true, 32, 32);
-			//s.origin.set(16, 32);
-			//s.animation.add("idle", [(type-1)]);
-			//s.animation.play("idle");
-			//s.immovable = true;
-			//s.ID = type;
-			
-		//}
-		//
-	}
-	
 	
 	public function loadObjects()
 	{
