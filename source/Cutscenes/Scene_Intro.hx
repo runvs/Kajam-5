@@ -27,23 +27,65 @@ class Scene_Intro extends CutSceneState
 		
 		target.setPosition(200, 600);
 		
-		target.velocity.set(50, 0);
-		a = new NPC_Annesa(_state);
+		target.velocity.set(45, 0);
 		
 		townsfolk = new FlxTypedGroup<NPC_townpeople>();
+		_state.player.setPosition(39 * GameProperties.TileSize, 43*GameProperties.TileSize);
+		
+		{
+			var t : NPC_townpeople = new NPC_townpeople(_state);
+			t.setPosition(15 * GameProperties.TileSize, 39 * GameProperties.TileSize);
+			townsfolk.add(t);
+			_state.level.allNSCs.add(t);
+		}
+		
+		{
+			var t : NPC_townpeople = new NPC_townpeople(_state);
+			t.setPosition(26 * GameProperties.TileSize, 40 * GameProperties.TileSize);
+			townsfolk.add(t);
+			_state.level.allNSCs.add(t);
+		}
+		
+		{
+			var t : NPC_townpeople = new NPC_townpeople(_state);
+			t.setPosition(35 * GameProperties.TileSize, 37* GameProperties.TileSize);
+			townsfolk.add(t);
+			_state.level.allNSCs.add(t);
+		}
+		{
+			var t : NPC_townpeople = new NPC_townpeople(_state);
+			t.setPosition(40 * GameProperties.TileSize, 39* GameProperties.TileSize);
+			townsfolk.add(t);
+			_state.level.allNSCs.add(t);
+		}
 		
 		
+		townsfolk.members[0].speak("Look, a clairvoyant is visiting!", 5.5);
 		
+		var ts1 : FlxTimer = new FlxTimer();
+		ts1.start(3.5, function(t)
+		{
+			townsfolk.members[1].speak("She might bring news about our future!", 3.5);
+		});
+		var ts2 : FlxTimer = new FlxTimer();
+		ts2.start(6.5, function(t)
+		{
+			townsfolk.members[2].speak("I hope she will tell some stories!", 3.5);
+		});
+		var ts3 : FlxTimer = new FlxTimer();
+		ts3.start(9.5, function(t)
+		{
+			target.velocity.set(0, 20);
+			townsfolk.members[3].speak("There she comes! Ohhh, she is beautiful!", 3.5);
+		});
 		
-		
-		
+		a = new NPC_Annesa(_state);
 		_state.level.allNSCs.add(a);
-		a.setPosition(672, 830);
-		
+		a.setPosition(650, 830);
 		
 		
 		var t1: FlxTimer = new FlxTimer();
-		t1.start(0.5, function (t) 
+		t1.start(10.5, function (t) 
 		{ 
 			a.velocity.set(-3, -40);
 			a.animation.play("walk_north", true);
@@ -51,24 +93,45 @@ class Scene_Intro extends CutSceneState
 			
 		} );
 		
-		var t2 : FlxTimer = new FlxTimer();
-		t2.start(5, function (t)
+		var ta1 : FlxTimer = new FlxTimer();
+		ta1.start(15, function (t)
 		{
 			a.velocity.set();
 			a.animation.play("idle",true);
-			a.speak("As a token of your love, bring me the artifact!", 2.5);
+			a.speak("I have a story to tell ...", 2.5);
 		});
-		var t3 : FlxTimer = new FlxTimer();
-		t3.start(7.75, function (t)
+		
+		var ta2 : FlxTimer = new FlxTimer();
+		ta2.start(18, function (t)
 		{
-			//a.setPosition( -500, -500);
-			
+			a.speak("of a young hero ...", 2.5);
+		});
+		
+		var ta3 : FlxTimer = new FlxTimer();
+		ta3.start(21, function (t)
+		{
+			a.speak("who will explore the  FOCA ruins ...", 2.5);
+		});
+		
+		var ta4 : FlxTimer = new FlxTimer();
+		ta4.start(24, function (t)
+		{
+			a.speak("and retrieve the ancient artifact ...", 2.5);
+		});
+		var ta5 : FlxTimer = new FlxTimer();
+		ta5.start(27, function (t)
+		{
+			a.speak("which has been lost for centuries!", 2.5);
+		});
+		
+		
+		
+		var t3 : FlxTimer = new FlxTimer();
+		t3.start(30.0, function (t)
+		{
 			BackToPlayState();
 		});
 		
-		
-		//var t : FlxTimer = new FlxTimer();
-		//t.start(5, function (t) { BackToPlayState(); } );
 		
 	}
 	
@@ -76,7 +139,7 @@ class Scene_Intro extends CutSceneState
 	override public function draw():Void 
 	{
 		super.draw();
-		target.draw();
+		//target.draw();
 	}
 	
 	override public function update(elapsed:Float):Void 
@@ -84,7 +147,7 @@ class Scene_Intro extends CutSceneState
 		super.update(elapsed);
 		target.update(elapsed);
 		//trace("intro.update");
-		_state.player.setPosition(target.x, target.y);
+		
 	}
 	
 	override function LeaveCallback() 
@@ -93,7 +156,7 @@ class Scene_Intro extends CutSceneState
 		a.alive = false;
 		for (t in townsfolk)
 		{
-			t.alive = false;
+			//t.alive = false;
 		}
 	}
 	
