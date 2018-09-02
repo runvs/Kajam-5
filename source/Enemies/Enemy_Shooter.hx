@@ -14,7 +14,7 @@ class Enemy_Shooter extends Enemy
 	
 	private var _aggroRangeInTiles : Float = 6.0;
 	
-	private static var _normalRandomWalkSpeed : Float = 58;
+	private static var _normalRandomWalkSpeed : Float = 38;
 	private static var _normalDrag : Float  = 250;
 	private var _distanceToPlayer : Float = 0;
 	
@@ -152,10 +152,8 @@ class Enemy_Shooter extends Enemy
 		_state.level.allEnemyShots.add(s);
 		
 		_rightGuyCounter--;
-		//trace();
 		if (_rightGuyCounter <= 0)
 		{
-			//trace("switch direction");
 			_rightGuy = ! _rightGuy;
 			_rightGuyCounter = FlxG.random.int(3, 6);
 		}

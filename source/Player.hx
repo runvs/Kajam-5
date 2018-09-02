@@ -44,8 +44,6 @@ class Player extends FlashSprite
 	var _facing         : Facing;
 	var _attackCooldown : Float;
 	
-	
-	var _dashCooldownBar: HudBar;
 	var _playerInfo     : PlayerInfo;
 
 	
@@ -70,6 +68,11 @@ class Player extends FlashSprite
 	
 	private var healthCont : HealthContainer;
 	
+	private var dashCooldownTimerText : FlxText;
+	private var dashCooldownTextTween1 : FlxTween = null;
+	private var dashCooldownTextTween2 : FlxTween = null;
+	
+	
     //#################################################################
 
     public function new(playState: PlayState)
@@ -81,6 +84,7 @@ class Player extends FlashSprite
 		pickupItem(Item.GetShortSword());
 		pickupItem(Item.GetSelfbow());
 		pickupItem(Item.GetRobe());
+		
 		trace('Items picked up.');
 		
 		inventory = new Inventory();
@@ -109,7 +113,8 @@ class Player extends FlashSprite
 		dustparticles.mySize = 500;
 
 		_hitArea = new FlxSprite();
-		_hitArea.makeGraphic(16, 16, flixel.util.FlxColor.fromRGB(255, 255, 255, 64));
+		_hitArea.makeGraphic(12, 12, flixel.util.FlxColor.fromRGB(255, 255, 255, 150));
+		
 		_hitArea.alpha = 0;
 		_facing = Facing.SOUTH;
 		_attackCooldown = 0.0;
@@ -132,9 +137,7 @@ class Player extends FlashSprite
 		healthCont = new HealthContainer(AssetPaths.heart_empty__png, AssetPaths.heart_half__png, AssetPaths.heart_full__png);
 		healthCont.SetHealth(health, healthMax);
 		
-		_dashCooldownBar = new HudBar(10, 32, 48, 8, false, FlxColor.BLUE);
-		//_dashCooldownBar.color = GameProperties.ColorStaminaBar;
-		_dashCooldownBar._background.color = FlxColor.fromRGB(100, 100, 100, 100);
+		
 
 		_playerInfo = new PlayerInfo(this);
 		bowBar = new HudBar(0, 0, 32, 10, false, FlxColor.BLUE);
@@ -150,6 +153,10 @@ class Player extends FlashSprite
 		_slashSprite.animation.play("idle");
 		_slashSprite.origin.set(8, 8);
 		
+		dashCooldownTimerText = new FlxText(0, 0, 32, "0", 6);
+		dashCooldownTimerText.alignment = FlxTextAlign.CENTER;
+		dashCooldownTimerText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1, 1);
+		dashCooldownTimerText.alpha = 0;
 		
     }
 
@@ -161,7 +168,7 @@ class Player extends FlashSprite
 		timeSinceDash += elapsed;
 		_damageWallTime -= elapsed;
 		//dustparticles.update(elapsed);
-		
+		updateDashCooldownTimerText(elapsed);
 		_slashSprite.update(elapsed);
 		
 		_dashSprite1.update(elapsed);
@@ -188,8 +195,8 @@ class Player extends FlashSprite
         _dashSpeedMax = GameProperties.PlayerMovementDashCooldown;
         _dashSpeedMax = _dashSpeedMax < 0.5 ? 0.5 : _dashSpeedMax;
 
-		_dashCooldownBar.health = 1.0 - _dashCooldown / _dashSpeedMax;
-		_dashCooldownBar.update(elapsed);
+		
+		
 		
 		updateBow(elapsed);
 		
@@ -496,7 +503,7 @@ class Player extends FlashSprite
 			setPosition(x + _dashDir.x * stepSize, y + _dashDir.y * stepSize);
 
 			 
-			if(FlxG.overlap(this, _state.level.collisionMap))
+			if(FlxG.overlap(this, _state.level.collisionMap) ||FlxG.overlap(this, _state.level.exits))
 			{
 				setPosition(lastPosition.x, lastPosition.y);
 				break;
@@ -530,22 +537,26 @@ class Player extends FlashSprite
 		{
 			case Facing.EAST:
 				_hitArea.setPosition(x + GameProperties.TileSize, y);
+				_hitArea.offset.set(0, -4);
 				animation.play("walk_east", false);
 				_slashSprite.angle = 90;
 				
 			case Facing.WEST:
 				_hitArea.setPosition(x - GameProperties.TileSize, y);
+				_hitArea.offset.set(-4, -4);
 				animation.play("walk_west", false);
 				_slashSprite.angle = -90;
 				
 			case Facing.NORTH:
 				_hitArea.setPosition(x, y - GameProperties.TileSize);
+				_hitArea.offset.set(-3,-4);
 				animation.play("walk_north", false);
 				_slashSprite.angle = 0;
 				
 	
 			case Facing.SOUTH:
 				_hitArea.setPosition(x, y + GameProperties.TileSize);
+				_hitArea.offset.set(-3,0);
 				animation.play("walk_south", false);
 				_slashSprite.angle = 180;
 			
@@ -582,7 +593,7 @@ class Player extends FlashSprite
 		_dashSprite4.draw();
 		super.draw();
 
-		_hitArea.draw();
+		//_hitArea.draw();
 		_slashSprite.draw();
 	}
 
@@ -602,7 +613,10 @@ class Player extends FlashSprite
 		if(_playerInfo.visible) {
 			_playerInfo.draw();
 		}
+		_hitArea.draw();
+
 		
+		dashCooldownTimerText.draw();
 		
 		drawHealthContainer();
 		
@@ -613,6 +627,33 @@ class Player extends FlashSprite
 	{
 		healthCont.draw();
 	}
+	
+	function updateDashCooldownTimerText(elapsed : Float ):Void 
+	{
+		if (_dashCooldown > 0)
+		{
+			
+			if (dashCooldownTextTween1 != null)
+				dashCooldownTextTween1.cancel();
+			if (dashCooldownTextTween2 != null)
+				dashCooldownTextTween2.cancel();
+			
+			dashCooldownTimerText.alpha = 0.8;
+			dashCooldownTimerText.scale.set(1, 1);
+				
+			dashCooldownTimerText.text = Std.string(MathExtender.roundForDisplay(_dashCooldown));
+		}
+		if (_dashCooldown > 0 && _dashCooldown - elapsed <= 0)
+		{
+			//trace("Trigger");
+			dashCooldownTimerText.alpha = 1.0;
+			dashCooldownTextTween1 = FlxTween.tween(dashCooldownTimerText, { alpha : 0 }, 0.2);
+			dashCooldownTextTween2 = FlxTween.tween(dashCooldownTimerText.scale, { x : 3, y:3 }, 0.2, { onComplete: function(t) { dashCooldownTimerText.alpha = 0; dashCooldownTimerText.scale.set(1, 1); }} );
+		}
+		
+		
+		dashCooldownTimerText.setPosition(x + width/2, y - 8);
+	}
 
     //#################################################################
 	
@@ -621,9 +662,10 @@ class Player extends FlashSprite
 		if (health >= healthMax) return;
 		
 		this.health += f;
-		if (f >= healthMax)
-		f = healthMax;
+		if (health >= healthMax)
+		health = healthMax;
 		
+		Flash(0.25, FlxColor.GREEN);
 		FlxTween.color(this, 0.25, FlxColor.GREEN, FlxColor.WHITE, { type : FlxTweenType.PERSIST} );
 	}
 
@@ -632,6 +674,7 @@ class Player extends FlashSprite
 	public function takeDamage(d:Float) : Void
 	{
 		if (_damageWallTime > 0) return;
+		
 		
 		_damageWallTime = GameProperties.PlayerDamageWallTime;
 		

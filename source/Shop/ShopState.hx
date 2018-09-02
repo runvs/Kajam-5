@@ -35,7 +35,6 @@ class ShopState extends FlxSubState
 	
 	public var allEntries : AdministratedList<ShopItem>;
 	
-	
 	private var goldtxt : FlxText;
 	
 	public function new(s : PlayState) 
@@ -303,7 +302,7 @@ class ShopState extends FlxSubState
 	{
 		super.update(elapsed);
 		MyInput.update();
-		
+		CreditsScene.playTime += elapsed;
 		goldtxt.text = "gold: " + _state.player.gold;
 		
 		if (MyInput.DashButtonJustPressed || FlxG.keys.justPressed.ESCAPE)

@@ -54,6 +54,7 @@ class Enemy_Runner extends Enemy
     {
         super(playState);
 
+		health = 30;
         MaxHealth      = health;
 
         //makeGraphic(16, 12);

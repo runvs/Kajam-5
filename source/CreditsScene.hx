@@ -14,6 +14,8 @@ class CreditsScene extends FlxState
 
 	var age : Float = 0;
 	
+	public static var playTime : Float = 0;
+	
 	public function new() 
 	{
 		super();

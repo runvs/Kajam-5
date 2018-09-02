@@ -32,7 +32,7 @@ class Enemy extends FlashSprite
 		super();
 		_state = s;
 		_idleTimer = 0;
-		health = 30;
+		
 		enemySpladderColor = FlxColor.fromRGB(175, 0, 0);
 	}
 	

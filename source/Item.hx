@@ -102,7 +102,7 @@ class Item extends FlxSprite
 		item.evasionMultiplier      = 1.4;
 		item.walkSpeedMultiplier    = 1.0;
 		item.dashDistanceMultiplier = 1.0;
-		item.dashCooldownMultiplier = 1.0;
+		item.dashCooldownMultiplier = 1.5;
 
 		item.damageMultiplier       = 2.0;
 		item.attackSpeedMultiplier  = 1.1;
@@ -123,7 +123,7 @@ class Item extends FlxSprite
 		item.loadGraphic(AssetPaths.robe__png, false, 16, 16);
 
 		item.evasionMultiplier      = 1.0;
-		item.walkSpeedMultiplier    = 1.0;
+		item.walkSpeedMultiplier    = 1.2;
 		item.dashDistanceMultiplier = 1.2;
 		item.dashCooldownMultiplier = 1.0;
 
@@ -162,10 +162,10 @@ class Item extends FlxSprite
 		item.type = ItemType.ARMOR;
 		item.loadGraphic(AssetPaths.chainmail__png, false, 16, 16);
 
-		item.evasionMultiplier      = 1.0;
-		item.walkSpeedMultiplier    = 1.0;
+		item.evasionMultiplier      = 2.0;
+		item.walkSpeedMultiplier    = 0.9;
 		item.dashDistanceMultiplier = 0.9;
-		item.dashCooldownMultiplier = 1.0;
+		item.dashCooldownMultiplier = 0.8;
 
 		item.damageMultiplier       = 1.0;
 		item.attackSpeedMultiplier  = 1.0;
@@ -182,10 +182,10 @@ class Item extends FlxSprite
 		item.type = ItemType.ARMOR;
 		item.loadGraphic(AssetPaths.platemail__png, false, 16, 16);
 
-		item.evasionMultiplier      = 1.0;
-		item.walkSpeedMultiplier    = 1.0;
+		item.evasionMultiplier      = 3.0;
+		item.walkSpeedMultiplier    = 0.8;
 		item.dashDistanceMultiplier = 0.7;
-		item.dashCooldownMultiplier = 1.0;
+		item.dashCooldownMultiplier = 0.7;
 
 		item.damageMultiplier       = 1.0;
 		item.attackSpeedMultiplier  = 1.0;
