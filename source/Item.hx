@@ -22,6 +22,8 @@ class Item extends FlxSprite
 	public var critChanceMultiplier   : Float = 1.0;
 	public var critDamageMultiplier   : Float = 1.0;
 
+	public var RangeDamage 			  : Float = 10;
+	
 	public function new() 
 	{
 		super();
@@ -47,7 +49,7 @@ class Item extends FlxSprite
 		item.damageMultiplier       = 1.0;
 		item.attackSpeedMultiplier  = 1.0;
 		item.critChanceMultiplier   = 1.0;
-		item.critDamageMultiplier   = 1.0;
+		item.critDamageMultiplier   = 0.0;
 
 		return item;
 	}
@@ -67,7 +69,7 @@ class Item extends FlxSprite
 		item.damageMultiplier       = 1.0;
 		item.attackSpeedMultiplier  = 1.5;
 		item.critChanceMultiplier   = 5.0;
-		item.critDamageMultiplier   = 10.0;
+		item.critDamageMultiplier   = 2.0;
 
 		return item;
 	}
@@ -87,7 +89,7 @@ class Item extends FlxSprite
 		item.damageMultiplier       = 3.0;
 		item.attackSpeedMultiplier  = 0.7;
 		item.critChanceMultiplier   = 1.0;
-		item.critDamageMultiplier   = 1.0;
+		item.critDamageMultiplier   = 0.5;
 
 		return item;
 	}
@@ -107,7 +109,7 @@ class Item extends FlxSprite
 		item.damageMultiplier       = 2.0;
 		item.attackSpeedMultiplier  = 1.1;
 		item.critChanceMultiplier   = 1.0;
-		item.critDamageMultiplier   = 1.0;
+		item.critDamageMultiplier   = 1.5;
 
 		return item;
 	}
@@ -130,7 +132,7 @@ class Item extends FlxSprite
 		item.damageMultiplier       = 1.0;
 		item.attackSpeedMultiplier  = 1.0;
 		item.critChanceMultiplier   = 1.0;
-		item.critDamageMultiplier   = 1.0;
+		item.critDamageMultiplier   = 0.0;
 
 		return item;
 	}
@@ -150,7 +152,7 @@ class Item extends FlxSprite
 		item.damageMultiplier       = 1.0;
 		item.attackSpeedMultiplier  = 1.0;
 		item.critChanceMultiplier   = 1.0;
-		item.critDamageMultiplier   = 1.0;
+		item.critDamageMultiplier   = 0.0;
 
 		return item;
 	}
@@ -170,7 +172,7 @@ class Item extends FlxSprite
 		item.damageMultiplier       = 1.0;
 		item.attackSpeedMultiplier  = 1.0;
 		item.critChanceMultiplier   = 1.0;
-		item.critDamageMultiplier   = 1.0;
+		item.critDamageMultiplier   = 0.0;
 
 		return item;
 	}
@@ -184,8 +186,8 @@ class Item extends FlxSprite
 
 		item.evasionMultiplier      = 20;
 		item.walkSpeedMultiplier    = 0.8;
-		item.dashDistanceMultiplier = 0.7;
-		item.dashCooldownMultiplier = 0.7;
+		item.dashDistanceMultiplier = 0.9;
+		item.dashCooldownMultiplier = 0.9;
 
 		item.damageMultiplier       = 1.0;
 		item.attackSpeedMultiplier  = 1.0;
@@ -213,7 +215,7 @@ class Item extends FlxSprite
 		item.damageMultiplier       = 1.0;
 		item.attackSpeedMultiplier  = 1.0;
 		item.critChanceMultiplier   = 1.0;
-		item.critDamageMultiplier   = 1.0;
+		item.critDamageMultiplier   = 0.0;
 
 		return item;
 	}
@@ -233,8 +235,9 @@ class Item extends FlxSprite
 		item.damageMultiplier       = 1.0;
 		item.attackSpeedMultiplier  = 1.0;
 		item.critChanceMultiplier   = 1.0;
-		item.critDamageMultiplier   = 1.0;
+		item.critDamageMultiplier   = 0.0;
 
+		item.RangeDamage 		    = 15;
 		return item;
 	}
 
@@ -253,8 +256,9 @@ class Item extends FlxSprite
 		item.damageMultiplier       = 1.0;
 		item.attackSpeedMultiplier  = 1.0;
 		item.critChanceMultiplier   = 1.0;
-		item.critDamageMultiplier   = 1.0;
+		item.critDamageMultiplier   = 0.0;
 
+		item.RangeDamage 		    = 20;
 		return item;
 	}
 
@@ -273,7 +277,7 @@ class Item extends FlxSprite
 		item.damageMultiplier       = 1.0;
 		item.attackSpeedMultiplier  = 1.0;
 		item.critChanceMultiplier   = 1.0;
-		item.critDamageMultiplier   = 1.0;
+		item.critDamageMultiplier   = 0.0;
 
 		return item;
 	}
@@ -289,7 +293,9 @@ class Item extends FlxSprite
 		str += ((damageMultiplier != 1.0) ?       ("\t\tdamage factor : " + Std.string(damageMultiplier)+ "\n") : "");
 		str += ((attackSpeedMultiplier != 1.0) ?  ("\t\tattack speed  : " + Std.string(attackSpeedMultiplier)+ "\n") : "");
 		str += ((critChanceMultiplier != 1.0) ?   ("\t\tcrit chance   : " + Std.string(critChanceMultiplier) + "\n") : "");
-		str += ((critDamageMultiplier != 1.0) ?   ("\t\tcrit factor   : " + Std.string(critDamageMultiplier) + "\n") : "");
+		str += ((critDamageMultiplier != 0.0) ?   ("\t\tcrit factor   : " + Std.string(critDamageMultiplier) + "\n") : "");
+		if (type == ItemType.BOW)
+			str += ("\t\trange damage  : " + Std.string(RangeDamage) + "\n");
 		
 		if (str == "")
 			str = "\t\tno special properties";

@@ -27,6 +27,7 @@ class NPC_Armorer extends NPCShop
 	override public function onCloseRange():Void 
 	{
 		super.onCloseRange();
+		speak("The finest armor you can buy");
 	}
 	
 }

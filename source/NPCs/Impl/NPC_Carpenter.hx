@@ -27,6 +27,7 @@ class NPC_Carpenter extends NPCShop
 	override public function onCloseRange():Void 
 	{
 		super.onCloseRange();
+		speak("High quality bows!");
 	}
 	
 }

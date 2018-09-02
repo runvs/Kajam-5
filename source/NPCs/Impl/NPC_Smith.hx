@@ -27,6 +27,7 @@ class NPC_Smith extends NPCShop
 	override public function onCloseRange():Void 
 	{
 		super.onCloseRange();
+		speak("Weapons for sale");
 	}
 	
 	

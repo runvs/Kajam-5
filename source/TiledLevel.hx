@@ -614,6 +614,10 @@ class TiledLevel extends TiledMap
 		e.scale.set(0.9,1);
 		e.angle = 90;
 		deadEnemies.add(e);
+		//if (FlxG.random.bool())
+			_state.player.gold += 1;
+		if (FlxG.random.bool())
+			_state.player.gold += 1;
 	}
 	
 	public function getEntry (entryid : Int ) :Entry

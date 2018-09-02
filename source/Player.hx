@@ -21,7 +21,7 @@ class Player extends FlashSprite
 	public var bowItem    : Item;
 	
 	public var inventory : Inventory;
-	public var gold : Int = 70;
+	public var gold : Int = 10;
 	
 	public var healthMax     : Float;
 	
@@ -75,6 +75,8 @@ class Player extends FlashSprite
 	private var dashCooldownTextTween1 : FlxTween = null;
 	private var dashCooldownTextTween2 : FlxTween = null;
 	var _itemEvasionFactor : Float = 1.0;
+	var _itemCritChanceTerm : Float = 1.0;
+	var _itemCritChanceDamage : Float = 1.0;
 	
 
 	private var _speechText : FlxText;
@@ -413,7 +415,15 @@ class Player extends FlashSprite
 		{
 			if(FlxG.overlap(_hitArea, enemy))
 			{
-				enemy.hit(getMeleeDamage(), x, y);
+				var r : Float  = FlxG.random.float(0, 1);
+				if (r < getCritChance())
+				{
+					enemy.hit(getMeleeDamage() * getCritDamage(), x, y);
+				}
+				else
+				{
+					enemy.hit(getMeleeDamage(), x, y);
+				}
 				enemyHit = true;
 				_state.level.spladder(enemy.x + GameProperties.TileSize/2, enemy.y + GameProperties.TileSize/2, enemy.enemySpladderColor);
 			}
@@ -455,8 +465,7 @@ class Player extends FlashSprite
 
 	public function getRangedDamage() : Float
 	{
-		var damageMultiplier = (bowItem.damageMultiplier + armorItem.damageMultiplier) / 2;
-		return GameProperties.PlayerAttackBaseDamage * damageMultiplier;
+		return bowItem.RangeDamage; 
 	}
 
 	//#################################################################
@@ -495,6 +504,11 @@ class Player extends FlashSprite
 		) / 3.0;
 		
 		_itemEvasionFactor = swordItem.evasionMultiplier + bowItem.evasionMultiplier + armorItem.evasionMultiplier;
+		
+		_itemCritChanceTerm = swordItem.critChanceMultiplier + bowItem.critChanceMultiplier + armorItem.critChanceMultiplier;
+		
+		_itemCritChanceDamage = swordItem.critDamageMultiplier + bowItem.critDamageMultiplier + armorItem.critDamageMultiplier;
+		
 	}
 
     //#################################################################
@@ -502,6 +516,16 @@ class Player extends FlashSprite
 	public function getMaxVelocityWithItems()  : FlxPoint
 	{
 		return new FlxPoint(GameProperties.PlayerMovementMaxVelocity.x,GameProperties.PlayerMovementMaxVelocity.y).scale(walkSpeedMultiplier);
+	}
+	
+	public function getCritChance() : Float
+	{
+		return 0.01 + _itemCritChanceTerm / 100;
+	}
+	
+	public function getCritDamage() : Float
+	{
+		return 2 + _itemCritChanceDamage;
 	}
 	
 	function dash()
