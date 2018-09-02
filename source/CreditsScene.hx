@@ -14,6 +14,8 @@ class CreditsScene extends FlxState
 
 	var age : Float = 0;
 	
+	public static var playTime : Float = 0;
+	
 	public function new() 
 	{
 		super();
@@ -22,8 +24,7 @@ class CreditsScene extends FlxState
 	override public function create():Void 
 	{
 		super.create();
-		
-		var t : FlxText = new FlxText(0, 0, 800, "THE END", 32);
+		var t : FlxText = new FlxText(0, 0, 800, "THE END\n\n\nPlaytime:\n" + MathExtender.roundForDisplay(playTime), 32);
 		t.alignment = FlxTextAlign.CENTER;
 		t.screenCenter(FlxAxes.XY);
 		

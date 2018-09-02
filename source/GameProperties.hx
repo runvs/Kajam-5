@@ -24,7 +24,7 @@ class GameProperties
     public static var PlayerMovementAcceleration  : Float    = 500.0;
     public static var PlayerMovementDrag          : FlxPoint = new FlxPoint(2500, 2500);
     public static var PlayerMovementMaxVelocity  (default, null) : FlxPoint = new FlxPoint(80, 80);
-    public static var PlayerMovementDashCooldown  : Float    = 0.9;
+    public static var PlayerMovementDashCooldown  : Float    = 0.8;
 	public static var PlayerMovementMaxDashLength : Float    = 40.0;
     public static var PlayerAttackBaseDamage      : Float    = 10.0;
     public static var PlayerAttackCooldown        : Float    = 0.45;
@@ -50,6 +50,7 @@ class GameProperties
 	public static var NPCSpeechFadeOutTime (default, null) : Float = 0.4;
 	static public var EnemyRunnerChargeTime (default, null) : Float = 0.65;
 	static public var WorldShopInputWallTime (default, null) : Float = 0.15;
+	static public var EnemyShooterReloadTime (default, null) : Float = 1.1;
 	
 	
 

@@ -43,6 +43,7 @@ class Enemy_SmashGround extends Enemy
 
         AttackStrength = 1;
 		AttackTimer	   = 0.1;
+		health = 60;
         MaxHealth      = health;
         aggroRangeInTiles   = 3.5;
 		accel = 550;

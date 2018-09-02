@@ -3,6 +3,7 @@ import flixel.FlxG;
 import flixel.math.FlxPoint;
 import flixel.math.FlxVector;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxColor;
 
 /**
  * ...
@@ -16,10 +17,15 @@ class Enemy_Boss extends Enemy
 	private var counter2 : Int = 0;
 	private var persistentRandom : Float = 0;
 	private var thinkTimer : Float= 3;
-
+	
+	private var healthBar : HudBar;
+	
 	public function new(s:PlayState) 
 	{
 		super(s);
+		
+		health = MaxHealth = 120;
+		
 		this.loadGraphic(AssetPaths.roan__png, true, 16, 20);
 		this.animation.add("idle", [0], 8, true);
 		this.animation.add("cast", [3, 4, 5, 6, 7, 8, 9], 7, false);
@@ -28,12 +34,24 @@ class Enemy_Boss extends Enemy
 		this.animation.add("invu", [9], 8, true);
 		this.animation.play("idle");
 		this.drag.set(500, 500);
+		
+		healthBar = new HudBar(250, 450 - 20, 200, 10, false, FlxColor.fromRGB(255,9,5), "Roan Health");
+		healthBar.scrollFactor.set();
+		//healthBar._background.color
+	}
+	
+	override public function hit(damage:Float, px:Float, py:Float) 
+	{
+		super.hit(damage, px, py);
+		healthBar.health = health / MaxHealth;
 	}
 	
 	override public function update(elapsed:Float):Void 
 	{
 		//trace("update");
 		super.update(elapsed);
+		healthBar.update(elapsed);
+		
 		
 		if (internalState == 0)
 		{
@@ -85,11 +103,11 @@ class Enemy_Boss extends Enemy
 				
 				thinkTimer += 0.5;
 				var v : FlxVector = new FlxVector();
-				v.set(Math.sin(a), Math.cos(a));
+				v.set(Math.sin(MathExtender.Deg2Rad(a)), Math.cos(MathExtender.Deg2Rad(a)));
 				shoot(v);
 				
 				counter2++;
-				if (counter2 == 5)
+				if (counter2 == 6)
 				{
 					this.acceleration.set(20, 20);
 					this.animation.play("walk");
@@ -109,7 +127,7 @@ class Enemy_Boss extends Enemy
 				{
 					var a : Float = 360.0 / 20.0 * i;
 					var v : FlxVector = new FlxVector();
-					v.set(Math.sin(a), Math.cos(a));
+					v.set(Math.sin(MathExtender.Deg2Rad(a)), Math.cos(MathExtender.Deg2Rad(a)));
 					shoot(v);
 				}
 				counter2++;
@@ -129,9 +147,11 @@ class Enemy_Boss extends Enemy
 			//trace(thinkTimer);
 			if (thinkTimer <= 0)
 			{
-				var dir : FlxVector = new FlxVector();
-				dir.set(_state.player.x + 8 - (x + 8), _state.player.y - (y + 10));
-				shoot(dir);
+				var v : FlxVector = new FlxVector();
+				v.set(_state.player.x + 8 - (x + 8), _state.player.y - (y + 10));
+				v = v.normalize();
+				trace(v);
+				shoot(v);
 			
 				thinkTimer = 1.7;
 			}
@@ -161,4 +181,10 @@ class Enemy_Boss extends Enemy
 		_state.level.allEnemyShots.add(s);
 	}
 	
+	
+	override public function drawUnderlay() 
+	{
+		super.drawUnderlay();
+		healthBar.draw();
+	}
 }

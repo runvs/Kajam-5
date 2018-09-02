@@ -14,7 +14,7 @@ class Enemy_Shooter extends Enemy
 	
 	private var _aggroRangeInTiles : Float = 6.0;
 	
-	private static var _normalRandomWalkSpeed : Float = 58;
+	private static var _normalRandomWalkSpeed : Float = 38;
 	private static var _normalDrag : Float  = 250;
 	private var _distanceToPlayer : Float = 0;
 	
@@ -147,15 +147,13 @@ class Enemy_Shooter extends Enemy
 	function shoot(dir : FlxVector) 
 	{
 		
-		_shootTimer = 0.9;
+		_shootTimer = GameProperties.EnemyShooterReloadTime;
 		var s : EnemyShot = new EnemyShot(x + this.width / 2.0, y + this.height / 2.0, dir.x , dir.y );
 		_state.level.allEnemyShots.add(s);
 		
 		_rightGuyCounter--;
-		//trace();
 		if (_rightGuyCounter <= 0)
 		{
-			//trace("switch direction");
 			_rightGuy = ! _rightGuy;
 			_rightGuyCounter = FlxG.random.int(3, 6);
 		}

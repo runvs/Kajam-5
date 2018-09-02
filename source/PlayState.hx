@@ -29,6 +29,10 @@ class PlayState extends BasicState
 	
 	private var activeArena : Arena = null;
 	
+	private var playTime : Float = 0;
+	private var playTimeText : FlxText;
+	
+	//private var introFired : Bool = false;
 	
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -51,6 +55,14 @@ class PlayState extends BasicState
 		
 		FlxG.camera.follow(player, flixel.FlxCameraFollowStyle.TOPDOWN);
 		trace("playstate create end");
+		
+		playTimeText = new FlxText(550, 160, 50, "playtime: 0.0", 8);
+		playTimeText.scrollFactor.set(0, 0);
+		playTimeText.color = FlxColor.GRAY;
+		playTimeText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1, 1);	
+		
+		var c : Scene_Intro = new Scene_Intro(this);
+		switchToCutScene(c);
 	}
 	
 	
@@ -128,6 +140,8 @@ class PlayState extends BasicState
 		super.drawOverlay();
 		player.drawHud();
 		
+		playTimeText.draw();
+		
 	}
 	
 	/**
@@ -139,6 +153,9 @@ class PlayState extends BasicState
 		MyInput.update();
 		
 		//trace(camera.target);
+		CreditsScene.playTime += elapsed;
+		
+		updatePlayTimeText();
 		
 		if (!ending)
 		{
@@ -148,8 +165,26 @@ class PlayState extends BasicState
 			level.allNSCs.update(elapsed);
 			level.allEnemyShots.update(elapsed);
 			level.allPlayerShots.update(elapsed);
-			level.allShrines.update(elapsed);
-			
+			//level.allShrines.update(elapsed);
+			for (si in level.allShrines)
+			{
+				var s : Shrine = si;
+				s.update(elapsed);
+				
+				if (player.healthMax <= player.health) continue;
+				var dx : Float = player.x + 8 - (s.x + s.width / 2);
+				var dy : Float = player.y + 8 - (s.y + s.height / 2);
+				var r : Float = dx * dx + dy * dy;
+				
+				if (r < (GameProperties.TileSize * GameProperties.TileSize * 4 * 4))
+				{
+					player.heal(player.healthMax);
+					
+					
+					//player.health += 1;
+				}
+				
+			}
 			
 			
 			level.allGates.update(elapsed);
@@ -268,10 +303,9 @@ class PlayState extends BasicState
 			CheckForLevelChange();
 		}
 		
-		if (FlxG.keys.justPressed.F5)
+		if (FlxG.keys.justPressed.F2)
 		{
-			var c : Scene_Intro = new Scene_Intro(this);
-			switchToCutScene(c);
+			switchLevel("arena_boss.tmx", 1);
 		}
 	}	
 	
@@ -287,10 +321,6 @@ class PlayState extends BasicState
 			}
 			else
 			{
-				activeArena.resetArena();
-				
-				level.allGates = new FlxSpriteGroup();
-				activeArena = null;
 				RestartLevel();
 			}
 		}
@@ -298,6 +328,14 @@ class PlayState extends BasicState
 	
 	function RestartLevel() 
 	{
+		if (activeArena != null)
+		{
+			activeArena.resetArena();
+			//level.allEnemies.getList().clear();	// can't do that as the boss would also respawn
+			level.allGates = new FlxSpriteGroup();
+			activeArena = null;
+		}
+		
 		switchLevel(lastTarget, lastEntryID);
 		
 	}
@@ -443,6 +481,7 @@ class PlayState extends BasicState
 		{
 			trace ("ERROR: music not found: " + track);
 		}
+		FlxG.sound.music.volume = 0.6;
 	}
 
 	
@@ -470,6 +509,11 @@ class PlayState extends BasicState
 		if (!overlapping)
 			player.timeInTrap = 0;
 		
+	}
+	
+	public function updatePlayTimeText():Void 
+	{
+		playTimeText.text = "Playtime: " + MathExtender.roundForDisplay(CreditsScene.playTime);
 	}
 
 }

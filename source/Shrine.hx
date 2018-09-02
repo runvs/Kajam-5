@@ -62,6 +62,9 @@ class Shrine extends FlxSprite
 			s.setPosition( (x+width/2.0) + r * Math.cos(phi), (y+height/2.0) + r * Math.sin(phi));
 			
 		}
+		
+		
+		
 	}
 	public function drawOverlay () : Void
 	{

@@ -70,6 +70,7 @@ class CutSceneState extends FlxSubState
 	override public function update(elapsed:Float):Void 
 	{
 		super.update(elapsed);
+		
 		_state.level.allNSCs.update(elapsed);
 		_state.level.midTiles.update(elapsed);
 		

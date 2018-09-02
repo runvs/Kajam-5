@@ -32,6 +32,7 @@ class MyInput
 	
 	public static var GamePadConnected 			 : Bool;
 
+	public static var AnyButtonJustPressed : Bool;
 	
 	public static function reset()
 	{
@@ -51,6 +52,8 @@ class MyInput
 		BowButtonJustPressed 	   = false;
 		BowButtonPressed		   = false;
 		BowButtonJustReleased	   = false;
+		
+		AnyButtonJustPressed 	   = false;
 	}
 	
 	public static function update ()
@@ -82,6 +85,8 @@ class MyInput
 				UpButtonJustPressed = yVal > 0;
 				DownButtonJustPressed = yVal < 0;
 			}
+			
+			
 		}
 		
 		if (FlxG.keys.pressed.D || FlxG.keys.pressed.RIGHT)
@@ -149,5 +154,6 @@ class MyInput
 		{
 			SpaceButtonJustPressed = true;
 		}
+		AnyButtonJustPressed = InventoryButtonJustPressed || DashButtonJustPressed || InteractButtonJustPressed || BowButtonJustPressed || EnterButtonJustPressed || SpaceButtonJustPressed;
 	}
 }

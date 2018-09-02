@@ -62,6 +62,7 @@ class MenuState extends FlxState
 	{
 		super.create();
 	
+		FlxG.mouse.visible = false;
 		
 		FlxG.sound.playMusic(AssetPaths.town_music__ogg,0.6);
 				
@@ -151,11 +152,12 @@ class MenuState extends FlxState
 	 */
 	override public function update(elapsed : Float):Void
 	{	
+		MyInput.update();
 		super.update(elapsed );
 		age += elapsed;
 		if (age > 0.5)
 		{
-			if (FlxG.keys.justPressed.SPACE)
+			if (MyInput.AnyButtonJustPressed)
 			{
 				StartGame();
 			}
