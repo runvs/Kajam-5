@@ -147,7 +147,7 @@ class Enemy_Shooter extends Enemy
 	function shoot(dir : FlxVector) 
 	{
 		
-		_shootTimer = 0.9;
+		_shootTimer = GameProperties.EnemyShooterReloadTime;
 		var s : EnemyShot = new EnemyShot(x + this.width / 2.0, y + this.height / 2.0, dir.x , dir.y );
 		_state.level.allEnemyShots.add(s);
 		

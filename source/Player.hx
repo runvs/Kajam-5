@@ -25,7 +25,9 @@ class Player extends FlashSprite
 	
 	public var healthMax     : Float;
 	
-	var _itemDashMultiplier : Float = 1.0;
+	public var _itemDashMultiplier : Float = 1.0;
+	public var dashCooldownMultiplier : Float = 1.0;
+	
     var _dashDir        : FlxPoint;
 	var _dashCooldown   : Float;
     var _dashSpeedMax   : Float;
@@ -60,7 +62,7 @@ class Player extends FlashSprite
 	public var timeSinceDash : Float = 0; 
 	public var timeInTrap : Float = 0;
 	
-	var walkSpeedMultiplier  : Float = 1.0;
+	public var walkSpeedMultiplier  : Float = 1.0;
 	
 	private var _bowTimer : Float = 0;
 	
@@ -338,7 +340,7 @@ class Player extends FlashSprite
 			if (MyInput.DashButtonJustPressed)
 			{
 				dash();
-				_dashCooldown = _dashSpeedMax;
+				_dashCooldown = getDashTime();
                 //trace(_dashSpeedMax);
 				velocity.set(velocity.x/2, velocity.y/2);
 			}
@@ -354,6 +356,11 @@ class Player extends FlashSprite
 			if(MyInput.InteractButtonJustPressed) attack();
 		}
     }
+	
+	public function getDashTime() : Float
+	{
+		return _dashSpeedMax  / dashCooldownMultiplier;
+	}
 
     //#################################################################
 
@@ -443,19 +450,25 @@ class Player extends FlashSprite
 			swordItem.walkSpeedMultiplier
 			+ bowItem.walkSpeedMultiplier
 			+ armorItem.walkSpeedMultiplier
-		) / 3;
+		) / 3.0;
 		maxVelocity = getMaxVelocityWithItems();
 
 		_itemDashMultiplier = (
 			swordItem.dashDistanceMultiplier
 			+ bowItem.dashDistanceMultiplier
 			+ armorItem.dashDistanceMultiplier
-		) / 3;
+		) / 3.0;
+		
+		dashCooldownMultiplier = (
+			swordItem.dashCooldownMultiplier 
+			+ bowItem.dashCooldownMultiplier
+			+ armorItem.dashCooldownMultiplier
+		)/3.0;
 	}
 
     //#################################################################
 
-	private function getMaxVelocityWithItems()  : FlxPoint
+	public function getMaxVelocityWithItems()  : FlxPoint
 	{
 		return new FlxPoint(GameProperties.PlayerMovementMaxVelocity.x,GameProperties.PlayerMovementMaxVelocity.y).scale(walkSpeedMultiplier);
 	}

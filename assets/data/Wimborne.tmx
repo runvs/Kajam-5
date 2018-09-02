@@ -51,7 +51,7 @@
   <object id="88" name="exit_top" type="exit" x="160" y="8" width="32" height="56">
    <properties>
     <property name="entryid" value="1"/>
-    <property name="target" value="arena_boss.tmx"/>
+    <property name="target" value="northofwimborne.tmx"/>
    </properties>
   </object>
   <object id="90" name="entry_top" type="entry" x="168" y="92" width="16" height="16">

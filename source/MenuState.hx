@@ -62,6 +62,7 @@ class MenuState extends FlxState
 	{
 		super.create();
 	
+		FlxG.mouse.visible = false;
 		
 		FlxG.sound.playMusic(AssetPaths.town_music__ogg,0.6);
 				

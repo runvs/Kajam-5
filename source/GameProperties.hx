@@ -50,6 +50,7 @@ class GameProperties
 	public static var NPCSpeechFadeOutTime (default, null) : Float = 0.4;
 	static public var EnemyRunnerChargeTime (default, null) : Float = 0.65;
 	static public var WorldShopInputWallTime (default, null) : Float = 0.15;
+	static public var EnemyShooterReloadTime (default, null) : Float = 1.1;
 	
 	
 
