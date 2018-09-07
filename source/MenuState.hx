@@ -66,7 +66,7 @@ class MenuState extends FlxState
 	
 		FlxG.mouse.visible = false;
 		
-		FlxG.sound.playMusic(AssetPaths.town_music__ogg,0.6);
+		FlxG.sound.playMusic(AssetPaths.title_theme__ogg,0.6);
 				
 #if(flash)
 		Kongregate.loadApi(function(api:KongregateApi) {

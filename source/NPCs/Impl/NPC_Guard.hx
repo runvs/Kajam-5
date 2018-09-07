@@ -25,7 +25,7 @@ class NPC_Guard extends NPCIdle
 	
 	override public function interact():Void 
 	{
-		trace ("talked to guard");
+		speak("Hey Thyl, how are you?");
 	}
 	
 	override public function onCloseRange():Void 

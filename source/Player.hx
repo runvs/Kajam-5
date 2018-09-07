@@ -111,16 +111,24 @@ class Player extends FlashSprite
 		animation.play("idle_south");
 		//makeGraphic(16,16);
 		_dashSprite1 = new FlxSprite();
-		_dashSprite1.makeGraphic(16, 16);
+		_dashSprite1.loadGraphic(AssetPaths.Thyl__png, true, 16, 16, true);
+		SpriteFunctions.shadeSpriteWithBorder(_dashSprite1, FlxColor.TRANSPARENT, FlxColor.WHITE);
+		//_dashSprite1.makeGraphic(16, 16);
 		
 		_dashSprite2 = new FlxSprite();
-		_dashSprite2.makeGraphic(16, 16);
+		_dashSprite2.loadGraphic(AssetPaths.Thyl__png, true, 16, 16,true);
+		SpriteFunctions.shadeSpriteWithBorder(_dashSprite2, FlxColor.TRANSPARENT, FlxColor.WHITE);
+		//_dashSprite2.makeGraphic(16, 16);
 		
 		_dashSprite3 = new FlxSprite();
-		_dashSprite3.makeGraphic(16, 16);
+		_dashSprite3.loadGraphic(AssetPaths.Thyl__png, true, 16, 16, true);
+		SpriteFunctions.shadeSpriteWithBorder(_dashSprite3, FlxColor.TRANSPARENT, FlxColor.WHITE);
+		//_dashSprite3.makeGraphic(16, 16);
 		
 		_dashSprite4 = new FlxSprite();
-		_dashSprite4.makeGraphic(16, 16);
+		_dashSprite4.loadGraphic(AssetPaths.Thyl__png, true, 16, 16, true);
+		SpriteFunctions.shadeSpriteWithBorder(_dashSprite4, FlxColor.TRANSPARENT, FlxColor.WHITE);
+		//_dashSprite4.makeGraphic(16, 16);
 		
 		dustparticles = new MyParticleSystem();
 		dustparticles.mySize = 500;

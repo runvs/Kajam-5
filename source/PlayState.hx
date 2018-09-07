@@ -61,6 +61,8 @@ class PlayState extends BasicState
 		playTimeText.color = FlxColor.GRAY;
 		playTimeText.setBorderStyle(FlxTextBorderStyle.OUTLINE, FlxColor.BLACK, 1, 1);	
 		
+		FlxG.sound.playMusic(AssetPaths.town_music__ogg,0.6);
+		
 		var c : Scene_Intro = new Scene_Intro(this);
 		switchToCutScene(c);
 	}
@@ -304,7 +306,7 @@ class PlayState extends BasicState
 		
 		if (FlxG.keys.justPressed.F2)
 		{
-			switchLevel("arena_boss.tmx", 1);
+			//switchLevel("arena_boss.tmx", 1);
 		}
 	}	
 	

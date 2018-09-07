@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 
@@ -17,14 +18,17 @@ class Trigger extends FlxSprite
 	private var _level : TiledLevel = null;
 	
 	public var playerOn : Bool = false;
+	private var underlay : GlowOverlay;
 	
 	public function new(?X:Float=0, ?Y:Float=0,w : Int, h:Int, l: TiledLevel)
 	{
 		super(X, Y);
 		_level = l;
-		this.makeGraphic(w, h);
+		//this.makeGraphic(w, h);
+		this.loadGraphic(AssetPaths.lever__png, false, 16, 16);
 		target = new Array<String>();
 		immovable = true;
+		underlay = new GlowOverlay(X + 6, Y + 8, FlxG.camera, 24, 1, 1);
 	}
 	
 	public function perform ()
@@ -68,6 +72,11 @@ class Trigger extends FlxSprite
 		}
 	}
 	
+	override public function draw():Void 
+	{
+		underlay.draw();
+		super.draw();
+	}
 	
 	
 }

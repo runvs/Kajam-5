@@ -55,7 +55,7 @@
   </object>
   <object id="207" name="combat" type="music" x="0" y="0" width="16" height="16"/>
  </objectgroup>
- <objectgroup color="#ffff7f" name="arena" visible="0">
+ <objectgroup color="#ffff7f" name="arena">
   <object id="205" x="16" y="32" width="224" height="144">
    <properties>
     <property name="gate" value="1,1;2,1;14,11;12,11;13,11"/>

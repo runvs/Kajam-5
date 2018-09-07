@@ -30,8 +30,8 @@ class Shrine extends FlxSprite
 		particles = new FlxSpriteGroup();
 		for (i in 0 ... 40)
 		{
-			var px : Float = x + width / 2 + FlxG.random.floatNormal(0, 32);
-			var py : Float = y + width / 2 + FlxG.random.floatNormal(0, 32);
+			var px : Float = x + width / 2 + FlxG.random.floatNormal(0, 24);
+			var py : Float = y + width / 2 + FlxG.random.floatNormal(0, 24);
 			var s : FlxSprite = new FlxSprite(px, py);
 			s.makeGraphic(2,2);
 			s.alpha = FlxG.random.float(0.2, 0.5);
@@ -57,7 +57,7 @@ class Shrine extends FlxSprite
 			var dy = s.y - (y + height / 2.0);
 			
 			var r : Float = Math.sqrt(dx * dx + dy * dy);
-			if (r < 16) r += 16;
+			if (r < 12) r += 12;
 			var phi = Math.atan2(dy, dx) + s.health * elapsed * MathExtender.Deg2Rad(1.0/r*640) * ((i>particles.length/2)?-1:1);
 			
 			s.setPosition( (x+width/2.0) + r * Math.cos(phi), (y+height/2.0) + r * Math.sin(phi));

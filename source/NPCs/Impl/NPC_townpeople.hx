@@ -20,4 +20,26 @@ class NPC_townpeople extends NPC
 		this.animation.play("south");
 	}
 	
+	
+	override public function onCloseRange():Void 
+	{
+		if ( _speechDisplayTimer <= GameProperties.NPCSpeechFadeOutTime)
+		{
+			var i : Int = FlxG.random.int(0, 2);
+			if (i == 0)
+				speak("Hey Thyl", 2);
+			else if (i == 1)
+				speak("Good day sir", 2);
+			else if ( i == 2)
+				speak("Greetings", 2);
+			else 
+				speak("How are you?");
+		}
+	}
+	
+	override public function interact():Void 
+	{
+		speak("Hey Thyl, how are you?");
+	}
+	
 }

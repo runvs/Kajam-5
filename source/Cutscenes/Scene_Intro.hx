@@ -13,10 +13,12 @@ class Scene_Intro extends CutSceneState
 	var a : NPC_Annesa;
 	
 	var townsfolk : FlxTypedGroup<NPC_townpeople>;
+	var allTimers : Array<FlxTimer>;
 	
 	public function new(s:PlayState) 
 	{
 		super(s);
+		allTimers = new Array<FlxTimer>();
 	}
 	
 	override public function create() 
@@ -67,18 +69,20 @@ class Scene_Intro extends CutSceneState
 		{
 			townsfolk.members[1].speak("She might bring news about our future!", 3.5);
 		});
+		allTimers.push(ts1);
 		var ts2 : FlxTimer = new FlxTimer();
 		ts2.start(6.5, function(t)
 		{
 			townsfolk.members[2].speak("I hope she will tell some stories.", 3.5);
 		});
+		allTimers.push(ts2);
 		var ts3 : FlxTimer = new FlxTimer();
 		ts3.start(9.5, function(t)
 		{
 			target.velocity.set(0, 20);
 			townsfolk.members[3].speak("There she comes. Ohhh, she is beautiful!", 3.5);
 		});
-		
+		allTimers.push(ts3);
 		a = new NPC_Annesa(_state);
 		_state.level.allNSCs.add(a);
 		a.setPosition(650, 830);
@@ -92,7 +96,7 @@ class Scene_Intro extends CutSceneState
 			a.overrideMessage = "";
 			
 		} );
-		
+		allTimers.push(t1);
 		var ta1 : FlxTimer = new FlxTimer();
 		ta1.start(15, function (t)
 		{
@@ -100,49 +104,51 @@ class Scene_Intro extends CutSceneState
 			a.animation.play("idle",true);
 			a.speak("I have a story to tell ...", 2.5);
 		});
-		
+		allTimers.push(ta1);
 		var ta2 : FlxTimer = new FlxTimer();
 		ta2.start(18, function (t)
 		{
 			a.speak("of a young hero ...", 2.5);
 		});
-		
+		allTimers.push(ta2);
 		var ta3 : FlxTimer = new FlxTimer();
 		ta3.start(21, function (t)
 		{
 			a.speak("who will explore the  FOCA ruins ...", 2.5);
 		});
-		
+		allTimers.push(ta3);
 		var ta4 : FlxTimer = new FlxTimer();
 		ta4.start(24, function (t)
 		{
 			a.speak("and retrieve the ancient artifact ...", 2.5);
 		});
+		allTimers.push(ta4);
 		var ta5 : FlxTimer = new FlxTimer();
 		ta5.start(27, function (t)
 		{
 			a.speak("which has been lost for centuries!", 2.5);
 		});
-		
+		allTimers.push(ta5);
 		
 		var ta6 : FlxTimer = new FlxTimer();
 		ta6.start(30, function (t)
 		{
 			_state.player.speak("I must take this quest!", 2.0);
 		});
-	var ta7 : FlxTimer = new FlxTimer();
+		allTimers.push(ta6);
+		var ta7 : FlxTimer = new FlxTimer();
 		ta7.start(32, function (t)
 		{
 			_state.player.speak("I shall go north and find this artifact!", 2.0);
 		});
-		
+		allTimers.push(ta7);
 		
 		var t3 : FlxTimer = new FlxTimer();
 		t3.start(36.0, function (t)
 		{
 			BackToPlayState();
 		});
-		
+		allTimers.push(ta3);
 		
 	}
 	
@@ -165,6 +171,11 @@ class Scene_Intro extends CutSceneState
 	{
 		super.LeaveCallback();
 		a.alive = false;
+		for (ti in allTimers)
+		{
+			var t : FlxTimer = ti;
+			t.cancel();
+		}
 		for (t in townsfolk)
 		{
 			//t.alive = false;

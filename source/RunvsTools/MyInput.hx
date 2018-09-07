@@ -114,19 +114,19 @@ class MyInput
 		{
 			DownButtonJustPressed = true;
 		}
-		if (FlxG.keys.justPressed.C)
+		if (FlxG.keys.justPressed.C ||FlxG.keys.justPressed.K)
 		{
 			DashButtonJustPressed = true;
 		}
-		if (FlxG.keys.justPressed.X)
+		if (FlxG.keys.justPressed.X|| FlxG.keys.justPressed.J)
 		{
 			JumpButtonJustPressed= true;
 		}
-		if (FlxG.keys.pressed.X)
+		if (FlxG.keys.pressed.X || FlxG.keys.pressed.J)
 		{
 			InteractButtonPressed = true;
 		}
-		if (FlxG.keys.justPressed.X)
+		if (FlxG.keys.justPressed.X || FlxG.keys.justPressed.J)
 		{
 			InteractButtonJustPressed = true;
 		}
